@@ -1,0 +1,7 @@
+File: {filename}
+
+C++ code:
+{code}
+
+Output ONLY the Python code. No markdown, no explanations.
+

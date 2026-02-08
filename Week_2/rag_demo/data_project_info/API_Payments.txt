@@ -1,0 +1,8 @@
+Endpoint: POST /v2/payments/refunds
+Owner: payments-service
+Retries:
+- Client retries: 2
+- Backoff: exponential (200ms, 800ms)
+Errors:
+- 409: duplicate refund request
+- 503: dependency unavailable

@@ -1,0 +1,9 @@
+ollama
+faiss-cpu
+numpy
+langchain
+pytest  
+langchain-ollama
+langchain-community
+langchain-text-splitters 
+faiss-cpu

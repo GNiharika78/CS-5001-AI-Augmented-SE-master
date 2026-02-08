@@ -1,0 +1,6 @@
+from tasks.task_431 import *
+
+def test_mbpp_asserts():
+    assert common_element([1,2,3,4,5], [5,6,7,8,9])==True
+    assert common_element([1,2,3,4,5], [6,7,8,9])==None
+    assert common_element(['a','b','c'], ['d','b','e'])==True

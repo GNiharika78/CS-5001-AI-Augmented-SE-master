@@ -1,0 +1,22 @@
+.F.................F....................                                 [100%]
+================================== FAILURES ===================================
+______________________________ test_mbpp_asserts ______________________________
+
+    def test_mbpp_asserts():
+>       assert kth_element([12,3,5,7,19], 5, 2) == 3
+E       assert 5 == 3
+E        +  where 5 = kth_element([3, 5, 7, 12, 19], 5, 2)
+
+tests\test_task_101.py:4: AssertionError
+______________________________ test_mbpp_asserts ______________________________
+
+    def test_mbpp_asserts():
+        assert common_element([1,2,3,4,5], [5,6,7,8,9])==True
+>       assert common_element([1,2,3,4,5], [6,7,8,9])==None
+E       assert False == None
+E        +  where False = common_element([1, 2, 3, 4, 5], [6, 7, 8, 9])
+
+tests\test_task_431.py:5: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_task_101.py::test_mbpp_asserts - assert 5 == 3
+FAILED tests/test_task_431.py::test_mbpp_asserts - assert False == None

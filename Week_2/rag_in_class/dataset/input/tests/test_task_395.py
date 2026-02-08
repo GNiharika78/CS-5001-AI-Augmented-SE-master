@@ -1,0 +1,6 @@
+from tasks.task_395 import *
+
+def test_task_395():
+    assert first_non_repeating_character("abcabc") == None
+    assert first_non_repeating_character("abc") == "a"
+    assert first_non_repeating_character("ababc") == "c"
