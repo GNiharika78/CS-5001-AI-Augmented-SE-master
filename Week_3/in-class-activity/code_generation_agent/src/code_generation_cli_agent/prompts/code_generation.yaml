@@ -1,0 +1,1499 @@
+# # # # # # # # metadata:
+# # # # # # # #   description: "Prompts for generating code"
+# # # # # # # #   version: "1.0.0"
+# # # # # # # #   author: "Classroom CLI Agent"
+# # # # # # # #   task_type: "code_generation"
+
+# # # # # # # # variants:
+# # # # # # # #   default:
+# # # # # # # #     description: "Standard code generation prompt"
+# # # # # # # #     template: |
+# # # # # # # #       You are a software engineer. Write a single Python module that satisfies the description.
+# # # # # # # #       Follow the plan.
+# # # # # # # #       Return ONLY the full module content.
+# # # # # # # #       Rules:
+# # # # # # # #       - Output raw Python only
+# # # # # # # #       - No Markdown
+# # # # # # # #       - No code fences
+# # # # # # # #       - No explanations
+
+# # # # # # # #       TARGET MODULE PATH: {module_path}
+
+# # # # # # # #       PLAN:
+# # # # # # # #       {plan}
+
+# # # # # # # #       DESCRIPTION:
+# # # # # # # #       {desc}
+
+# # # # # # # #   documented:
+# # # # # # # #     description: "Generate well-documented code"
+# # # # # # # #     template: |
+# # # # # # # #       You are a senior software engineer. Create a well-documented Python module.
+      
+# # # # # # # #       Path: {module_path}
+      
+# # # # # # # #       Implementation Plan:
+# # # # # # # #       {plan}
+      
+# # # # # # # #       Requirements:
+# # # # # # # #       {desc}
+      
+# # # # # # # #       Standards:
+# # # # # # # #       - Comprehensive docstrings (Google style)
+# # # # # # # #       - Type hints for all functions
+# # # # # # # #       - Inline comments for complex logic
+# # # # # # # #       - Clear variable names
+# # # # # # # #       - Return ONLY raw Python code
+# # # # # # # #       - No markdown formatting
+
+# # # # # # # #   minimal:
+# # # # # # # #     description: "Generate minimal, concise code"
+# # # # # # # #     template: |
+# # # # # # # #       Write minimal Python code for: {desc}
+      
+# # # # # # # #       Follow this plan:
+# # # # # # # #       {plan}
+      
+# # # # # # # #       Target: {module_path}
+      
+# # # # # # # #       Rules: Raw Python only, no comments unless critical, no markdown.
+
+
+# # # # # # # metadata:
+# # # # # # #   description: "Prompts for generating code"
+# # # # # # #   version: "1.1.0"
+# # # # # # #   author: "Classroom CLI Agent"
+# # # # # # #   task_type: "code_generation"
+
+# # # # # # # variants:
+# # # # # # #   default:
+# # # # # # #     description: "Strict per-file generation (type-aware, no prose)"
+# # # # # # #     template: |
+# # # # # # #       You are a senior software engineer and repo maintainer. You are generating ONE file for a project.
+
+# # # # # # #       Project description:
+# # # # # # #       {desc}
+
+# # # # # # #       Implementation plan:
+# # # # # # #       {plan}
+
+# # # # # # #       Project file tree (planned files):
+# # # # # # #       {file_tree}
+
+# # # # # # #       TARGET FILE (generate ONLY this file):
+# # # # # # #       Path: {target_path}
+# # # # # # #       Purpose: {target_purpose}
+
+# # # # # # #       HARD RULES (must follow exactly):
+# # # # # # #       - Output ONLY the contents of the target file. Nothing else.
+# # # # # # #       - Do NOT include explanations, headings, or introductory text.
+# # # # # # #       - Do NOT use Markdown code fences (no ```).
+# # # # # # #       - Do NOT mention other files unless writing their contents is required for this target file (but you are NOT allowed to output other files).
+# # # # # # #       - Respect the target file type rules below.
+
+# # # # # # #       TARGET FILE TYPE RULES:
+# # # # # # #       - If target_path ends with ".py":
+# # # # # # #         * Output valid Python source code only.
+# # # # # # #         * You may include a module docstring at the top (triple quotes) but no plain English outside code.
+# # # # # # #         * Include minimal dependencies; prefer standard library.
+# # # # # # #       - If target_path is "requirements.txt":
+# # # # # # #         * Output ONLY dependency specifiers, one per line (e.g., "flask", "requests>=2.31").
+# # # # # # #         * No bullets, no comments, no prose, no colons.
+# # # # # # #       - If target_path is "README.md":
+# # # # # # #         * Output Markdown content only (headings, code blocks are allowed in README).
+# # # # # # #         * Include setup + run instructions that match the file tree paths.
+# # # # # # #       - Otherwise:
+# # # # # # #         * Output only the exact file content required for that file type.
+
+# # # # # # #       Reflection checklist (do this silently before responding):
+# # # # # # #       - Did I output ONLY the target file contents?
+# # # # # # #       - Did I avoid prose like "Here's the implementation"?
+# # # # # # #       - If requirements.txt: are all lines valid package specifiers?
+# # # # # # #       - If .py: is the first line valid Python (import or docstring), not prose?
+
+# # # # # # #   documented:
+# # # # # # #     description: "Per-file generation with strong documentation for Python files"
+# # # # # # #     template: |
+# # # # # # #       You are a senior software engineer and repo maintainer. You are generating ONE file for a project.
+
+# # # # # # #       Project description:
+# # # # # # #       {desc}
+
+# # # # # # #       Implementation plan:
+# # # # # # #       {plan}
+
+# # # # # # #       Project file tree (planned files):
+# # # # # # #       {file_tree}
+
+# # # # # # #       TARGET FILE (generate ONLY this file):
+# # # # # # #       Path: {target_path}
+# # # # # # #       Purpose: {target_purpose}
+
+# # # # # # #       HARD RULES (must follow exactly):
+# # # # # # #       - Output ONLY the contents of the target file. Nothing else.
+# # # # # # #       - No explanations, no headings, no introductory text.
+# # # # # # #       - No Markdown code fences (no ```).
+# # # # # # #       - Follow the target file type rules below.
+
+# # # # # # #       TARGET FILE TYPE RULES:
+# # # # # # #       - If target_path ends with ".py":
+# # # # # # #         * Output valid Python source code only.
+# # # # # # #         * Include a clear module docstring at the top describing purpose and how to run.
+# # # # # # #         * Use type hints for functions and methods.
+# # # # # # #         * Add docstrings (Google style) for public functions/classes.
+# # # # # # #         * Add inline comments only where logic is non-obvious.
+# # # # # # #       - If target_path is "requirements.txt":
+# # # # # # #         * Output ONLY dependency specifiers, one per line.
+# # # # # # #         * No prose, no bullets, no comments.
+# # # # # # #       - If target_path is "README.md":
+# # # # # # #         * Output Markdown content only.
+# # # # # # #         * Include: Overview, Setup, Run, Example usage, Project structure (brief).
+# # # # # # #       - Otherwise:
+# # # # # # #         * Output only the exact file content required.
+
+# # # # # # #       Reflection checklist (do this silently before responding):
+# # # # # # #       - Did I output ONLY the target file contents?
+# # # # # # #       - Did I avoid any prose outside the file?
+# # # # # # #       - If requirements.txt: does every line look like a valid package specifier?
+# # # # # # #       - If .py: does it run without syntax errors?
+
+# # # # # # #   minimal:
+# # # # # # #     description: "Per-file minimal generation (no extra fluff)"
+# # # # # # #     template: |
+# # # # # # #       Generate ONE file for the following project.
+
+# # # # # # #       Description:
+# # # # # # #       {desc}
+
+# # # # # # #       Plan:
+# # # # # # #       {plan}
+
+# # # # # # #       File tree:
+# # # # # # #       {file_tree}
+
+# # # # # # #       TARGET FILE:
+# # # # # # #       Path: {target_path}
+# # # # # # #       Purpose: {target_purpose}
+
+# # # # # # #       Rules:
+# # # # # # #       - Output ONLY the contents of {target_path}
+# # # # # # #       - No explanations, no markdown fences
+# # # # # # #       - For requirements.txt: output only package lines
+# # # # # # #       - For .py: output only valid Python code
+# # # # # # #       - For README.md: output markdown only
+
+
+
+# # # # # # metadata:
+# # # # # #   description: "Prompts for generating code"
+# # # # # #   version: "1.2.0"
+# # # # # #   author: "Classroom CLI Agent"
+# # # # # #   task_type: "code_generation"
+
+# # # # # # variants:
+# # # # # #   default:
+# # # # # #     description: "Generic per-file generator with strict output contract + conditional behavior"
+# # # # # #     template: |
+# # # # # #       You are a file generator, not a chat assistant. You are generating EXACTLY ONE file artifact for a project.
+
+# # # # # #       Project description:
+# # # # # #       {desc}
+
+# # # # # #       Implementation plan:
+# # # # # #       {plan}
+
+# # # # # #       Project file tree (planned files):
+# # # # # #       {file_tree}
+
+# # # # # #       TARGET FILE (generate ONLY this file):
+# # # # # #       Path: {target_path}
+# # # # # #       Purpose: {target_purpose}
+
+# # # # # #       UNIVERSAL OUTPUT CONTRACT (non-negotiable):
+# # # # # #       - Output ONLY the contents of the target file. Nothing else.
+# # # # # #       - Do NOT include any introductory text (e.g., "Here's...", "Sure...", "Below is...").
+# # # # # #       - Do NOT include headings or explanations outside the file.
+# # # # # #       - Do NOT use Markdown code fences (no ```).
+# # # # # #       - The first line MUST be valid for the target file type (see below).
+# # # # # #       - Do not output other files.
+
+# # # # # #       TARGET FILE TYPE RULES:
+# # # # # #       - If target_path ends with ".py":
+# # # # # #         * Output valid Python source code only.
+# # # # # #         * First line MUST start with: import, from, or a triple-quoted docstring (""").
+# # # # # #         * Prefer standard library unless the plan requires external packages.
+# # # # # #         * If this is a web/API app, include a minimal "/" route or homepage/health endpoint (only when appropriate).
+# # # # # #       - If target_path is "requirements.txt":
+# # # # # #         * Output ONLY valid pip requirement specifiers, one per line.
+# # # # # #         * First character must be alphanumeric (package name).
+# # # # # #         * No bullets, no comments, no prose, no colons.
+# # # # # #         * Include only packages actually needed by the project (and pytest only if tests exist in file_tree).
+# # # # # #       - If target_path is "README.md":
+# # # # # #         * Output Markdown only.
+# # # # # #         * First line MUST start with "#".
+# # # # # #         * Include setup + run instructions that match the file tree paths.
+# # # # # #         * For APIs, include example endpoints/requests.
+# # # # # #       - If target_path ends with ".md":
+# # # # # #         * Output Markdown only.
+# # # # # #       - Otherwise:
+# # # # # #         * Output only the exact file content required for that file type.
+
+# # # # # #       Reflection checklist (do this silently BEFORE responding):
+# # # # # #       - Did I output ONLY the target file contents?
+# # # # # #       - Did I avoid any prose like "Here's the implementation"?
+# # # # # #       - Does the first line match the required file-type rule?
+# # # # # #       - If requirements.txt: is every line a valid requirement specifier?
+# # # # # #       - If this project is a web/API app: is there a discoverable "/" route or clear README endpoint usage?
+
+# # # # # #   documented:
+# # # # # #     description: "Same as default, but stronger docstrings/comments for Python files"
+# # # # # #     template: |
+# # # # # #       You are a file generator, not a chat assistant. You are generating EXACTLY ONE file artifact for a project.
+
+# # # # # #       Project description:
+# # # # # #       {desc}
+
+# # # # # #       Implementation plan:
+# # # # # #       {plan}
+
+# # # # # #       Project file tree (planned files):
+# # # # # #       {file_tree}
+
+# # # # # #       TARGET FILE (generate ONLY this file):
+# # # # # #       Path: {target_path}
+# # # # # #       Purpose: {target_purpose}
+
+# # # # # #       UNIVERSAL OUTPUT CONTRACT (non-negotiable):
+# # # # # #       - Output ONLY the contents of the target file. Nothing else.
+# # # # # #       - No introductory text, no explanations outside the file.
+# # # # # #       - No Markdown code fences (no ```).
+# # # # # #       - The first line MUST be valid for the target file type.
+# # # # # #       - Do not output other files.
+
+# # # # # #       TARGET FILE TYPE RULES:
+# # # # # #       - If target_path ends with ".py":
+# # # # # #         * Output valid Python source code only.
+# # # # # #         * First line MUST start with: import, from, or a triple-quoted docstring (""").
+# # # # # #         * Include a concise module docstring describing purpose and how to run.
+# # # # # #         * Use type hints for functions and methods.
+# # # # # #         * Add docstrings (Google style) for public functions/classes.
+# # # # # #         * Add inline comments only where logic is non-obvious.
+# # # # # #         * If this is a web/API app, include a minimal "/" route or homepage/health endpoint (only when appropriate).
+# # # # # #       - If target_path is "requirements.txt":
+# # # # # #         * Output ONLY valid requirement specifiers, one per line.
+# # # # # #         * No prose, no bullets, no comments, no colons.
+# # # # # #         * Include pytest only if tests are present in the file tree.
+# # # # # #       - If target_path is "README.md":
+# # # # # #         * Output Markdown only.
+# # # # # #         * Include: Overview, Setup, Run, Example usage, Project structure (brief).
+# # # # # #         * For APIs, include example curl commands.
+# # # # # #       - Otherwise:
+# # # # # #         * Output only the exact file content required.
+
+# # # # # #       Reflection checklist (do this silently BEFORE responding):
+# # # # # #       - Did I output ONLY the target file contents?
+# # # # # #       - Did I avoid any prose outside the file?
+# # # # # #       - If requirements.txt: does every line look like a valid requirement specifier?
+# # # # # #       - If .py: does it have no syntax-breaking prose?
+# # # # # #       - If web/API: does "/" exist or does README clearly guide to endpoints?
+
+# # # # # #   minimal:
+# # # # # #     description: "Strict minimal per-file generator"
+# # # # # #     template: |
+# # # # # #       Generate EXACTLY ONE file for the project below.
+
+# # # # # #       Description:
+# # # # # #       {desc}
+
+# # # # # #       Plan:
+# # # # # #       {plan}
+
+# # # # # #       File tree:
+# # # # # #       {file_tree}
+
+# # # # # #       TARGET FILE:
+# # # # # #       Path: {target_path}
+# # # # # #       Purpose: {target_purpose}
+
+# # # # # #       Rules:
+# # # # # #       - Output ONLY the contents of {target_path}
+# # # # # #       - No explanations, no markdown fences
+# # # # # #       - First line must match file type:
+# # # # # #         * .py => import/from/""" 
+# # # # # #         * requirements.txt => package name
+# # # # # #         * README.md => #
+# # # # # #       - requirements.txt must contain only package lines
+# # # # # #       - .py must be valid Python only
+# # # # # #       - README.md must be Markdown only
+# # # # # metadata:
+# # # # #   description: "Prompts for generating code"
+# # # # #   version: "1.3.0"
+# # # # #   author: "Classroom CLI Agent"
+# # # # #   task_type: "code_generation"
+
+# # # # # variants:
+# # # # #   default:
+# # # # #     description: "Generic per-file generator with strict output contract, dependency + syntax validation"
+# # # # #     template: |
+# # # # #       You are a file generator, not a chat assistant. You generate EXACTLY ONE file artifact for a project.
+
+# # # # #       Project description:
+# # # # #       {desc}
+
+# # # # #       Implementation plan:
+# # # # #       {plan}
+
+# # # # #       Project file tree (planned files):
+# # # # #       {file_tree}
+
+# # # # #       TARGET FILE (generate ONLY this file):
+# # # # #       Path: {target_path}
+# # # # #       Purpose: {target_purpose}
+
+# # # # #       UNIVERSAL OUTPUT CONTRACT (non-negotiable):
+# # # # #       - Output ONLY the contents of the target file. Nothing else.
+# # # # #       - Do NOT include any introductory text (e.g., "Here's...", "Sure...", "Below is...").
+# # # # #       - Do NOT include headings or explanations outside the file.
+# # # # #       - Do NOT use Markdown code fences (no ```).
+# # # # #       - Do not output other files.
+# # # # #       - The first line MUST be valid for the target file type:
+# # # # #         * .py => starts with 'from ', 'import ', or a triple-quoted docstring (""")
+# # # # #         * requirements.txt => starts with an alphanumeric package name
+# # # # #         * README.md => starts with '#'
+
+# # # # #       TARGET FILE TYPE RULES:
+# # # # #       - If target_path ends with ".py":
+# # # # #         * Output syntactically valid Python that would pass `python -m py_compile`.
+# # # # #         * Re-check every f-string, bracket expression, and quote pairing before finalizing.
+# # # # #         * Prefer standard library unless the plan requires external packages.
+# # # # #         * If this project is a web/API app (Flask/FastAPI/Streamlit), include a minimal "/" route/homepage/health endpoint when appropriate.
+# # # # #       - If target_path is "requirements.txt":
+# # # # #         * Output ONLY valid pip requirement specifiers, one per line.
+# # # # #         * No bullets, no comments, no prose, no colons.
+# # # # #         * Must include a dependency for every non-standard-library import used by Python files in the project file tree.
+# # # # #         * Include pytest ONLY if tests/ exists in the file tree.
+# # # # #       - If target_path is "README.md":
+# # # # #         * Output Markdown only.
+# # # # #         * Include setup + run instructions that match the file tree paths.
+# # # # #         * For APIs, include example endpoints/requests.
+# # # # #       - If target_path ends with ".md":
+# # # # #         * Output Markdown only.
+# # # # #       - Otherwise:
+# # # # #         * Output only the exact file content required for that file type.
+
+# # # # #       Reflection checklist (do this silently BEFORE responding; if any check fails, fix and re-check):
+# # # # #       - I output ONLY the target file contents (no extra prose).
+# # # # #       - First line matches the required file-type rule.
+# # # # #       - For .py files: mentally parse like `python -m py_compile`:
+# # # # #         * brackets (), [], {} balanced
+# # # # #         * quotes and triple quotes balanced
+# # # # #         * f-strings are valid (no broken indexing, no stray quotes)
+# # # # #         * indentation is consistent
+# # # # #       - For requirements.txt: every line is a valid requirement specifier AND covers all external imports.
+# # # # #       - For web/API apps: "/" is discoverable (route exists or README clearly directs to endpoints).
+
+# # # # #   documented:
+# # # # #     description: "Same as default, but stronger docstrings/comments for Python files"
+# # # # #     template: |
+# # # # #       You are a file generator, not a chat assistant. You generate EXACTLY ONE file artifact for a project.
+
+# # # # #       Project description:
+# # # # #       {desc}
+
+# # # # #       Implementation plan:
+# # # # #       {plan}
+
+# # # # #       Project file tree (planned files):
+# # # # #       {file_tree}
+
+# # # # #       TARGET FILE (generate ONLY this file):
+# # # # #       Path: {target_path}
+# # # # #       Purpose: {target_purpose}
+
+# # # # #       UNIVERSAL OUTPUT CONTRACT (non-negotiable):
+# # # # #       - Output ONLY the contents of the target file. Nothing else.
+# # # # #       - No introductory text, no explanations outside the file.
+# # # # #       - No Markdown code fences (no ```).
+# # # # #       - Do not output other files.
+# # # # #       - The first line MUST be valid for the target file type:
+# # # # #         * .py => starts with 'from ', 'import ', or a triple-quoted docstring (""")
+# # # # #         * requirements.txt => starts with an alphanumeric package name
+# # # # #         * README.md => starts with '#'
+
+# # # # #       TARGET FILE TYPE RULES:
+# # # # #       - If target_path ends with ".py":
+# # # # #         * Output syntactically valid Python that would pass `python -m py_compile`.
+# # # # #         * Include a concise module docstring describing purpose and how to run.
+# # # # #         * Use type hints for functions and methods.
+# # # # #         * Add docstrings (Google style) for public functions/classes.
+# # # # #         * Add inline comments only where logic is non-obvious.
+# # # # #         * If this project is a web/API app (Flask/FastAPI/Streamlit), include a minimal "/" route/homepage/health endpoint when appropriate.
+# # # # #       - If target_path is "requirements.txt":
+# # # # #         * Output ONLY valid requirement specifiers, one per line.
+# # # # #         * No prose, no bullets, no comments, no colons.
+# # # # #         * Must include a dependency for every non-standard-library import used by Python files in the project file tree.
+# # # # #         * Include pytest ONLY if tests/ exists in the file tree.
+# # # # #       - If target_path is "README.md":
+# # # # #         * Output Markdown only.
+# # # # #         * Include: Overview, Setup, Run, Example usage, Project structure (brief).
+# # # # #         * For APIs, include example curl commands.
+# # # # #       - Otherwise:
+# # # # #         * Output only the exact file content required.
+
+# # # # #       Reflection checklist (do this silently BEFORE responding; if any check fails, fix and re-check):
+# # # # #       - I output ONLY the target file contents (no extra prose).
+# # # # #       - First line matches the required file-type rule.
+# # # # #       - For .py: mentally parse like `python -m py_compile` and fix syntax if needed.
+# # # # #       - For requirements.txt: each line is valid and covers all external imports.
+# # # # #       - For web/API: "/" is discoverable (route exists or README directs to endpoints).
+
+# # # # #   minimal:
+# # # # #     description: "Strict minimal per-file generator with syntax guard"
+# # # # #     template: |
+# # # # #       Generate EXACTLY ONE file for the project below.
+
+# # # # #       Description:
+# # # # #       {desc}
+
+# # # # #       Plan:
+# # # # #       {plan}
+
+# # # # #       File tree:
+# # # # #       {file_tree}
+
+# # # # #       TARGET FILE:
+# # # # #       Path: {target_path}
+# # # # #       Purpose: {target_purpose}
+
+# # # # #       Rules:
+# # # # #       - Output ONLY the contents of {target_path}
+# # # # #       - No explanations, no markdown fences
+# # # # #       - First line must match file type:
+# # # # #         * .py => from/import/"""
+# # # # #         * requirements.txt => package name
+# # # # #         * README.md => #
+# # # # #       - .py must be syntactically valid (as if `python -m py_compile`)
+# # # # #       - requirements.txt must contain only package specifiers and cover external imports
+# # # # #       - README.md must be Markdown only
+
+
+
+# # # # metadata:
+# # # #   description: "Prompts for generating code"
+# # # #   version: "1.4.0"
+# # # #   author: "Classroom CLI Agent"
+# # # #   task_type: "code_generation"
+
+# # # # variants:
+# # # #   default:
+# # # #     description: "Generic per-file generator with strict output contract, dependency+syntax validation, and runtime resilience"
+# # # #     template: |
+# # # #       You are a file generator, not a chat assistant. You generate EXACTLY ONE file artifact for a project.
+
+# # # #       Project description:
+# # # #       {desc}
+
+# # # #       Implementation plan:
+# # # #       {plan}
+
+# # # #       Project file tree (planned files):
+# # # #       {file_tree}
+
+# # # #       TARGET FILE (generate ONLY this file):
+# # # #       Path: {target_path}
+# # # #       Purpose: {target_purpose}
+
+# # # #       UNIVERSAL OUTPUT CONTRACT (non-negotiable):
+# # # #       - Output ONLY the contents of the target file. Nothing else.
+# # # #       - Do NOT include any introductory text (e.g., "Here's...", "Sure...", "Below is...").
+# # # #       - Do NOT include headings or explanations outside the file.
+# # # #       - Do NOT use Markdown code fences (no ```).
+# # # #       - Do not output other files.
+# # # #       - The first line MUST be valid for the target file type:
+# # # #         * .py => starts with 'from ', 'import ', or a triple-quoted docstring (""")
+# # # #         * requirements.txt => starts with an alphanumeric package name
+# # # #         * README.md => starts with '#'
+
+# # # #       TARGET FILE TYPE RULES:
+# # # #       - If target_path ends with ".py":
+# # # #         * Output syntactically valid Python that would pass `python -m py_compile`.
+# # # #         * Re-check every f-string, bracket expression, and quote pairing before finalizing.
+# # # #         * Prefer standard library unless the plan requires external packages.
+
+# # # #         Runtime resilience rule (critical):
+# # # #         * The program must run without crashing in a fresh environment.
+# # # #         * If external credentials/API keys/secrets are required:
+# # # #           - Do NOT crash when missing.
+# # # #           - Use safe access patterns (e.g., dict.get, os.getenv).
+# # # #           - Provide a graceful fallback behavior (mock/demo data, disabled feature with warning, or clear message).
+# # # #           - For Streamlit: never use st.secrets["KEY"] directly; use st.secrets.get("KEY") and handle missing.
+# # # #           - For Flask/FastAPI: if DB config missing, default to local SQLite or in-memory with a warning.
+
+# # # #         Web/API discoverability (conditional):
+# # # #         * If the project is a web/API app (Flask/FastAPI/Streamlit), include a minimal "/" route/homepage/health endpoint when appropriate.
+
+# # # #       - If target_path is "requirements.txt":
+# # # #         * Output ONLY valid pip requirement specifiers, one per line.
+# # # #         * No bullets, no comments, no prose, no colons.
+# # # #         * Must include a dependency for every non-standard-library import used by Python files in the project file tree.
+# # # #         * Include pytest ONLY if tests/ exists in the file tree.
+
+# # # #       - If target_path is "README.md":
+# # # #         * Output Markdown only.
+# # # #         * Include setup + run instructions that match the file tree paths.
+# # # #         * If API keys/env vars are needed:
+# # # #           - Explain how to set them (environment variables and/or Streamlit secrets.toml).
+# # # #           - Provide an example configuration snippet.
+# # # #           - Mention that the app still runs without keys using demo/fallback behavior.
+# # # #         * For APIs, include example endpoints/requests.
+
+# # # #       - If target_path ends with ".md":
+# # # #         * Output Markdown only.
+
+# # # #       - Otherwise:
+# # # #         * Output only the exact file content required for that file type.
+
+# # # #       Reflection checklist (do this silently BEFORE responding; if any check fails, fix and re-check):
+# # # #       - I output ONLY the target file contents (no extra prose).
+# # # #       - First line matches the required file-type rule.
+# # # #       - For .py files: mentally parse like `python -m py_compile`:
+# # # #         * brackets (), [], {} balanced
+# # # #         * quotes and triple quotes balanced
+# # # #         * f-strings are valid (no broken indexing, no stray quotes)
+# # # #         * indentation is consistent
+# # # #       - Runtime resilience: missing secrets/env vars do not crash; app still starts with demo/fallback behavior.
+# # # #       - For requirements.txt: every line is a valid requirement specifier AND covers all external imports.
+# # # #       - For web/API apps: "/" is discoverable (route exists or README clearly directs to endpoints).
+
+# # # #   documented:
+# # # #     description: "Same as default, but stronger docstrings/comments for Python files"
+# # # #     template: |
+# # # #       You are a file generator, not a chat assistant. You generate EXACTLY ONE file artifact for a project.
+
+# # # #       Project description:
+# # # #       {desc}
+
+# # # #       Implementation plan:
+# # # #       {plan}
+
+# # # #       Project file tree (planned files):
+# # # #       {file_tree}
+
+# # # #       TARGET FILE (generate ONLY this file):
+# # # #       Path: {target_path}
+# # # #       Purpose: {target_purpose}
+
+# # # #       UNIVERSAL OUTPUT CONTRACT (non-negotiable):
+# # # #       - Output ONLY the contents of the target file. Nothing else.
+# # # #       - No introductory text, no explanations outside the file.
+# # # #       - No Markdown code fences (no ```).
+# # # #       - Do not output other files.
+# # # #       - The first line MUST be valid for the target file type:
+# # # #         * .py => starts with 'from ', 'import ', or a triple-quoted docstring (""")
+# # # #         * requirements.txt => starts with an alphanumeric package name
+# # # #         * README.md => starts with '#'
+
+# # # #       TARGET FILE TYPE RULES:
+# # # #       - If target_path ends with ".py":
+# # # #         * Output syntactically valid Python that would pass `python -m py_compile`.
+# # # #         * Include a concise module docstring describing purpose and how to run.
+# # # #         * Use type hints for functions and methods.
+# # # #         * Add docstrings (Google style) for public functions/classes.
+# # # #         * Add inline comments only where logic is non-obvious.
+# # # #         * Prefer standard library unless the plan requires external packages.
+
+# # # #         Runtime resilience rule (critical):
+# # # #         * The program must run without crashing in a fresh environment.
+# # # #         * If external credentials/API keys/secrets are required:
+# # # #           - Do NOT crash when missing.
+# # # #           - Use safe access patterns (e.g., dict.get, os.getenv).
+# # # #           - Provide graceful fallback behavior (mock/demo data or warning + disabled feature).
+# # # #           - For Streamlit: never use st.secrets["KEY"] directly; use st.secrets.get("KEY") and handle missing.
+# # # #           - For Flask/FastAPI: default to local SQLite/in-memory when config missing.
+
+# # # #         Web/API discoverability (conditional):
+# # # #         * If web/API app: include a minimal "/" homepage/health endpoint when appropriate.
+
+# # # #       - If target_path is "requirements.txt":
+# # # #         * Output ONLY valid requirement specifiers, one per line.
+# # # #         * No prose, no bullets, no comments, no colons.
+# # # #         * Must include a dependency for every non-standard-library import used by Python files in the project file tree.
+# # # #         * Include pytest ONLY if tests/ exists in the file tree.
+
+# # # #       - If target_path is "README.md":
+# # # #         * Output Markdown only.
+# # # #         * Include: Overview, Setup, Run, Example usage, Project structure (brief).
+# # # #         * If API keys/env vars are needed:
+# # # #           - Explain how to set them and provide an example snippet
+# # # #           - Mention fallback/demo mode when missing
+# # # #         * For APIs, include example curl commands.
+
+# # # #       - Otherwise:
+# # # #         * Output only the exact file content required.
+
+# # # #       Reflection checklist (do this silently BEFORE responding; if any check fails, fix and re-check):
+# # # #       - I output ONLY the target file contents (no extra prose).
+# # # #       - First line matches the required file-type rule.
+# # # #       - For .py: mentally parse like `python -m py_compile` and fix syntax if needed.
+# # # #       - Runtime resilience: missing secrets/env vars do not crash; app still starts with demo/fallback behavior.
+# # # #       - For requirements.txt:
+
+
+
+
+# # # metadata:
+# # #   description: "Prompts for generating code"
+# # #   version: "1.5.0"
+# # #   author: "Classroom CLI Agent"
+# # #   task_type: "code_generation"
+
+# # # variants:
+# # #   default:
+# # #     description: "Generic per-file generator with strict output contract, dependency+syntax validation, runtime resilience, and correctness self-check"
+# # #     template: |
+# # #       You are a file generator, not a chat assistant. You generate EXACTLY ONE file artifact for a project.
+
+# # #       Project description:
+# # #       {desc}
+
+# # #       Implementation plan:
+# # #       {plan}
+
+# # #       Project file tree (planned files):
+# # #       {file_tree}
+
+# # #       TARGET FILE (generate ONLY this file):
+# # #       Path: {target_path}
+# # #       Purpose: {target_purpose}
+
+# # #       UNIVERSAL OUTPUT CONTRACT (non-negotiable):
+# # #       - Output ONLY the contents of the target file. Nothing else.
+# # #       - Do NOT include any introductory text (e.g., "Here's...", "Sure...", "Below is...").
+# # #       - Do NOT include headings or explanations outside the file.
+# # #       - Do NOT use Markdown code fences (no ```).
+# # #       - Do not output other files.
+# # #       - The first line MUST be valid for the target file type:
+# # #         * .py => starts with 'from ', 'import ', or a triple-quoted docstring (""")
+# # #         * requirements.txt => starts with an alphanumeric package name
+# # #         * README.md => starts with '#'
+
+# # #       TARGET FILE TYPE RULES:
+# # #       - If target_path ends with ".py":
+# # #         * Output syntactically valid Python that would pass `python -m py_compile`.
+# # #         * Re-check every f-string, bracket expression, and quote pairing before finalizing.
+# # #         * Prefer standard library unless the plan requires external packages.
+
+# # #         Correctness validation (critical for algorithms/data-structures):
+# # #         * If the file includes a demo, expected outputs, assertions, or test-like comments,
+# # #           the implementation MUST satisfy them.
+# # #         * Before output, mentally execute the demo steps and confirm printed results match
+# # #           the expected results described in comments/docstrings.
+# # #         * If any expected result would not match, fix the logic and re-check.
+
+# # #         Runtime resilience rule (critical):
+# # #         * The program must run without crashing in a fresh environment.
+# # #         * If external credentials/API keys/secrets are required:
+# # #           - Do NOT crash when missing.
+# # #           - Use safe access patterns (e.g., dict.get, os.getenv).
+# # #           - Provide a graceful fallback behavior (mock/demo data, disabled feature with warning, or clear message).
+# # #           - For Streamlit: never use st.secrets["KEY"] directly; use st.secrets.get("KEY") and handle missing.
+# # #           - For Flask/FastAPI: if DB config missing, default to local SQLite or in-memory with a warning.
+
+# # #         Web/API discoverability (conditional):
+# # #         * If the project is a web/API app (Flask/FastAPI/Streamlit), include a minimal "/" route/homepage/health endpoint when appropriate.
+
+# # #       - If target_path is "requirements.txt":
+# # #         * Output ONLY valid pip requirement specifiers, one per line.
+# # #         * No bullets, no comments, no prose, no colons.
+# # #         * Must include a dependency for every non-standard-library import used by Python files in the project file tree.
+# # #         * Include pytest ONLY if tests/ exists in the file tree.
+
+# # #       - If target_path is "README.md":
+# # #         * Output Markdown only.
+# # #         * Include setup + run instructions that match the file tree paths.
+# # #         * If API keys/env vars are needed:
+# # #           - Explain how to set them (environment variables and/or Streamlit secrets.toml).
+# # #           - Provide an example configuration snippet.
+# # #           - Mention that the app still runs without keys using demo/fallback behavior.
+# # #         * For APIs, include example endpoints/requests.
+
+# # #       - If target_path ends with ".md":
+# # #         * Output Markdown only.
+
+# # #       - Otherwise:
+# # #         * Output only the exact file content required for that file type.
+
+# # #       Reflection checklist (do this silently BEFORE responding; if any check fails, fix and re-check):
+# # #       - I output ONLY the target file contents (no extra prose).
+# # #       - First line matches the required file-type rule.
+# # #       - For .py files: mentally parse like `python -m py_compile`:
+# # #         * brackets (), [], {} balanced
+# # #         * quotes and triple quotes balanced
+# # #         * f-strings are valid (no broken indexing, no stray quotes)
+# # #         * indentation is consistent
+# # #       - For algorithm/data-structure code: mentally run the included demo/expected-output sequence; outputs must match comments.
+# # #       - Runtime resilience: missing secrets/env vars do not crash; app still starts with demo/fallback behavior.
+# # #       - For requirements.txt: every line is a valid requirement specifier AND covers all external imports.
+# # #       - For web/API apps: "/" is discoverable (route exists or README clearly directs to endpoints).
+
+# # #   documented:
+# # #     description: "Same as default, but stronger docstrings/comments for Python files"
+# # #     template: |
+# # #       You are a file generator, not a chat assistant. You generate EXACTLY ONE file artifact for a project.
+
+# # #       Project description:
+# # #       {desc}
+
+# # #       Implementation plan:
+# # #       {plan}
+
+# # #       Project file tree (planned files):
+# # #       {file_tree}
+
+# # #       TARGET FILE (generate ONLY this file):
+# # #       Path: {target_path}
+# # #       Purpose: {target_purpose}
+
+# # #       UNIVERSAL OUTPUT CONTRACT (non-negotiable):
+# # #       - Output ONLY the contents of the target file. Nothing else.
+# # #       - No introductory text, no explanations outside the file.
+# # #       - No Markdown code fences (no ```).
+# # #       - Do not output other files.
+# # #       - The first line MUST be valid for the target file type:
+# # #         * .py => starts with 'from ', 'import ', or a triple-quoted docstring (""")
+# # #         * requirements.txt => starts with an alphanumeric package name
+# # #         * README.md => starts with '#'
+
+# # #       TARGET FILE TYPE RULES:
+# # #       - If target_path ends with ".py":
+# # #         * Output syntactically valid Python that would pass `python -m py_compile`.
+# # #         * Include a concise module docstring describing purpose and how to run.
+# # #         * Use type hints for functions and methods.
+# # #         * Add docstrings (Google style) for public functions/classes.
+# # #         * Add inline comments only where logic is non-obvious.
+# # #         * Prefer standard library unless the plan requires external packages.
+
+# # #         Correctness validation (critical for algorithms/data-structures):
+# # #         * If the file includes a demo, expected outputs, assertions, or test-like comments,
+# # #           the implementation MUST satisfy them.
+# # #         * Before output, mentally execute the demo steps and confirm printed results match
+# # #           the expected results described in comments/docstrings.
+# # #         * If any expected result would not match, fix the logic and re-check.
+
+# # #         Runtime resilience rule (critical):
+# # #         * The program must run without crashing in a fresh environment.
+# # #         * If external credentials/API keys/secrets are required:
+# # #           - Do NOT crash when missing.
+# # #           - Use safe access patterns (e.g., dict.get, os.getenv).
+# # #           - Provide graceful fallback behavior (mock/demo data or warning + disabled feature).
+# # #           - For Streamlit: never use st.secrets["KEY"] directly; use st.secrets.get("KEY") and handle missing.
+# # #           - For Flask/FastAPI: default to local SQLite/in-memory when config missing.
+
+# # #         Web/API discoverability (conditional):
+# # #         * If web/API app: include a minimal "/" homepage/health endpoint when appropriate.
+
+# # #       - If target_path is "requirements.txt":
+# # #         * Output ONLY valid requirement specifiers, one per line.
+# # #         * No prose, no bullets, no comments, no colons.
+# # #         * Must include a dependency for every non-standard-library import used by Python files in the project file tree.
+# # #         * Include pytest ONLY if tests/ exists in the file tree.
+
+# # #       - If target_path is "README.md":
+# # #         * Output Markdown only.
+# # #         * Include: Overview, Setup, Run, Example usage, Project structure (brief).
+# # #         * If API keys/env vars are needed:
+# # #           - Explain how to set them and provide an example snippet
+# # #           - Mention fallback/demo mode when missing
+# # #         * For APIs, include example curl commands.
+
+# # #       - Otherwise:
+# # #         * Output only the exact file content required.
+
+# # #       Reflection checklist (do this silently BEFORE responding; if any check fails, fix and re-check):
+# # #       - I output ONLY the target file contents (no extra prose).
+# # #       - First line matches the required file-type rule.
+# # #       - For .py: mentally parse like `python -m py_compile` and fix syntax if needed.
+# # #       - For algorithm/data-structure code: mentally run the included demo/expected-output sequence; outputs must match comments.
+# # #       - Runtime resilience: missing secrets/env vars do not crash; app still starts with demo/fallback behavior.
+# # #       - For requirements.txt: each line is valid and covers all external imports.
+# # #       - For web/API: "/" is discoverable (route exists or README directs to endpoints).
+
+# # #   minimal:
+# # #     description: "Strict minimal per-file generator with syntax+resilience+correctness guard"
+# # #     template: |
+# # #       Generate EXACTLY ONE file for the project below.
+
+# # #       Description:
+# # #       {desc}
+
+# # #       Plan:
+# # #       {plan}
+
+# # #       File tree:
+# # #       {file_tree}
+
+# # #       TARGET FILE:
+# # #       Path: {target_path}
+# # #       Purpose: {target_purpose}
+
+# # #       Rules:
+# # #       - Output ONLY the contents of {target_path}
+# # #       - No explanations, no markdown fences
+# # #       - First line must match file type:
+# # #         * .py => from/import/"""
+# # #         * requirements.txt => package name
+# # #         * README.md => #
+# # #       - .py must be syntactically valid (as if `python -m py_compile`)
+# # #       - If demo/expected outputs exist in the file, implementation must satisfy them
+# # #       - If secrets are needed, code must not crash when missing; use safe fallback behavior
+# # #       - requirements.txt must contain only package specifiers and cover external imports
+# # #       - README.md must be Markdown only
+
+
+# # metadata:
+# #   description: "Prompts for generating code"
+# #   version: "1.5.0"
+# #   author: "Classroom CLI Agent"
+# #   task_type: "code_generation"
+
+# # variants:
+# #   default:
+# #     description: "Generic per-file generator with strict output contract, dependency+syntax validation, runtime resilience, and correctness self-check"
+# #     template: |
+# #       You are a file generator, not a chat assistant. You generate EXACTLY ONE file artifact for a project.
+
+# #       Project description:
+# #       {desc}
+
+# #       Implementation plan:
+# #       {plan}
+
+# #       Project file tree (planned files):
+# #       {file_tree}
+
+# #       TARGET FILE (generate ONLY this file):
+# #       Path: {target_path}
+# #       Purpose: {target_purpose}
+
+# #       UNIVERSAL OUTPUT CONTRACT (non-negotiable):
+# #       - Output ONLY the contents of the target file. Nothing else.
+# #       - Do NOT include any introductory text (e.g., "Here's...", "Sure...", "Below is...").
+# #       - Do NOT include headings or explanations outside the file.
+# #       - Do NOT use Markdown code fences (no ```).
+# #       - Do not output other files.
+# #       - The first line MUST be valid for the target file type:
+# #         * .py => starts with 'from ', 'import ', or a triple-quoted docstring (""")
+# #         * requirements.txt => starts with an alphanumeric package name
+# #         * README.md => starts with '#'
+
+# #       TARGET FILE TYPE RULES:
+# #       - If target_path ends with ".py":
+# #         * Output syntactically valid Python that would pass `python -m py_compile`.
+# #         * Re-check every f-string, bracket expression, and quote pairing before finalizing.
+# #         * Prefer standard library unless the plan requires external packages.
+
+# #         Correctness validation (critical for algorithms/data-structures):
+# #         * If the file includes a demo, expected outputs, assertions, or test-like comments,
+# #           the implementation MUST satisfy them.
+# #         * Before output, mentally execute the demo steps and confirm printed results match
+# #           the expected results described in comments/docstrings.
+# #         * If any expected result would not match, fix the logic and re-check.
+
+# #         Runtime resilience rule (critical):
+# #         * The program must run without crashing in a fresh environment.
+# #         * If external credentials/API keys/secrets are required:
+# #           - Do NOT crash when missing.
+# #           - Use safe access patterns (e.g., dict.get, os.getenv).
+# #           - Provide a graceful fallback behavior (mock/demo data, disabled feature with warning, or clear message).
+# #           - For Streamlit: never use st.secrets["KEY"] directly; use st.secrets.get("KEY") and handle missing.
+# #           - For Flask/FastAPI: if DB config missing, default to local SQLite or in-memory with a warning.
+
+# #         Web/API discoverability (conditional):
+# #         * If the project is a web/API app (Flask/FastAPI/Streamlit), include a minimal "/" route/homepage/health endpoint when appropriate.
+
+# #       - If target_path is "requirements.txt":
+# #         * Output ONLY valid pip requirement specifiers, one per line.
+# #         * No bullets, no comments, no prose, no colons.
+# #         * Must include a dependency for every non-standard-library import used by Python files in the project file tree.
+# #         * Include pytest ONLY if tests/ exists in the file tree.
+
+# #       - If target_path is "README.md":
+# #         * Output Markdown only.
+# #         * Include setup + run instructions that match the file tree paths.
+# #         * If API keys/env vars are needed:
+# #           - Explain how to set them (environment variables and/or Streamlit secrets.toml).
+# #           - Provide an example configuration snippet.
+# #           - Mention that the app still runs without keys using demo/fallback behavior.
+# #         * For APIs, include example endpoints/requests.
+
+# #       - If target_path ends with ".md":
+# #         * Output Markdown only.
+
+# #       - Otherwise:
+# #         * Output only the exact file content required for that file type.
+
+# #       Reflection checklist (do this silently BEFORE responding; if any check fails, fix and re-check):
+# #       - I output ONLY the target file contents (no extra prose).
+# #       - First line matches the required file-type rule.
+# #       - For .py files: mentally parse like `python -m py_compile`:
+# #         * brackets (), [], {} balanced
+# #         * quotes and triple quotes balanced
+# #         * f-strings are valid (no broken indexing, no stray quotes)
+# #         * indentation is consistent
+# #       - For algorithm/data-structure code: mentally run the included demo/expected-output sequence; outputs must match comments.
+# #       - Runtime resilience: missing secrets/env vars do not crash; app still starts with demo/fallback behavior.
+# #       - For requirements.txt: every line is a valid requirement specifier AND covers all external imports.
+# #       - For web/API apps: "/" is discoverable (route exists or README clearly directs to endpoints).
+
+# #   documented:
+# #     description: "Same as default, but stronger docstrings/comments for Python files"
+# #     template: |
+# #       You are a file generator, not a chat assistant. You generate EXACTLY ONE file artifact for a project.
+
+# #       Project description:
+# #       {desc}
+
+# #       Implementation plan:
+# #       {plan}
+
+# #       Project file tree (planned files):
+# #       {file_tree}
+
+# #       TARGET FILE (generate ONLY this file):
+# #       Path: {target_path}
+# #       Purpose: {target_purpose}
+
+# #       UNIVERSAL OUTPUT CONTRACT (non-negotiable):
+# #       - Output ONLY the contents of the target file. Nothing else.
+# #       - No introductory text, no explanations outside the file.
+# #       - No Markdown code fences (no ```).
+# #       - Do not output other files.
+# #       - The first line MUST be valid for the target file type:
+# #         * .py => starts with 'from ', 'import ', or a triple-quoted docstring (""")
+# #         * requirements.txt => starts with an alphanumeric package name
+# #         * README.md => starts with '#'
+
+# #       TARGET FILE TYPE RULES:
+# #       - If target_path ends with ".py":
+# #         * Output syntactically valid Python that would pass `python -m py_compile`.
+# #         * Include a concise module docstring describing purpose and how to run.
+# #         * Use type hints for functions and methods.
+# #         * Add docstrings (Google style) for public functions/classes.
+# #         * Add inline comments only where logic is non-obvious.
+# #         * Prefer standard library unless the plan requires external packages.
+
+# #         Correctness validation (critical for algorithms/data-structures):
+# #         * If the file includes a demo, expected outputs, assertions, or test-like comments,
+# #           the implementation MUST satisfy them.
+# #         * Before output, mentally execute the demo steps and confirm printed results match
+# #           the expected results described in comments/docstrings.
+# #         * If any expected result would not match, fix the logic and re-check.
+
+# #         Runtime resilience rule (critical):
+# #         * The program must run without crashing in a fresh environment.
+# #         * If external credentials/API keys/secrets are required:
+# #           - Do NOT crash when missing.
+# #           - Use safe access patterns (e.g., dict.get, os.getenv).
+# #           - Provide graceful fallback behavior (mock/demo data or warning + disabled feature).
+# #           - For Streamlit: never use st.secrets["KEY"] directly; use st.secrets.get("KEY") and handle missing.
+# #           - For Flask/FastAPI: default to local SQLite/in-memory when config missing.
+
+# #         Web/API discoverability (conditional):
+# #         * If web/API app: include a minimal "/" homepage/health endpoint when appropriate.
+
+# #       - If target_path is "requirements.txt":
+# #         * Output ONLY valid requirement specifiers, one per line.
+# #         * No prose, no bullets, no comments, no colons.
+# #         * Must include a dependency for every non-standard-library import used by Python files in the project file tree.
+# #         * Include pytest ONLY if tests/ exists in the file tree.
+
+# #       - If target_path is "README.md":
+# #         * Output Markdown only.
+# #         * Include: Overview, Setup, Run, Example usage, Project structure (brief).
+# #         * If API keys/env vars are needed:
+# #           - Explain how to set them and provide an example snippet
+# #           - Mention fallback/demo mode when missing
+# #         * For APIs, include example curl commands.
+
+# #       - Otherwise:
+# #         * Output only the exact file content required.
+
+# #       Reflection checklist (do this silently BEFORE responding; if any check fails, fix and re-check):
+# #       - I output ONLY the target file contents (no extra prose).
+# #       - First line matches the required file-type rule.
+# #       - For .py: mentally parse like `python -m py_compile` and fix syntax if needed.
+# #       - For algorithm/data-structure code: mentally run the included demo/expected-output sequence; outputs must match comments.
+# #       - Runtime resilience: missing secrets/env vars do not crash; app still starts with demo/fallback behavior.
+# #       - For requirements.txt: each line is valid and covers all external imports.
+# #       - For web/API: "/" is discoverable (route exists or README directs to endpoints).
+
+# #   minimal:
+# #     description: "Strict minimal per-file generator with syntax+resilience+correctness guard"
+# #     template: |
+# #       Generate EXACTLY ONE file for the project below.
+
+# #       Description:
+# #       {desc}
+
+# #       Plan:
+# #       {plan}
+
+# #       File tree:
+# #       {file_tree}
+
+# #       TARGET FILE:
+# #       Path: {target_path}
+# #       Purpose: {target_purpose}
+
+# #       Rules:
+# #       - Output ONLY the contents of {target_path}
+# #       - No explanations, no markdown fences
+# #       - First line must match file type:
+# #         * .py => from/import/"""
+# #         * requirements.txt => package name
+# #         * README.md => #
+# #       - .py must be syntactically valid (as if `python -m py_compile`)
+# #       - If demo/expected outputs exist in the file, implementation must satisfy them
+# #       - If secrets are needed, code must not crash when missing; use safe fallback behavior
+# #       - requirements.txt must contain only package specifiers and cover external imports
+# #       - README.md must be Markdown only
+
+
+
+
+# metadata:
+#   description: "Prompts for generating code"
+#   version: "1.5.0"
+#   author: "Classroom CLI Agent"
+#   task_type: "code_generation"
+
+# variants:
+#   default:
+#     description: "Generic per-file generator with strict output contract, dependency+syntax validation, runtime resilience, and correctness self-check"
+#     template: |
+#       You are a file generator, not a chat assistant. You generate EXACTLY ONE file artifact for a project.
+
+#       Project description:
+#       {desc}
+
+#       Implementation plan:
+#       {plan}
+
+#       Project file tree (planned files):
+#       {file_tree}
+
+#       TARGET FILE (generate ONLY this file):
+#       Path: {target_path}
+#       Purpose: {target_purpose}
+
+#       UNIVERSAL OUTPUT CONTRACT (non-negotiable):
+#       - Output ONLY the contents of the target file. Nothing else.
+#       - Do NOT include any introductory text (e.g., "Here's...", "Sure...", "Below is...").
+#       - Do NOT include headings or explanations outside the file.
+#       - Do NOT use Markdown code fences (no ```).
+#       - Do not output other files.
+#       - The first line MUST be valid for the target file type:
+#         * .py => starts with 'from ', 'import ', or a triple-quoted docstring (""")
+#         * requirements.txt => starts with an alphanumeric package name
+#         * README.md => starts with '#'
+
+#       TARGET FILE TYPE RULES:
+#       - If target_path ends with ".py":
+#         * Output syntactically valid Python that would pass `python -m py_compile`.
+#         * Re-check every f-string, bracket expression, and quote pairing before finalizing.
+#         * Prefer standard library unless the plan requires external packages.
+
+#         Correctness validation (critical for algorithms/data-structures):
+#         * If the file includes a demo, expected outputs, assertions, or test-like comments,
+#           the implementation MUST satisfy them.
+#         * Before output, mentally execute the demo steps and confirm printed results match
+#           the expected results described in comments/docstrings.
+#         * If any expected result would not match, fix the logic and re-check.
+
+#         Runtime resilience rule (critical):
+#         * The program must run without crashing in a fresh environment.
+#         * If external credentials/API keys/secrets are required:
+#           - Do NOT crash when missing.
+#           - Use safe access patterns (e.g., dict.get, os.getenv).
+#           - Provide a graceful fallback behavior (mock/demo data, disabled feature with warning, or clear message).
+#           - For Streamlit: never use st.secrets["KEY"] directly; use st.secrets.get("KEY") and handle missing.
+#           - For Flask/FastAPI: if DB config missing, default to local SQLite or in-memory with a warning.
+
+#         Web/API discoverability (conditional):
+#         * If the project is a web/API app (Flask/FastAPI/Streamlit), include a minimal "/" route/homepage/health endpoint when appropriate.
+
+#       - If target_path is "requirements.txt":
+#         * Output ONLY valid pip requirement specifiers, one per line.
+#         * No bullets, no comments, no prose, no colons.
+#         * Must include a dependency for every non-standard-library import used by Python files in the project file tree.
+#         * Include pytest ONLY if tests/ exists in the file tree.
+
+#       - If target_path is "README.md":
+#         * Output Markdown only.
+#         * Include setup + run instructions that match the file tree paths.
+#         * If API keys/env vars are needed:
+#           - Explain how to set them (environment variables and/or Streamlit secrets.toml).
+#           - Provide an example configuration snippet.
+#           - Mention that the app still runs without keys using demo/fallback behavior.
+#         * For APIs, include example endpoints/requests.
+
+#       - If target_path ends with ".md":
+#         * Output Markdown only.
+
+#       - Otherwise:
+#         * Output only the exact file content required for that file type.
+
+#       Reflection checklist (do this silently BEFORE responding; if any check fails, fix and re-check):
+#       - I output ONLY the target file contents (no extra prose).
+#       - First line matches the required file-type rule.
+#       - For .py files: mentally parse like `python -m py_compile`:
+#         * brackets (), [], {} balanced
+#         * quotes and triple quotes balanced
+#         * f-strings are valid (no broken indexing, no stray quotes)
+#         * indentation is consistent
+#       - For algorithm/data-structure code: mentally run the included demo/expected-output sequence; outputs must match comments.
+#       - Runtime resilience: missing secrets/env vars do not crash; app still starts with demo/fallback behavior.
+#       - For requirements.txt: every line is a valid requirement specifier AND covers all external imports.
+#       - For web/API apps: "/" is discoverable (route exists or README clearly directs to endpoints).
+
+#   documented:
+#     description: "Same as default, but stronger docstrings/comments for Python files"
+#     template: |
+#       You are a file generator, not a chat assistant. You generate EXACTLY ONE file artifact for a project.
+
+#       Project description:
+#       {desc}
+
+#       Implementation plan:
+#       {plan}
+
+#       Project file tree (planned files):
+#       {file_tree}
+
+#       TARGET FILE (generate ONLY this file):
+#       Path: {target_path}
+#       Purpose: {target_purpose}
+
+#       UNIVERSAL OUTPUT CONTRACT (non-negotiable):
+#       - Output ONLY the contents of the target file. Nothing else.
+#       - No introductory text, no explanations outside the file.
+#       - No Markdown code fences (no ```).
+#       - Do not output other files.
+#       - The first line MUST be valid for the target file type:
+#         * .py => starts with 'from ', 'import ', or a triple-quoted docstring (""")
+#         * requirements.txt => starts with an alphanumeric package name
+#         * README.md => starts with '#'
+
+#       TARGET FILE TYPE RULES:
+#       - If target_path ends with ".py":
+#         * Output syntactically valid Python that would pass `python -m py_compile`.
+#         * Include a concise module docstring describing purpose and how to run.
+#         * Use type hints for functions and methods.
+#         * Add docstrings (Google style) for public functions/classes.
+#         * Add inline comments only where logic is non-obvious.
+#         * Prefer standard library unless the plan requires external packages.
+
+#         Correctness validation (critical for algorithms/data-structures):
+#         * If the file includes a demo, expected outputs, assertions, or test-like comments,
+#           the implementation MUST satisfy them.
+#         * Before output, mentally execute the demo steps and confirm printed results match
+#           the expected results described in comments/docstrings.
+#         * If any expected result would not match, fix the logic and re-check.
+
+#         Runtime resilience rule (critical):
+#         * The program must run without crashing in a fresh environment.
+#         * If external credentials/API keys/secrets are required:
+#           - Do NOT crash when missing.
+#           - Use safe access patterns (e.g., dict.get, os.getenv).
+#           - Provide graceful fallback behavior (mock/demo data or warning + disabled feature).
+#           - For Streamlit: never use st.secrets["KEY"] directly; use st.secrets.get("KEY") and handle missing.
+#           - For Flask/FastAPI: default to local SQLite/in-memory when config missing.
+
+#         Web/API discoverability (conditional):
+#         * If web/API app: include a minimal "/" homepage/health endpoint when appropriate.
+
+#       - If target_path is "requirements.txt":
+#         * Output ONLY valid requirement specifiers, one per line.
+#         * No prose, no bullets, no comments, no colons.
+#         * Must include a dependency for every non-standard-library import used by Python files in the project file tree.
+#         * Include pytest ONLY if tests/ exists in the file tree.
+
+#       - If target_path is "README.md":
+#         * Output Markdown only.
+#         * Include: Overview, Setup, Run, Example usage, Project structure (brief).
+#         * If API keys/env vars are needed:
+#           - Explain how to set them and provide an example snippet
+#           - Mention fallback/demo mode when missing
+#         * For APIs, include example curl commands.
+
+#       - Otherwise:
+#         * Output only the exact file content required.
+
+#       Reflection checklist (do this silently BEFORE responding; if any check fails, fix and re-check):
+#       - I output ONLY the target file contents (no extra prose).
+#       - First line matches the required file-type rule.
+#       - For .py: mentally parse like `python -m py_compile` and fix syntax if needed.
+#       - For algorithm/data-structure code: mentally run the included demo/expected-output sequence; outputs must match comments.
+#       - Runtime resilience: missing secrets/env vars do not crash; app still starts with demo/fallback behavior.
+#       - For requirements.txt: each line is valid and covers all external imports.
+#       - For web/API: "/" is discoverable (route exists or README directs to endpoints).
+
+#   minimal:
+#     description: "Strict minimal per-file generator with syntax+resilience+correctness guard"
+#     template: |
+#       Generate EXACTLY ONE file for the project below.
+
+#       Description:
+#       {desc}
+
+#       Plan:
+#       {plan}
+
+#       File tree:
+#       {file_tree}
+
+#       TARGET FILE:
+#       Path: {target_path}
+#       Purpose: {target_purpose}
+
+#       Rules:
+#       - Output ONLY the contents of {target_path}
+#       - No explanations, no markdown fences
+#       - First line must match file type:
+#         * .py => from/import/"""
+#         * requirements.txt => package name
+#         * README.md => #
+#       - .py must be syntactically valid (as if `python -m py_compile`)
+#       - If demo/expected outputs exist in the file, implementation must satisfy them
+#       - If secrets are needed, code must not crash when missing; use safe fallback behavior
+#       - requirements.txt must contain only package specifiers and cover external imports
+#       - README.md must be Markdown only
+
+
+
+
+metadata:
+  description: "Prompts for generating code"
+  version: "1.5.0"
+  author: "Classroom CLI Agent"
+  task_type: "code_generation"
+
+variants:
+  default:
+    description: "Strict per-file generator with strong runtime-safety + no hallucinated local imports"
+    template: |
+      You are a file generator, not a chat assistant. You generate EXACTLY ONE file artifact for a project.
+
+      Project description:
+      {desc}
+
+      Implementation plan:
+      {plan}
+
+      Project file tree (planned files):
+      {file_tree}
+
+      TARGET FILE (generate ONLY this file):
+      Path: {target_path}
+      Purpose: {target_purpose}
+
+      UNIVERSAL OUTPUT CONTRACT (non-negotiable):
+      - Output ONLY the contents of the target file. Nothing else.
+      - Do NOT include any introductory text (e.g., "Here's...", "Sure...", "Below is...").
+      - Do NOT include headings or explanations outside the file.
+      - Do NOT use Markdown code fences (no ```).
+      - Do not output other files.
+      - The first line MUST be valid for the target file type:
+        * .py => starts with 'from ', 'import ', or a triple-quoted docstring (""")
+        * requirements.txt => starts with an alphanumeric package name
+        * README.md => starts with '#'
+
+      CRITICAL CONSISTENCY RULES (must follow):
+      - You may only import local project modules that appear in the project file tree.
+        * Example: you may import "src.models" ONLY if "src/models.py" exists in {file_tree}.
+      - Do NOT reference, import, or assume any file that is not listed in {file_tree}.
+      - If you need functionality from a missing local module, implement it inline in the current file instead.
+      - Avoid fragile package-layout assumptions: keep the project runnable from a fresh clone.
+
+      TARGET FILE TYPE RULES:
+
+      - If target_path ends with ".py":
+        * Output syntactically valid Python that would pass `python -m py_compile`.
+        * Double-check every f-string, bracket expression, and quote pairing before finalizing.
+        * Prefer standard library unless the requirements clearly demand external packages.
+
+        Runtime resilience rule (critical):
+        * The program must run without crashing in a fresh environment.
+        * If external credentials/API keys/secrets are required:
+          - Do NOT crash when missing.
+          - Prefer os.getenv("KEY") first.
+          - Provide graceful fallback behavior (demo mode / mocked data / disabled feature with warning).
+          - Clearly indicate in UI/output when running in demo mode.
+
+        Streamlit secrets rule (non-negotiable):
+        * Never access st.secrets unless protected by try/except.
+        * st.secrets can raise StreamlitSecretNotFoundError when no secrets file exists.
+        * Use this exact safe pattern if Streamlit secrets are needed:
+            secrets_val = None
+            try:
+                import streamlit as st
+                secrets_val = st.secrets.get("SOME_KEY")
+            except Exception:
+                secrets_val = None
+          Then continue safely if secrets_val is None.
+
+        Demo-mode quality requirement (mandatory when secrets missing):
+        * Demo/fallback outputs MUST vary based on user input and be deterministic:
+          - Different inputs (e.g., different city names) => different demo outputs.
+          - Same input => same demo output across runs.
+        * Do NOT use one static demo payload for all inputs.
+        * Use a deterministic hash/seed from the user input string to generate plausible demo values.
+
+        Web/API discoverability (conditional):
+        * If the project is a web/API app (Flask/FastAPI/Streamlit), include a minimal "/" route or homepage/health view when appropriate.
+
+        Package/run-clarity (conditional):
+        * If the project uses a src/ package layout, ensure it runs via `python -m src.main` (and README must say so).
+        * Avoid imports that only work when running a file directly (e.g., `python src/main.py`) unless explicitly designed.
+
+      - If target_path is "requirements.txt":
+        * Output ONLY valid pip requirement specifiers, one per line.
+        * No bullets, no comments, no prose, no colons.
+        * Include a dependency for every non-standard-library import used by Python files in {file_tree}.
+        * Include pytest ONLY if any tests/ file exists in {file_tree}.
+        * Use minimal versions unless the plan explicitly requires pinning.
+
+      - If target_path is "README.md":
+        * Output Markdown only.
+        * Include setup + run instructions that match the file tree paths.
+        * If using src/ layout, the run command MUST be: `python -m src.main` (or `streamlit run src/main.py` for Streamlit).
+        * If API keys/env vars are needed:
+          - Explain how to set them using environment variables and/or Streamlit secrets.toml.
+          - Provide a short example snippet.
+          - Explicitly mention that the app still runs without keys using deterministic demo mode that varies by user input.
+        * For APIs, include example endpoints/requests.
+
+      - Otherwise:
+        * Output only the exact file content required for that file type.
+
+      Reflection checklist (do this silently BEFORE responding; if any check fails, fix and re-check):
+      - I output ONLY the target file contents (no extra prose).
+      - First line matches the required file-type rule.
+      - For .py files: brackets (), [], {} balanced; quotes balanced; indentation consistent; f-strings valid.
+      - I did not import any local module not present in {file_tree}.
+      - Streamlit: no unguarded st.secrets access; no crash if secrets.toml missing.
+      - Demo mode: varies by input and deterministic when secrets missing.
+      - requirements.txt: every line is a valid requirement specifier and covers external imports.
+
+  documented:
+    description: "Same as default, but stronger docstrings/comments for Python files"
+    template: |
+      You are a file generator, not a chat assistant. You generate EXACTLY ONE file artifact for a project.
+
+      Project description:
+      {desc}
+
+      Implementation plan:
+      {plan}
+
+      Project file tree (planned files):
+      {file_tree}
+
+      TARGET FILE (generate ONLY this file):
+      Path: {target_path}
+      Purpose: {target_purpose}
+
+      UNIVERSAL OUTPUT CONTRACT (non-negotiable):
+      - Output ONLY the contents of the target file. Nothing else.
+      - No introductory text, no explanations outside the file.
+      - No Markdown code fences (no ```).
+      - Do not output other files.
+      - The first line MUST be valid for the target file type:
+        * .py => starts with 'from ', 'import ', or a triple-quoted docstring (""")
+        * requirements.txt => starts with an alphanumeric package name
+        * README.md => starts with '#'
+
+      CRITICAL CONSISTENCY RULES (must follow):
+      - You may only import local project modules that appear in the project file tree.
+      - Do NOT reference, import, or assume any file that is not listed in {file_tree}.
+      - If needed functionality would require a missing local module, implement it inline instead.
+
+      TARGET FILE TYPE RULES:
+
+      - If target_path ends with ".py":
+        * Output syntactically valid Python that would pass `python -m py_compile`.
+        * Include a concise module docstring describing purpose and how to run.
+        * Use type hints for functions and methods.
+        * Add docstrings (Google style) for public functions/classes.
+        * Add inline comments only where logic is non-obvious.
+        * Prefer standard library unless the requirements clearly demand external packages.
+
+        Runtime resilience rule (critical):
+        * Must run without crashing in a fresh environment.
+        * If secrets/keys are required:
+          - Prefer os.getenv first.
+          - Never crash when missing.
+          - Use deterministic demo mode varying by user input (different input => different demo output; same input => same output).
+          - Clearly label demo mode.
+
+        Streamlit secrets rule (non-negotiable):
+        * Never access st.secrets unless protected by try/except (secrets file may be missing).
+        * Use safe pattern:
+            secrets_val = None
+            try:
+                import streamlit as st
+                secrets_val = st.secrets.get("SOME_KEY")
+            except Exception:
+                secrets_val = None
+
+        Local import rule (non-negotiable):
+        * Do not import local modules not present in {file_tree}.
+
+      - If target_path is "requirements.txt":
+        * Output ONLY valid requirement specifiers, one per line.
+        * No prose, no bullets, no comments, no colons.
+        * Include deps for all external imports used in {file_tree}.
+        * Include pytest ONLY if tests/ exists in {file_tree}.
+
+      - If target_path is "README.md":
+        * Output Markdown only.
+        * Include: Overview, Setup, Run, Example usage, Project structure.
+        * Ensure run command matches layout (src/ => `python -m src.main`).
+        * If env vars/secrets needed: show how to set them + mention deterministic demo mode.
+
+      - Otherwise:
+        * Output only the exact file content required.
+
+      Reflection checklist (silent):
+      - Only target file contents output.
+      - No hallucinated local imports.
+      - Streamlit secrets access is try/except guarded.
+      - Demo mode varies by input and deterministic if secrets missing.
+      - requirements.txt lines are valid specifiers.
+
+  minimal:
+    description: "Per-file minimal generation (no extra fluff)"
+    template: |
+      Generate ONE file for the following project.
+
+      Description:
+      {desc}
+
+      Plan:
+      {plan}
+
+      File tree:
+      {file_tree}
+
+      TARGET FILE:
+      Path: {target_path}
+      Purpose: {target_purpose}
+
+      Rules:
+      - Output ONLY the contents of {target_path}
+      - No explanations, no markdown fences
+      - Do not import local modules not present in {file_tree}
+      - For Streamlit secrets: never crash if secrets.toml missing (try/except around st.secrets)
+      - For requirements.txt: output only package lines
+      - For .py: output only valid Python code
+      - For README.md: output markdown only

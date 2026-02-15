@@ -1,0 +1,437 @@
+# # # metadata:
+# # #   description: "Prompts for creating implementation plans"
+# # #   version: "1.0.0"
+# # #   author: "Classroom CLI Agent"
+# # #   task_type: "planning"
+
+# # # variants:
+# # #   default:
+# # #     description: "Standard planning prompt for code generation"
+# # #     template: |
+# # #       You are a senior software engineer. Create a short, actionable implementation plan with ordered steps.
+      
+# # #       Constraints:
+# # #       - Keep the solution minimal and readable
+# # #       - Assume standard library only unless the description requires otherwise
+# # #       - Do not write code yet
+# # #       - Output plain text only
+
+# # #       TARGET MODULE PATH: {module_path}
+
+# # #       DESCRIPTION:
+# # #       {desc}
+
+# # #   detailed:
+# # #     description: "More detailed planning with architecture considerations"
+# # #     template: |
+# # #       You are a senior software architect. Create a comprehensive implementation plan.
+      
+# # #       TARGET MODULE PATH: {module_path}
+      
+# # #       REQUIREMENTS:
+# # #       {desc}
+      
+# # #       Your plan should include:
+# # #       1. Architecture overview
+# # #       2. Key components and their responsibilities
+# # #       3. Data structures needed
+# # #       4. Function signatures
+# # #       5. Dependencies (prefer standard library)
+# # #       6. Edge cases to handle
+# # #       7. Testing considerations
+      
+# # #       Output as numbered steps in plain text.
+
+# # #   minimal:
+# # #     description: "Quick planning for simple tasks"
+# # #     template: |
+# # #       Create a brief plan (3-5 steps) for implementing:
+# # #       {desc}
+      
+# # #       Target file: {module_path}
+      
+# # #       Keep it simple and actionable.
+
+
+# # metadata:
+# #   description: "Prompts for creating implementation plans"
+# #   version: "1.1.0"
+# #   author: "Classroom CLI Agent"
+# #   task_type: "planning"
+
+# # variants:
+# #   default:
+# #     description: "Standard planning prompt for code generation (includes file scaffold)"
+# #     template: |
+# #       You are a senior software engineer and repo maintainer. Create a short, actionable implementation plan.
+
+# #       Constraints:
+# #       - Keep the solution minimal, runnable, and readable
+# #       - Prefer standard library unless the requirements clearly demand external packages
+# #       - Do not write code yet
+# #       - Output plain text only
+
+# #       TARGET MODULE PATH (main entry point): {module_path}
+
+# #       DESCRIPTION:
+# #       {desc}
+
+# #       Your output MUST end with a FILES section in the exact format below (this is critical):
+# #       FILES:
+# #       - README.md: short purpose
+# #       - requirements.txt: short purpose
+# #       - {module_path}: short purpose
+# #       - src/<optional_module>.py: short purpose
+
+# #       Rules for FILES:
+# #       - Always include README.md and requirements.txt
+# #       - Always include {module_path} as the main entry point
+# #       - Add only files that are truly necessary
+# #       - Use forward slashes in paths
+# #       - Do NOT list directories, only file paths
+# #       - Do NOT include any content after the FILES list
+
+# #       Before the FILES section, provide 5-10 numbered steps describing what you will implement.
+
+# #   detailed:
+# #     description: "More detailed planning with architecture considerations + file scaffold"
+# #     template: |
+# #       You are a senior software architect and repo maintainer. Create a comprehensive implementation plan.
+
+# #       TARGET MODULE PATH (main entry point): {module_path}
+
+# #       REQUIREMENTS:
+# #       {desc}
+
+# #       In your plan, include:
+# #       1) Architecture overview (1 short paragraph)
+# #       2) Key components and responsibilities (bullets)
+# #       3) Data structures and data flow
+# #       4) Main functions/classes (signatures only)
+# #       5) Dependencies (prefer standard library; justify external packages)
+# #       6) Edge cases to handle
+# #       7) Testing approach (what to test, not test code)
+
+# #       IMPORTANT OUTPUT FORMAT:
+# #       - First output numbered steps (plain text).
+# #       - Then output a FILES section exactly as specified below.
+# #       - Do NOT output anything after the FILES list.
+
+# #       FILES:
+# #       - README.md: how to run + usage examples
+# #       - requirements.txt: dependencies with pinned or minimal versions
+# #       - {module_path}: main entry point and wiring
+# #       - src/<optional_module>.py: optional helper module(s) only if needed
+# #       - tests/<optional_test>.py: optional tests only if appropriate
+
+# #       Rules for FILES:
+# #       - Always include README.md, requirements.txt, and {module_path}
+# #       - Add helper modules only when they reduce complexity or repetition
+# #       - If tests are included, put them under tests/
+# #       - Use forward slashes; no absolute paths; no ".."
+# #       - Do NOT invent extra config files unless necessary (e.g., .env.example only if secrets are needed)
+# #       - Do NOT include any content after the FILES list
+
+# #   minimal:
+# #     description: "Quick planning for simple tasks (includes minimal scaffold)"
+# #     template: |
+# #       Create a brief plan (3-5 steps) for implementing:
+# #       {desc}
+
+# #       TARGET MODULE PATH (main entry point): {module_path}
+
+# #       Output format:
+# #       1) 3-5 numbered steps
+# #       2) Then a FILES section EXACTLY like this (no extra text after):
+
+# #       FILES:
+# #       - README.md: short purpose
+# #       - requirements.txt: short purpose
+# #       - {module_path}: short purpose
+
+
+# metadata:
+#   description: "Prompts for creating implementation plans"
+#   version: "1.2.0"
+#   author: "Classroom CLI Agent"
+#   task_type: "planning"
+
+# variants:
+#   default:
+#     description: "Generic planning prompt with file scaffold and project-type rules"
+#     template: |
+#       You are a senior software engineer and repo maintainer. Create a short, actionable implementation plan.
+
+#       Constraints:
+#       - Keep the solution minimal, runnable, and readable
+#       - Prefer standard library unless the description clearly requires external packages
+#       - Do not write code yet
+#       - Output plain text only
+
+#       TARGET MODULE PATH (main entry point): {module_path}
+
+#       DESCRIPTION:
+#       {desc}
+
+#       Project-type rules (apply conditionally based on the description):
+#       - If the project is a web app or API (e.g., Flask/FastAPI/Streamlit):
+#         * Include a basic "/" route or homepage/health endpoint to avoid 404 confusion
+#         * Ensure README includes exact run commands and at least one example request/usage
+#       - If the project is an algorithm/data-structure or non-trivial logic:
+#         * Include either a tests/ file with pytest OR a runnable demo in {module_path} (prefer tests if feasible)
+#       - If secrets/keys are required:
+#         * Include .env.example (do not include real secrets)
+
+#       Output requirements:
+#       - Provide 5-10 numbered implementation steps first
+#       - Your output MUST end with a FILES section in the exact format below (this is critical)
+#       - Do NOT output anything after the FILES list
+
+#       FILES:
+#       - README.md: short purpose
+#       - requirements.txt: short purpose
+#       - {module_path}: short purpose
+#       - src/<optional_module>.py: short purpose
+#       - tests/<optional_test>.py: short purpose
+#       - .env.example: short purpose
+
+#       Rules for FILES:
+#       - Always include README.md and requirements.txt
+#       - Always include {module_path} as the main entry point
+#       - Include tests/ only when appropriate (algorithms / non-trivial logic)
+#       - Include .env.example only when secrets/keys are needed
+#       - Add only files that are truly necessary
+#       - Use forward slashes in paths
+#       - Do NOT list directories, only file paths
+#       - No absolute paths and no ".."
+#       - Do NOT include any content after the FILES list
+
+#   detailed:
+#     description: "Detailed planning with architecture + strong conditional scaffolding"
+#     template: |
+#       You are a senior software architect and repo maintainer. Create a comprehensive implementation plan.
+
+#       TARGET MODULE PATH (main entry point): {module_path}
+
+#       REQUIREMENTS:
+#       {desc}
+
+#       In your plan, include:
+#       1) Architecture overview (1 short paragraph)
+#       2) Key components and responsibilities (bullets)
+#       3) Data structures and data flow
+#       4) Main functions/classes (signatures only)
+#       5) Dependencies (prefer standard library; justify external packages)
+#       6) Edge cases to handle
+#       7) Validation/testing approach (what to test, not test code)
+
+#       Project-type rules (apply conditionally based on the requirements):
+#       - If the project is a web app or API (Flask/FastAPI/Streamlit):
+#         * Include a GET "/" homepage/health endpoint returning something simple (HTML for UI apps or JSON for APIs)
+#         * Include example requests/usage in README
+#       - If the project is an algorithm/data-structure or correctness-critical logic:
+#         * Include tests/ with pytest and add pytest to requirements.txt
+#       - If the project needs external keys/secrets:
+#         * Include .env.example and explain environment variables in README
+
+#       IMPORTANT OUTPUT FORMAT:
+#       - First output the plan using numbered steps and short bullet sections as needed (plain text).
+#       - Then output a FILES section exactly as specified below.
+#       - Do NOT output anything after the FILES list.
+
+#       FILES:
+#       - README.md: how to run + usage examples
+#       - requirements.txt: dependencies (minimal or pinned)
+#       - {module_path}: main entry point and wiring
+#       - src/<optional_module>.py: helper module(s) only if needed
+#       - tests/test_<name>.py: tests (required for algorithm/correctness-critical tasks)
+#       - .env.example: environment variables template (only if needed)
+
+#       Rules for FILES:
+#       - Always include README.md, requirements.txt, and {module_path}
+#       - Add helper modules only when they reduce complexity or repetition
+#       - If tests are included, put them under tests/
+#       - Use forward slashes; no absolute paths; no ".."
+#       - Do NOT invent extra config files unless necessary
+#       - Do NOT include any content after the FILES list
+
+#   minimal:
+#     description: "Quick planning with strict file list"
+#     template: |
+#       Create a brief plan (3-5 steps) for implementing:
+#       {desc}
+
+#       TARGET MODULE PATH (main entry point): {module_path}
+
+#       Output format:
+#       1) 3-5 numbered steps
+#       2) Then a FILES section EXACTLY like this (no extra text after):
+
+#       FILES:
+#       - README.md: short purpose
+#       - requirements.txt: short purpose
+#       - {module_path}: short purpose
+
+
+
+
+
+
+
+
+
+
+metadata:
+  description: "Prompts for creating implementation plans"
+  version: "1.4.0"
+  author: "Classroom CLI Agent"
+  task_type: "planning"
+
+variants:
+  default:
+    description: "Generic planning prompt with strict FILES scaffold and conditional rules"
+    template: |
+      You are a senior software engineer and repo maintainer. Create a short, actionable implementation plan.
+
+      Constraints:
+      - Keep the solution minimal, runnable, and readable
+      - Prefer standard library unless the description clearly requires external packages
+      - Do not write code yet
+      - Output plain text only
+
+      TARGET MODULE PATH (main entry point): {module_path}
+
+      DESCRIPTION:
+      {desc}
+
+      Project-type rules (apply conditionally based on the description):
+      - Web app / API (Flask/FastAPI/Streamlit or similar):
+        * Include a basic "/" homepage/health endpoint to avoid 404 confusion
+        * Ensure README includes exact run commands and at least one example request/usage
+
+      - Algorithm/data-structure or correctness-critical logic:
+        * Include a runnable demo or unit tests (prefer tests if feasible)
+
+      - Secrets/keys required:
+        * Include .env.example or instructions for Streamlit secrets (never include real secrets)
+        * If the key/secret is missing at runtime, the app MUST still run in demo/fallback mode (no crash)
+        * Demo/fallback mode MUST vary by user input (e.g., different city names produce different demo outputs)
+        * Demo/fallback mode MUST be deterministic (same input => same demo output across runs)
+        * Do NOT use one static demo payload for all inputs
+
+      TEST REQUIREMENT (MANDATORY when requested):
+      - If the description explicitly asks for tests, unit tests, pytest, validation, or verification:
+        * You MUST include tests/test_main.py in the FILES list.
+        * requirements.txt MUST include pytest.
+        * Treat missing tests as a failure to meet requirements.
+
+      Output requirements:
+      - Provide 5-10 numbered implementation steps first
+      - Your output MUST end with a FILES section in the exact format below (this is critical)
+      - Do NOT output anything after the FILES list
+
+      FILES:
+      - README.md: short purpose
+      - requirements.txt: short purpose
+      - {module_path}: short purpose
+      - src/<optional_module>.py: short purpose
+      - tests/test_main.py: unit tests (include when tests are requested)
+      - .env.example: environment variables template (include only if secrets/keys are required)
+
+      Rules for FILES:
+      - Always include README.md and requirements.txt
+      - Always include {module_path} as the main entry point
+      - Add only files that are truly necessary
+      - If tests are explicitly requested, tests/test_main.py is REQUIRED
+      - If tests/test_main.py is present, requirements.txt MUST include pytest
+      - Include .env.example ONLY when secrets/keys are required
+      - Use forward slashes in paths
+      - Do NOT list directories, only file paths
+      - No absolute paths and no ".."
+      - Do NOT include any content after the FILES list
+
+  detailed:
+    description: "Detailed planning with architecture + strict test requirement when requested"
+    template: |
+      You are a senior software architect and repo maintainer. Create a comprehensive implementation plan.
+
+      TARGET MODULE PATH (main entry point): {module_path}
+
+      REQUIREMENTS:
+      {desc}
+
+      In your plan, include:
+      1) Architecture overview (1 short paragraph)
+      2) Key components and responsibilities (bullets)
+      3) Data structures and data flow
+      4) Main functions/classes (signatures only)
+      5) Dependencies (prefer standard library; justify external packages)
+      6) Edge cases to handle
+      7) Validation/testing approach (what to test)
+
+      Project-type rules (apply conditionally based on the requirements):
+      - Web app / API (Flask/FastAPI/Streamlit or similar):
+        * Include a GET "/" homepage/health endpoint (JSON for APIs, simple UI for Streamlit)
+        * Include example requests/usage in README
+
+      - Algorithm/data-structure or correctness-critical logic:
+        * Prefer tests/ with pytest and cover edge cases
+
+      - External keys/secrets:
+        * Include .env.example (or Streamlit secrets instructions) and document variables in README
+        * Implement graceful fallback when the key/secret is missing:
+          - App must still run (no crash)
+          - Demo/fallback output must vary based on user input (e.g., city/query)
+          - Demo/fallback must be deterministic (same input => same output across runs)
+          - Do NOT return a single static demo dataset for all inputs
+          - Clearly label demo mode in the UI/output to avoid misleading users
+
+      TEST REQUIREMENT (MANDATORY when requested):
+      - If the requirements explicitly ask for tests, unit tests, pytest, validation, or verification:
+        * You MUST include tests/test_main.py in the FILES list.
+        * requirements.txt MUST include pytest.
+        * Tests must cover: happy path + at least 2 edge cases.
+        * Treat missing tests as a failure to meet requirements.
+
+      IMPORTANT OUTPUT FORMAT:
+      - First output numbered steps (plain text).
+      - Then output a FILES section exactly as specified below.
+      - Do NOT output anything after the FILES list.
+
+      FILES:
+      - README.md: how to run + usage examples
+      - requirements.txt: dependencies (minimal or pinned)
+      - {module_path}: main entry point and wiring
+      - src/<optional_module>.py: helper module(s) only if needed
+      - tests/test_main.py: unit tests (MANDATORY if tests were requested)
+      - .env.example: environment variables template (only if needed)
+
+      Rules for FILES:
+      - Always include README.md, requirements.txt, and {module_path}
+      - Add helper modules only when they reduce complexity or repetition
+      - If tests are explicitly requested, tests/test_main.py is REQUIRED
+      - If tests/test_main.py is present, requirements.txt MUST include pytest
+      - Use forward slashes; no absolute paths; no ".."
+      - Do NOT invent extra config files unless necessary
+      - Do NOT include any content after the FILES list
+
+  minimal:
+    description: "Quick planning with strict file list (adds tests when requested)"
+    template: |
+      Create a brief plan (3-5 steps) for implementing:
+      {desc}
+
+      TARGET MODULE PATH (main entry point): {module_path}
+
+      TEST REQUIREMENT:
+      - If tests are explicitly requested, include tests/test_main.py in FILES.
+
+      Output format:
+      1) 3-5 numbered steps
+      2) Then a FILES section EXACTLY like this (no extra text after):
+
+      FILES:
+      - README.md: short purpose
+      - requirements.txt: short purpose
+      - {module_path}: short purpose
+      - tests/test_main.py: unit tests (required if tests were requested)
