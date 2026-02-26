@@ -34,13 +34,15 @@ def run_cmd(cmd: List[str], cwd: Optional[Path] = None) -> str:
     """Run a command and return stdout. Raises ToolError on non-zero exit."""
     try:
         proc = subprocess.run(
-            cmd,
-            cwd=str(cwd) if cwd else None,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            check=False,
-        )
+        cmd,
+        cwd=str(cwd) if cwd else None,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=False,
+    )
     except FileNotFoundError as e:
         raise ToolError(f"Command not found: {cmd[0]}") from e
 
@@ -514,6 +516,7 @@ def review(
 ):
     """Task 1: Review changes from git diff and decide: create issue, create PR, or no action."""
     diff = git_diff(base=base, commit_range=commit_range)
+    diff = diff or ""
     files = git_changed_files(base=base, commit_range=commit_range)
 
     reviewer = Reviewer()
