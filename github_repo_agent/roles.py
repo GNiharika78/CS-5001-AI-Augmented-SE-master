@@ -29,7 +29,7 @@ def classify_change(diff_text: str, changed_files: List[str]) -> str:
     # Simple heuristics; deterministic.
     if any("test" in f.lower() for f in changed_files) and ("fix" in diff_text.lower() or "bug" in diff_text.lower()):
         return "bugfix"
-    if any(f.lower().endswith((".md", ".rst")) for f in changed_files):
+    if changed_files and all(f.lower().endswith((".md", ".rst")) for f in changed_files):
         return "docs"
     if "refactor" in diff_text.lower():
         return "refactor"
@@ -137,6 +137,10 @@ class Planner:
         if any(i["type"] in ("security",) for i in issues):
             decision = "create_issue"
             justification = "Security-related signal found in diff; track and resolve explicitly."
+        elif any(i["type"] in ("quality",) for i in issues) and risk in ("medium", "high"):
+
+            decision = "create_issue"
+            justification = "Quality issue detected in diff (e.g., debug prints); track cleanup before merge/release."
         elif any(i["type"] in ("reliability", "performance") for i in issues) and risk in ("medium", "high"):
             decision = "create_issue"
             justification = "Medium/high risk with correctness/performance concerns; create issue for remediation."
