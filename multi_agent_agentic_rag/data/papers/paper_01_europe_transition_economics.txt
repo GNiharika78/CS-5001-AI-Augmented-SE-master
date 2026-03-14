@@ -1,0 +1,13 @@
+Title: Renewable Energy Transition Economics in Europe
+
+Abstract:
+This report examines the economic and environmental impacts of renewable energy adoption across major European economies.
+Across Germany, France, Spain, and the Netherlands, rising renewable energy shares are associated with lower power-sector
+emissions intensity over time. Economic gains are visible through investment growth, job creation in clean-energy sectors,
+and improved resilience against fossil-fuel price volatility.
+
+Key Findings:
+1. Renewable deployment tends to reduce medium-term exposure to imported fuel shocks.
+2. Wind and solar growth often require balancing investments in storage, transmission, and grid modernization.
+3. Countries with strong policy continuity tend to attract more private capital into renewable infrastructure.
+4. Short-term electricity price pressure can still occur during grid transition periods.

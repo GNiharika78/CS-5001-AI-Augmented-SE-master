@@ -1,0 +1,69 @@
+{
+  "run_id": "acf32cc0-8704-482a-8762-59f3dcb4e02a",
+  "query": "recommend follow-up reading on renewable investment policy",
+  "selected_agents": [
+    "paper_agent",
+    "recommendation_agent"
+  ],
+  "events": [
+    {
+      "event_type": "start",
+      "component": "coordinator",
+      "message": "Starting multi-agent workflow",
+      "metadata": {}
+    },
+    {
+      "event_type": "planning",
+      "component": "planner_agent",
+      "message": "Planner selected agents",
+      "metadata": {
+        "selected_agents": [
+          "paper_agent",
+          "recommendation_agent"
+        ]
+      }
+    },
+    {
+      "event_type": "agent_start",
+      "component": "paper_agent",
+      "message": "Running paper_agent",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_finish",
+      "component": "paper_agent",
+      "message": "Finished paper_agent",
+      "metadata": {
+        "latency_ms": 14.976400008890778,
+        "cost_usd": 0.0,
+        "sources_count": 3,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "event_type": "agent_start",
+      "component": "recommendation_agent",
+      "message": "Running recommendation_agent",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_finish",
+      "component": "recommendation_agent",
+      "message": "Finished recommendation_agent",
+      "metadata": {
+        "latency_ms": 46.65540000132751,
+        "cost_usd": 0.0,
+        "sources_count": 3,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "event_type": "synthesis",
+      "component": "synthesizer_agent",
+      "message": "Generated dynamic LLM synthesis",
+      "metadata": {}
+    }
+  ]
+}

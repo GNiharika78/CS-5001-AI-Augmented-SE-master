@@ -1,0 +1,96 @@
+{
+  "run_id": "b6cb46d6-0a68-400a-9383-4cd377720586",
+  "query": "renewable energy investment effects in Europe",
+  "selected_agents": [
+    "sql_agent",
+    "paper_agent",
+    "web_agent",
+    "recommendation_agent"
+  ],
+  "events": [
+    {
+      "event_type": "start",
+      "component": "coordinator",
+      "message": "Starting multi-agent workflow",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_start",
+      "component": "sql_agent",
+      "message": "Running sql_agent",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_finish",
+      "component": "sql_agent",
+      "message": "Finished sql_agent",
+      "metadata": {
+        "latency_ms": 1.0359000007156283,
+        "cost_usd": 0.0,
+        "sources_count": 4,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "event_type": "agent_start",
+      "component": "paper_agent",
+      "message": "Running paper_agent",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_finish",
+      "component": "paper_agent",
+      "message": "Finished paper_agent",
+      "metadata": {
+        "latency_ms": 62.01380000129575,
+        "cost_usd": 0.0,
+        "sources_count": 3,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "event_type": "agent_start",
+      "component": "web_agent",
+      "message": "Running web_agent",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_finish",
+      "component": "web_agent",
+      "message": "Finished web_agent",
+      "metadata": {
+        "latency_ms": 1248.0217999982415,
+        "cost_usd": 0.0,
+        "sources_count": 3,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "event_type": "agent_start",
+      "component": "recommendation_agent",
+      "message": "Running recommendation_agent",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_finish",
+      "component": "recommendation_agent",
+      "message": "Finished recommendation_agent",
+      "metadata": {
+        "latency_ms": 46.79980000219075,
+        "cost_usd": 0.0,
+        "sources_count": 3,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "event_type": "synthesis",
+      "component": "synthesizer_agent",
+      "message": "Generated dynamic LLM synthesis",
+      "metadata": {}
+    }
+  ]
+}

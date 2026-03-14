@@ -1,0 +1,52 @@
+[
+  {
+    "id": "rec_001",
+    "title": "EU Energy Transition Outlook",
+    "type": "report",
+    "topics": [
+      "renewable energy",
+      "Europe",
+      "policy",
+      "grid modernization"
+    ],
+    "summary": "Overview of long-term European renewable transition pathways and infrastructure needs.",
+    "file": "report_01_eu_energy_outlook.txt"
+  },
+  {
+    "id": "rec_002",
+    "title": "Grid Integration and Storage Trade-Offs in High-Renewable Systems",
+    "type": "paper",
+    "topics": [
+      "storage",
+      "grid",
+      "wind",
+      "solar"
+    ],
+    "summary": "Explains bottlenecks and infrastructure trade-offs in high-renewable systems.",
+    "file": "paper_02_grid_and_storage_tradeoffs.txt"
+  },
+  {
+    "id": "rec_003",
+    "title": "Policy Design, Market Signals, and Emissions Outcomes",
+    "type": "paper",
+    "topics": [
+      "policy",
+      "emissions",
+      "carbon pricing"
+    ],
+    "summary": "Shows how policy design affects emissions reduction quality and investment signals.",
+    "file": "paper_03_policy_design_and_emissions.txt"
+  },
+  {
+    "id": "rec_004",
+    "title": "Expert Commentary on Renewable Policy",
+    "type": "commentary",
+    "topics": [
+      "expert commentary",
+      "affordability",
+      "transmission"
+    ],
+    "summary": "Contextual commentary on affordability, grid reliability, and industrial competitiveness.",
+    "file": "report_02_expert_commentary.txt"
+  }
+]

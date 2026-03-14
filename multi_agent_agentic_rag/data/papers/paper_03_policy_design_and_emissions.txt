@@ -1,0 +1,10 @@
+Title: Policy Design, Market Signals, and Emissions Outcomes
+
+Abstract:
+Policy design strongly influences the environmental effectiveness of renewable energy expansion.
+Stable auctions, carbon pricing, and transmission planning improve the emissions impact of renewable build-out.
+
+Key Findings:
+1. Renewable growth alone does not guarantee optimal emissions reductions unless fossil dispatch declines.
+2. Carbon pricing and transmission planning amplify climate benefits.
+3. A clear policy roadmap reduces investor uncertainty and accelerates deployment.

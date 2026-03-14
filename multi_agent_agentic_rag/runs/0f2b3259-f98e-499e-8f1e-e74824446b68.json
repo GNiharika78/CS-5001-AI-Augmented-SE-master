@@ -1,0 +1,49 @@
+{
+  "run_id": "0f2b3259-f98e-499e-8f1e-e74824446b68",
+  "query": "compare renewable share and emissions across European countries",
+  "selected_agents": [
+    "sql_agent"
+  ],
+  "events": [
+    {
+      "event_type": "start",
+      "component": "coordinator",
+      "message": "Starting multi-agent workflow",
+      "metadata": {}
+    },
+    {
+      "event_type": "planning",
+      "component": "planner_agent",
+      "message": "Planner selected agents",
+      "metadata": {
+        "selected_agents": [
+          "sql_agent"
+        ]
+      }
+    },
+    {
+      "event_type": "agent_start",
+      "component": "sql_agent",
+      "message": "Running sql_agent",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_finish",
+      "component": "sql_agent",
+      "message": "Finished sql_agent",
+      "metadata": {
+        "latency_ms": 0.8584000024711713,
+        "cost_usd": 0.0,
+        "sources_count": 4,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "event_type": "synthesis",
+      "component": "synthesizer_agent",
+      "message": "Generated dynamic LLM synthesis",
+      "metadata": {}
+    }
+  ]
+}

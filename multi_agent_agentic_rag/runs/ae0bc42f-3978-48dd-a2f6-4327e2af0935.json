@@ -1,0 +1,89 @@
+{
+  "run_id": "ae0bc42f-3978-48dd-a2f6-4327e2af0935",
+  "query": "recommend follow-up reading on renewable investment policy",
+  "selected_agents": [
+    "sql_agent",
+    "paper_agent",
+    "recommendation_agent"
+  ],
+  "events": [
+    {
+      "event_type": "start",
+      "component": "coordinator",
+      "message": "Starting multi-agent workflow",
+      "metadata": {}
+    },
+    {
+      "event_type": "planning",
+      "component": "planner_agent",
+      "message": "Planner selected agents",
+      "metadata": {
+        "selected_agents": [
+          "sql_agent",
+          "paper_agent",
+          "recommendation_agent"
+        ]
+      }
+    },
+    {
+      "event_type": "agent_start",
+      "component": "sql_agent",
+      "message": "Running sql_agent",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_finish",
+      "component": "sql_agent",
+      "message": "Finished sql_agent",
+      "metadata": {
+        "latency_ms": 0.9602000063750893,
+        "cost_usd": 0.0,
+        "sources_count": 4,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "event_type": "agent_start",
+      "component": "paper_agent",
+      "message": "Running paper_agent",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_finish",
+      "component": "paper_agent",
+      "message": "Finished paper_agent",
+      "metadata": {
+        "latency_ms": 12.80409999890253,
+        "cost_usd": 0.0,
+        "sources_count": 3,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "event_type": "agent_start",
+      "component": "recommendation_agent",
+      "message": "Running recommendation_agent",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_finish",
+      "component": "recommendation_agent",
+      "message": "Finished recommendation_agent",
+      "metadata": {
+        "latency_ms": 51.62660000496544,
+        "cost_usd": 0.0,
+        "sources_count": 3,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "event_type": "synthesis",
+      "component": "synthesizer_agent",
+      "message": "Generated dynamic LLM synthesis",
+      "metadata": {}
+    }
+  ]
+}

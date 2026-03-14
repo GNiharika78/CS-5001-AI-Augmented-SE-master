@@ -1,0 +1,35 @@
+{
+  "review": {
+    "scope": {
+      "mode": "base",
+      "base": "main"
+    },
+    "changed_files": [
+      "github_repo_agent/demo_security_case.py"
+    ],
+    "diff_bytes": 430,
+    "diff_excerpt": "diff --git a/github_repo_agent/demo_security_case.py b/github_repo_agent/demo_security_case.py\nnew file mode 100644\nindex 0000000..78734fa\n--- /dev/null\n+++ b/github_repo_agent/demo_security_case.py\n@@ -0,0 +1,6 @@\n+\ufeff# Demo file for agent review (do not use real secrets)\n+import os\n+\n+TOKEN = os.getenv(\"DEMO_TOKEN\")\n+if not TOKEN:\n+    raise RuntimeError(\"Missing DEMO_TOKEN environment variable\")\n\\ No newline at end of file\n",
+    "change_type": "chore",
+    "risk": "high",
+    "issues": [
+      {
+        "type": "security",
+        "title": "Potential secret in code",
+        "evidence": "Found assignment to password/secret/token in added lines.",
+        "suggestion": "Move secrets to env/secret manager and scrub history if needed."
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "diff-signal",
+        "text": "Found assignment to password/secret/token in added lines."
+      }
+    ]
+  },
+  "plan": {
+    "decision": "create_issue",
+    "justification": "Security-related signal found in diff; track and resolve explicitly.",
+    "must_reference_evidence": true,
+    "recommended_kind": "issue"
+  }
+}

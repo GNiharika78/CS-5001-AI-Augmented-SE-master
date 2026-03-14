@@ -1,0 +1,17 @@
+country,year,co2_mt,power_sector_co2_mt,co2_per_capita_t
+Germany,2020,644,214,7.7
+Germany,2021,675,227,8.0
+Germany,2022,666,219,7.9
+Germany,2023,601,191,7.1
+France,2020,302,34,4.5
+France,2021,316,36,4.7
+France,2022,308,35,4.6
+France,2023,289,31,4.3
+Spain,2020,214,58,4.5
+Spain,2021,232,61,4.9
+Spain,2022,225,56,4.7
+Spain,2023,209,49,4.3
+Netherlands,2020,160,43,9.2
+Netherlands,2021,168,45,9.6
+Netherlands,2022,162,42,9.2
+Netherlands,2023,151,38,8.6

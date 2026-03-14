@@ -1,0 +1,49 @@
+{
+  "run_id": "df94d086-edcc-4658-87ec-90909a89d7d7",
+  "query": "compare renewable share and emissions across European countries",
+  "selected_agents": [
+    "sql_agent"
+  ],
+  "events": [
+    {
+      "event_type": "start",
+      "component": "coordinator",
+      "message": "Starting multi-agent workflow",
+      "metadata": {}
+    },
+    {
+      "event_type": "planning",
+      "component": "planner_agent",
+      "message": "Planner selected agents",
+      "metadata": {
+        "selected_agents": [
+          "sql_agent"
+        ]
+      }
+    },
+    {
+      "event_type": "agent_start",
+      "component": "sql_agent",
+      "message": "Running sql_agent",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_finish",
+      "component": "sql_agent",
+      "message": "Finished sql_agent",
+      "metadata": {
+        "latency_ms": 1.1682000040309504,
+        "cost_usd": 0.0,
+        "sources_count": 4,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "event_type": "synthesis",
+      "component": "coordinator",
+      "message": "Generated deterministic SQL-only synthesis",
+      "metadata": {}
+    }
+  ]
+}

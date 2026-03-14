@@ -1,0 +1,69 @@
+{
+  "run_id": "dca961a5-f83b-4fb6-a47e-d15772aa1984",
+  "query": "latest renewable energy policy updates in Europe",
+  "selected_agents": [
+    "paper_agent",
+    "web_agent"
+  ],
+  "events": [
+    {
+      "event_type": "start",
+      "component": "coordinator",
+      "message": "Starting multi-agent workflow",
+      "metadata": {}
+    },
+    {
+      "event_type": "planning",
+      "component": "planner_agent",
+      "message": "Planner selected agents",
+      "metadata": {
+        "selected_agents": [
+          "paper_agent",
+          "web_agent"
+        ]
+      }
+    },
+    {
+      "event_type": "agent_start",
+      "component": "paper_agent",
+      "message": "Running paper_agent",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_finish",
+      "component": "paper_agent",
+      "message": "Finished paper_agent",
+      "metadata": {
+        "latency_ms": 66.0067999997409,
+        "cost_usd": 0.0,
+        "sources_count": 3,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "event_type": "agent_start",
+      "component": "web_agent",
+      "message": "Running web_agent",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_finish",
+      "component": "web_agent",
+      "message": "Finished web_agent",
+      "metadata": {
+        "latency_ms": 1003.0067000043346,
+        "cost_usd": 0.0,
+        "sources_count": 3,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "event_type": "synthesis",
+      "component": "synthesizer_agent",
+      "message": "Generated dynamic LLM synthesis",
+      "metadata": {}
+    }
+  ]
+}

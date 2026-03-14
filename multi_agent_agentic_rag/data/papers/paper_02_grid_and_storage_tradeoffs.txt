@@ -1,0 +1,10 @@
+Title: Grid Integration and Storage Trade-Offs in High-Renewable Systems
+
+Abstract:
+High shares of variable renewable generation create operational benefits and new planning challenges.
+Grid congestion, curtailment, and storage adequacy become central concerns as solar and wind penetration increases.
+
+Key Findings:
+1. Grid flexibility investments are essential for sustaining renewable growth.
+2. Storage reduces balancing costs but raises capital requirements in the near term.
+3. Policy coordination across interconnectors and market design materially affects long-run efficiency.
