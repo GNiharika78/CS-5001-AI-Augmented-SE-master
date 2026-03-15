@@ -7,30 +7,7 @@ The system inspired by Multi-agent agentic RAG architecture, where coordinator a
 
 This approach improves modularity, scalability and retrieval quality and allows the system to combine strcutural data, academic knowledge and live web information.
 
-System architecture:
-
-It follows multi-agent workflow.
-
-User Query
-     │
-     ▼
-Planner Agent
-(decides which agents are needed)
-     │
-     ▼
-Coordinator Agent
-(orchestrates execution)
-     │
-     ├── SQL Agent (structured data)
-     ├── Paper Retrieval Agent (academic knowledge)
-     ├── Web Agent (live web search)
-     └── Recommendation Agent (suggests further reading)
-     │
-     ▼
-Synthesizer Agent (LLM)
-     │
-     ▼
-Final Answer
+System architecture:  SystemArchitecture.png
 
 
 Agents in the system:
@@ -71,3 +48,125 @@ Documents are embedded into vector database to enable semantic search.
 
 example questions handled:
 academic insights on energy transitions, policy design impacts, research summaries
+
+
+web agent:
+It retrives live info from internet.
+
+It perfroms web search queries and prioritizes trusted energy and policy sources such as: internet energy agency, europen commision, IRENA, EU energy portals
+
+This allows the system to retrieve recent policy updates and market developments.
+
+Recommendation agent:
+It suggests relevant follow-up readings such as:
+research papers, policy reports, expert commentary
+
+This helps users to explore topics in greater depth
+
+Synthesizer Agent:
+It uses LLM to integrate info retrieved by all agents
+It produces final responses that:
+combines insights from multiple sources
+separate evidence from interpretation
+avoids unsupported causal claims
+clearly structures the answer
+
+Key features:
+
+Multi agent architecture: Each agent specializes in a different task or data source, improving retrieval quality.
+
+Parallel Retrieval: Agents can run independently, enabling efficient information gathering.
+
+Modular Design: Agents can be easily added or removed without affecting the overall system.
+
+Hybrid Data Sources:
+
+The system combines:structured databases, academic documents, live web information, curated recommendations
+
+Cost and Latency Tracking:
+
+Each agent tracks: execution latency, API cost (if applicable)
+
+This improves transparency and reproducibility
+
+Project Structure: ![Project Structure](ProjectStructure.png)
+multi_agent_agentic_rag
+│
+├── app.py
+├── requirements.txt
+├── README.md
+│
+├── data
+│   ├── papers
+│   ├── recommendations
+│   ├── structured
+│   └── web
+│
+├── runs
+│
+└── src
+    ├── agents
+    ├── llm
+    ├── models
+    ├── orchestration
+    ├── tools
+    └── utils
+
+
+How to run: 
+1. install dependencies
+2. python app.py
+3. ask a question
+
+Enter your query:
+What are the economic and environmental impacts of renewable energy adoption in Europe?
+The system will:
+select relevant agents
+retrieve information
+synthesize a final response
+
+Example queries:
+Research Queries
+compare renewable share and emissions across European countries
+Research Queries
+what are the economic impacts of renewable energy adoption in Europe
+Recommendation Queries
+latest renewable energy policy updates in Europe
+Recommendation Queries
+recommend follow-up reading on renewable investment policy
+
+Example Output
+
+The system returns:
+selected agents
+sources retrieved
+final synthesized answer
+latency statistics
+execution trace
+
+Technologies Used:
+Python
+Chroma Vector Database
+Sentence Transformers
+SQLite
+Ollama LLM
+
+
+Learning Goals:
+This project demonstrates key ideas in modern agent-based AI systems:
+multi-agent orchestration
+retrieval-augmented generation
+modular agent design
+hybrid data retrieval
+LLM-based synthesis
+
+Future Improvements:
+
+Potential enhancements include:
+
+more advanced inter-agent communication
+improved ranking of retrieved sources
+additional domain-specific agents
+
+Screenshots
+Example system runs are included in the repository.
