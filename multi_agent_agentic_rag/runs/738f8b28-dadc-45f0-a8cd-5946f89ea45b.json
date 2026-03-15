@@ -1,5 +1,5 @@
 {
-  "run_id": "dca961a5-f83b-4fb6-a47e-d15772aa1984",
+  "run_id": "738f8b28-dadc-45f0-a8cd-5946f89ea45b",
   "query": "latest renewable energy policy updates in Europe",
   "selected_agents": [
     "paper_agent",
@@ -26,7 +26,13 @@
     {
       "event_type": "agent_start",
       "component": "paper_agent",
-      "message": "Running paper_agent",
+      "message": "Running paper_agent in parallel",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_start",
+      "component": "web_agent",
+      "message": "Running web_agent in parallel",
       "metadata": {}
     },
     {
@@ -34,7 +40,7 @@
       "component": "paper_agent",
       "message": "Finished paper_agent",
       "metadata": {
-        "latency_ms": 66.0067999997409,
+        "latency_ms": 252.45400000130758,
         "cost_usd": 0.0,
         "sources_count": 3,
         "success": true,
@@ -42,17 +48,11 @@
       }
     },
     {
-      "event_type": "agent_start",
-      "component": "web_agent",
-      "message": "Running web_agent",
-      "metadata": {}
-    },
-    {
       "event_type": "agent_finish",
       "component": "web_agent",
       "message": "Finished web_agent",
       "metadata": {
-        "latency_ms": 1003.0067000043346,
+        "latency_ms": 2484.361599999829,
         "cost_usd": 0.0,
         "sources_count": 3,
         "success": true,

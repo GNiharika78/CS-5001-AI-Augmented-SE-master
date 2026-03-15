@@ -1,9 +1,9 @@
 {
-  "run_id": "acf32cc0-8704-482a-8762-59f3dcb4e02a",
-  "query": "recommend follow-up reading on renewable investment policy",
+  "run_id": "0b8c74db-977f-4111-b452-3b8f0503afe3",
+  "query": "What recent policies and market strategies are driving renewable energy expansion in Europe?",
   "selected_agents": [
     "paper_agent",
-    "recommendation_agent"
+    "web_agent"
   ],
   "events": [
     {
@@ -19,14 +19,20 @@
       "metadata": {
         "selected_agents": [
           "paper_agent",
-          "recommendation_agent"
+          "web_agent"
         ]
       }
     },
     {
       "event_type": "agent_start",
       "component": "paper_agent",
-      "message": "Running paper_agent",
+      "message": "Running paper_agent in parallel",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_start",
+      "component": "web_agent",
+      "message": "Running web_agent in parallel",
       "metadata": {}
     },
     {
@@ -34,7 +40,7 @@
       "component": "paper_agent",
       "message": "Finished paper_agent",
       "metadata": {
-        "latency_ms": 14.976400008890778,
+        "latency_ms": 19.89510000566952,
         "cost_usd": 0.0,
         "sources_count": 3,
         "success": true,
@@ -42,17 +48,11 @@
       }
     },
     {
-      "event_type": "agent_start",
-      "component": "recommendation_agent",
-      "message": "Running recommendation_agent",
-      "metadata": {}
-    },
-    {
       "event_type": "agent_finish",
-      "component": "recommendation_agent",
-      "message": "Finished recommendation_agent",
+      "component": "web_agent",
+      "message": "Finished web_agent",
       "metadata": {
-        "latency_ms": 46.65540000132751,
+        "latency_ms": 2421.642300003441,
         "cost_usd": 0.0,
         "sources_count": 3,
         "success": true,

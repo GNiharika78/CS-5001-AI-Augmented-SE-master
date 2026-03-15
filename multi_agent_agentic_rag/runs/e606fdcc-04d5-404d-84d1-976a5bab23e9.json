@@ -1,9 +1,9 @@
 {
-  "run_id": "ae4e54d5-c47c-4075-a4ec-c77a3ac9739a",
-  "query": "latest renewable energy policy updates in Europ",
+  "run_id": "e606fdcc-04d5-404d-84d1-976a5bab23e9",
+  "query": "recommend follow-up reading on renewable investment policy",
   "selected_agents": [
     "paper_agent",
-    "web_agent"
+    "recommendation_agent"
   ],
   "events": [
     {
@@ -19,14 +19,14 @@
       "metadata": {
         "selected_agents": [
           "paper_agent",
-          "web_agent"
+          "recommendation_agent"
         ]
       }
     },
     {
       "event_type": "agent_start",
       "component": "paper_agent",
-      "message": "Running paper_agent",
+      "message": "Running paper_agent in parallel",
       "metadata": {}
     },
     {
@@ -34,7 +34,7 @@
       "component": "paper_agent",
       "message": "Finished paper_agent",
       "metadata": {
-        "latency_ms": 302.2964999981923,
+        "latency_ms": 20.189300004858524,
         "cost_usd": 0.0,
         "sources_count": 3,
         "success": true,
@@ -43,16 +43,16 @@
     },
     {
       "event_type": "agent_start",
-      "component": "web_agent",
-      "message": "Running web_agent",
+      "component": "recommendation_agent",
+      "message": "Running recommendation agent with evidence-aware query",
       "metadata": {}
     },
     {
       "event_type": "agent_finish",
-      "component": "web_agent",
-      "message": "Finished web_agent",
+      "component": "recommendation_agent",
+      "message": "Finished recommendation_agent",
       "metadata": {
-        "latency_ms": 1849.344900008873,
+        "latency_ms": 68.88930000422988,
         "cost_usd": 0.0,
         "sources_count": 3,
         "success": true,

@@ -7,90 +7,79 @@ class PlannerAgent(BaseAgent):
 
     def run(self, query: str) -> list[str]:
         q = query.lower()
-        selected = set()
 
-        has_latest = any(
-            k in q for k in ["latest", "recent", "today", "current", "news", "update", "updates"]
-        )
-        has_policy = any(
-            k in q for k in ["policy", "policies", "regulation", "regulations", "market", "markets"]
-        )
-        has_stats = any(
-            k in q
-            for k in [
-                "compare",
-                "trend",
-                "trends",
-                "statistics",
-                "data",
-                "jobs",
-                "job creation",
-                "investment data",
-                "emissions",
-                "share",
-                "shares",
-                "country",
-                "countries",
-            ]
-        )
-        has_research = any(
-            k in q
-            for k in [
-                "study",
-                "studies",
-                "paper",
-                "papers",
-                "research",
-                "evidence",
-                "analysis",
-                "impact",
-                "impacts",
-                "environmental",
-                "economic",
-            ]
-        )
-        has_recommendation = any(
-            k in q
-            for k in [
-                "recommend",
-                "recommendation",
-                "suggest",
-                "follow-up",
-                "reading",
-                "readings",
-                "report",
-                "reports",
-                "commentary",
-                "resources",
-            ]
-        )
+        scores = {
+            "sql_agent": 0,
+            "paper_agent": 0,
+            "web_agent": 0,
+            "recommendation_agent": 0,
+        }
 
-        if has_stats:
-            selected.add("sql_agent")
+        # Structured-data intent
+        for token in [
+            "compare", "across", "countries", "country", "trend", "trends",
+            "statistics", "data", "jobs", "employment", "investment",
+            "investments", "emissions", "co2", "share", "shares"
+        ]:
+            if token in q:
+                scores["sql_agent"] += 2
 
-        if has_research or has_policy:
-            selected.add("paper_agent")
+        # Research / analytical intent
+        for token in [
+            "study", "studies", "paper", "papers", "research", "evidence",
+            "analysis", "impact", "impacts", "economic", "environmental"
+        ]:
+            if token in q:
+                scores["paper_agent"] += 2
 
-        if has_latest or has_policy:
-            selected.add("web_agent")
+        # Current / policy / market intent
+        for token in [
+            "latest", "recent", "today", "current", "news", "update",
+            "updates", "policy", "policies", "regulation", "regulations",
+            "market", "markets"
+        ]:
+            if token in q:
+                scores["web_agent"] += 2
 
-        if has_recommendation:
-            selected.update(["recommendation_agent", "paper_agent"])
+        # Follow-up / recommendation intent
+        for token in [
+            "recommend", "recommendation", "suggest", "follow-up", "reading",
+            "readings", "report", "reports", "commentary", "resource", "resources"
+        ]:
+            if token in q:
+                scores["recommendation_agent"] += 2
 
+        # Broad impacts questions generally need both structured + research evidence
         if "impact" in q or "impacts" in q:
-            selected.update(["sql_agent", "paper_agent"])
+            scores["sql_agent"] += 1
+            scores["paper_agent"] += 1
 
-        if has_recommendation:
-            selected.discard("sql_agent")
+        # Policy update questions should rarely be web-only
+        if ("latest" in q or "recent" in q or "update" in q or "updates" in q) and (
+            "policy" in q or "policies" in q or "market" in q
+        ):
+            scores["paper_agent"] += 1
+            scores["web_agent"] += 1
 
-        if has_latest and has_policy:
-            selected.update(["web_agent", "paper_agent"])
+        # Recommendation queries should focus on papers + recommendation agent
+        if any(t in q for t in ["recommend", "follow-up", "reading", "report", "commentary"]):
+            scores["recommendation_agent"] += 2
+            scores["paper_agent"] += 1
+            scores["sql_agent"] -= 2
+            scores["web_agent"] -= 2
 
-        if has_recommendation and not has_latest:
-            selected.discard("web_agent")
+        # If recommendation query is also explicitly "latest", allow web back in
+        if any(t in q for t in ["recommend", "follow-up", "reading"]) and any(
+            t in q for t in ["latest", "recent", "current"]
+        ):
+            scores["web_agent"] += 2
 
+        # Select agents with positive score
+        selected = [agent for agent, score in scores.items() if score > 0]
+
+        # Fallback
         if not selected:
-            selected.update(["paper_agent", "recommendation_agent"])
+            selected = ["paper_agent", "recommendation_agent"]
 
         preferred_order = [
             "sql_agent",
@@ -98,5 +87,4 @@ class PlannerAgent(BaseAgent):
             "web_agent",
             "recommendation_agent",
         ]
-
         return [agent for agent in preferred_order if agent in selected]

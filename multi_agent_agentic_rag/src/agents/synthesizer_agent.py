@@ -40,7 +40,7 @@ class SynthesizerAgent:
             if source_count == 0:
                 lines.append("No sources were returned by this agent.")
             else:
-                max_sources = 4 if result.agent_name == "sql_agent" else 1
+                max_sources = 2 if result.agent_name in ["paper_agent", "web_agent", "recommendation_agent"] else 4
                 for idx, source in enumerate(result.sources[:max_sources], start=1):
                     lines.append(f"Source {idx}: {source.title}")
                     lines.append(f"Snippet {idx}: {source.snippet}")
@@ -62,17 +62,22 @@ class SynthesizerAgent:
             "- Do not use outside knowledge.\n"
             "- Do not claim an agent had no evidence if its source count is greater than 0.\n"
             "- Do not claim causation unless the evidence explicitly supports it.\n"
-            "- Do not describe relationships as direct unless the evidence explicitly supports that.\n"
             "- Do not say investment caused jobs unless the evidence explicitly proves causation; say they are associated in the retrieved data.\n"
+            "- Do not compare emissions across countries as lower or higher due to renewable share unless the evidence explicitly supports that relationship.\n"
+            "- For mixed SQL and paper evidence, prefer neutral wording such as 'the retrieved data shows differences across countries' rather than causal or directional claims.\n"
             "- Use phrases like 'the evidence suggests' or 'the retrieved data indicates'.\n"
             "- If an agent returned zero sources, say evidence from that source is limited.\n"
             "- Separate observed data from interpretation.\n"
-            "- For SQL comparison queries, compare multiple countries when multiple SQL sources are provided.\n"
-            "- Keep the final response concise, around under 180 words.\n"
-            "- Do not add any extra sections beyond the four required sections.\n"
-            "- If recommended reading is weak or missing, say so briefly.\n"
-            "- When multiple SQL sources are provided, compare values directly and avoid mis-ranking countries.\n"
-            "- If evidence for a section is missing, state briefly that the evidence is limited."
+            "- If a section lacks evidence, say briefly that evidence is limited for that section.\n"
+            "- Keep the final response concise, under 180 words.\n"
+            "- Do not add extra sections.\n"
+            "- Recommended Follow-up Reading should primarily use recommendation_agent evidence when available.\n"
+            "- For recommendation-focused queries, prioritize concrete titles from recommendation_agent and paper_agent over generic suggestions.\n"
+            "- If paper_agent provides concrete document titles, use those titles in Recommended Follow-up Reading.\n"
+"- Do not say evidence is missing for policy or market context if paper_agent snippets explicitly mention strategy, policy, decarbonization, or grid modernization.\n"
+"- For SQL and paper combined queries, do not infer a general relationship between renewable share and emissions unless the evidence explicitly supports it.\n"
+"- When reporting cross-country numeric differences, describe them as comparisons in the retrieved data, not as trends or causal patterns.\n"
+
         )
 
         return "\n".join(lines)

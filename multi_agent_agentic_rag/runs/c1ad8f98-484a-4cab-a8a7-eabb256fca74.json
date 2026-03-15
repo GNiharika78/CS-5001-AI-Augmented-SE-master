@@ -1,5 +1,5 @@
 {
-  "run_id": "df94d086-edcc-4658-87ec-90909a89d7d7",
+  "run_id": "c1ad8f98-484a-4cab-a8a7-eabb256fca74",
   "query": "compare renewable share and emissions across European countries",
   "selected_agents": [
     "sql_agent"
@@ -24,7 +24,7 @@
     {
       "event_type": "agent_start",
       "component": "sql_agent",
-      "message": "Running sql_agent",
+      "message": "Running sql_agent in parallel",
       "metadata": {}
     },
     {
@@ -32,7 +32,7 @@
       "component": "sql_agent",
       "message": "Finished sql_agent",
       "metadata": {
-        "latency_ms": 1.1682000040309504,
+        "latency_ms": 7.727899996098131,
         "cost_usd": 0.0,
         "sources_count": 4,
         "success": true,
@@ -41,8 +41,8 @@
     },
     {
       "event_type": "synthesis",
-      "component": "coordinator",
-      "message": "Generated deterministic SQL-only synthesis",
+      "component": "synthesizer_agent",
+      "message": "Generated dynamic LLM synthesis",
       "metadata": {}
     }
   ]

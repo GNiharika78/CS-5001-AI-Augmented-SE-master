@@ -1,9 +1,8 @@
 {
-  "run_id": "929922a3-8970-418a-8b9d-5841c93ec363",
-  "query": "recommend follow-up reading on renewable investment policy",
+  "run_id": "7fa28ffe-389c-4c43-903f-f7efc11d0373",
+  "query": "latest renewable energy policy updates in Europe",
   "selected_agents": [
-    "sql_agent",
-    "recommendation_agent",
+    "paper_agent",
     "web_agent"
   ],
   "events": [
@@ -19,42 +18,29 @@
       "message": "Planner selected agents",
       "metadata": {
         "selected_agents": [
-          "sql_agent",
-          "recommendation_agent",
+          "paper_agent",
           "web_agent"
         ]
       }
     },
     {
       "event_type": "agent_start",
-      "component": "sql_agent",
-      "message": "Running sql_agent",
+      "component": "paper_agent",
+      "message": "Running paper_agent in parallel",
       "metadata": {}
-    },
-    {
-      "event_type": "agent_finish",
-      "component": "sql_agent",
-      "message": "Finished sql_agent",
-      "metadata": {
-        "latency_ms": 0.9523000044282526,
-        "cost_usd": 0.0,
-        "sources_count": 4,
-        "success": true,
-        "error": null
-      }
     },
     {
       "event_type": "agent_start",
-      "component": "recommendation_agent",
-      "message": "Running recommendation_agent",
+      "component": "web_agent",
+      "message": "Running web_agent in parallel",
       "metadata": {}
     },
     {
       "event_type": "agent_finish",
-      "component": "recommendation_agent",
-      "message": "Finished recommendation_agent",
+      "component": "paper_agent",
+      "message": "Finished paper_agent",
       "metadata": {
-        "latency_ms": 120.4338999959873,
+        "latency_ms": 269.31199998944066,
         "cost_usd": 0.0,
         "sources_count": 3,
         "success": true,
@@ -62,17 +48,11 @@
       }
     },
     {
-      "event_type": "agent_start",
-      "component": "web_agent",
-      "message": "Running web_agent",
-      "metadata": {}
-    },
-    {
       "event_type": "agent_finish",
       "component": "web_agent",
       "message": "Finished web_agent",
       "metadata": {
-        "latency_ms": 2245.9731999988435,
+        "latency_ms": 3393.2367999950657,
         "cost_usd": 0.0,
         "sources_count": 3,
         "success": true,

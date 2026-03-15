@@ -1,5 +1,5 @@
 {
-  "run_id": "2d7865b5-9de5-4a59-bf6a-d9c06efc6046",
+  "run_id": "36a292d2-27b2-442a-8f44-b53919081015",
   "query": "What are the economic and environmental impacts of renewable energy adoption in Europe",
   "selected_agents": [
     "sql_agent",
@@ -26,7 +26,13 @@
     {
       "event_type": "agent_start",
       "component": "sql_agent",
-      "message": "Running sql_agent",
+      "message": "Running sql_agent in parallel",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_start",
+      "component": "paper_agent",
+      "message": "Running paper_agent in parallel",
       "metadata": {}
     },
     {
@@ -34,7 +40,7 @@
       "component": "sql_agent",
       "message": "Finished sql_agent",
       "metadata": {
-        "latency_ms": 0.9723999974085018,
+        "latency_ms": 3.0771000019740313,
         "cost_usd": 0.0,
         "sources_count": 4,
         "success": true,
@@ -42,17 +48,11 @@
       }
     },
     {
-      "event_type": "agent_start",
-      "component": "paper_agent",
-      "message": "Running paper_agent",
-      "metadata": {}
-    },
-    {
       "event_type": "agent_finish",
       "component": "paper_agent",
       "message": "Finished paper_agent",
       "metadata": {
-        "latency_ms": 22.6295000029495,
+        "latency_ms": 213.90999999130145,
         "cost_usd": 0.0,
         "sources_count": 3,
         "success": true,

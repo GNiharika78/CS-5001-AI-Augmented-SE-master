@@ -1,10 +1,8 @@
 {
-  "run_id": "9454ef18-31da-4043-a6ae-e8fcb4a83502",
-  "query": "enewable energy investment effects in Europe",
+  "run_id": "1aafb1e8-0ef1-4b97-bb6a-587ab956c69b",
+  "query": "recommend follow-up reading on renewable investment policy",
   "selected_agents": [
-    "sql_agent",
     "paper_agent",
-    "web_agent",
     "recommendation_agent"
   ],
   "events": [
@@ -15,27 +13,20 @@
       "metadata": {}
     },
     {
-      "event_type": "agent_start",
-      "component": "sql_agent",
-      "message": "Running sql_agent",
-      "metadata": {}
-    },
-    {
-      "event_type": "agent_finish",
-      "component": "sql_agent",
-      "message": "Finished sql_agent",
+      "event_type": "planning",
+      "component": "planner_agent",
+      "message": "Planner selected agents",
       "metadata": {
-        "latency_ms": 1.0416000004624948,
-        "cost_usd": 0.0,
-        "sources_count": 4,
-        "success": true,
-        "error": null
+        "selected_agents": [
+          "paper_agent",
+          "recommendation_agent"
+        ]
       }
     },
     {
       "event_type": "agent_start",
       "component": "paper_agent",
-      "message": "Running paper_agent",
+      "message": "Running paper_agent in parallel",
       "metadata": {}
     },
     {
@@ -43,7 +34,7 @@
       "component": "paper_agent",
       "message": "Finished paper_agent",
       "metadata": {
-        "latency_ms": 349.05559999970137,
+        "latency_ms": 18.02529999986291,
         "cost_usd": 0.0,
         "sources_count": 3,
         "success": true,
@@ -52,26 +43,8 @@
     },
     {
       "event_type": "agent_start",
-      "component": "web_agent",
-      "message": "Running web_agent",
-      "metadata": {}
-    },
-    {
-      "event_type": "agent_finish",
-      "component": "web_agent",
-      "message": "Finished web_agent",
-      "metadata": {
-        "latency_ms": 3888.4861999977147,
-        "cost_usd": 0.0,
-        "sources_count": 0,
-        "success": true,
-        "error": null
-      }
-    },
-    {
-      "event_type": "agent_start",
       "component": "recommendation_agent",
-      "message": "Running recommendation_agent",
+      "message": "Running recommendation agent with evidence-aware query",
       "metadata": {}
     },
     {
@@ -79,7 +52,7 @@
       "component": "recommendation_agent",
       "message": "Finished recommendation_agent",
       "metadata": {
-        "latency_ms": 180.22619999828748,
+        "latency_ms": 53.74039999151137,
         "cost_usd": 0.0,
         "sources_count": 3,
         "success": true,

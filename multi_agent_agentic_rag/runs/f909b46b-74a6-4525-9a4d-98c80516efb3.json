@@ -1,8 +1,9 @@
 {
-  "run_id": "0f2b3259-f98e-499e-8f1e-e74824446b68",
-  "query": "compare renewable share and emissions across European countries",
+  "run_id": "f909b46b-74a6-4525-9a4d-98c80516efb3",
+  "query": "What are the economic and environmental impacts of renewable energy adoption in Europe",
   "selected_agents": [
-    "sql_agent"
+    "sql_agent",
+    "paper_agent"
   ],
   "events": [
     {
@@ -17,14 +18,21 @@
       "message": "Planner selected agents",
       "metadata": {
         "selected_agents": [
-          "sql_agent"
+          "sql_agent",
+          "paper_agent"
         ]
       }
     },
     {
       "event_type": "agent_start",
       "component": "sql_agent",
-      "message": "Running sql_agent",
+      "message": "Running sql_agent in parallel",
+      "metadata": {}
+    },
+    {
+      "event_type": "agent_start",
+      "component": "paper_agent",
+      "message": "Running paper_agent in parallel",
       "metadata": {}
     },
     {
@@ -32,9 +40,21 @@
       "component": "sql_agent",
       "message": "Finished sql_agent",
       "metadata": {
-        "latency_ms": 0.8584000024711713,
+        "latency_ms": 4.011700002592988,
         "cost_usd": 0.0,
         "sources_count": 4,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "event_type": "agent_finish",
+      "component": "paper_agent",
+      "message": "Finished paper_agent",
+      "metadata": {
+        "latency_ms": 218.30139998928644,
+        "cost_usd": 0.0,
+        "sources_count": 3,
         "success": true,
         "error": null
       }

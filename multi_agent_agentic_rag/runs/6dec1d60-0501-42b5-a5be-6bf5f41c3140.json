@@ -1,6 +1,6 @@
 {
-  "run_id": "800cd807-a0cf-4485-b487-6f4688cf0cab",
-  "query": "compare renewable share and emissions across European countries",
+  "run_id": "6dec1d60-0501-42b5-a5be-6bf5f41c3140",
+  "query": "How do renewable energy investments relate to emissions and job creation across major European countries?",
   "selected_agents": [
     "sql_agent"
   ],
@@ -24,7 +24,7 @@
     {
       "event_type": "agent_start",
       "component": "sql_agent",
-      "message": "Running sql_agent",
+      "message": "Running sql_agent in parallel",
       "metadata": {}
     },
     {
@@ -32,7 +32,7 @@
       "component": "sql_agent",
       "message": "Finished sql_agent",
       "metadata": {
-        "latency_ms": 1.0917999898083508,
+        "latency_ms": 3.2808999967528507,
         "cost_usd": 0.0,
         "sources_count": 4,
         "success": true,

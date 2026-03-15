@@ -1,5 +1,5 @@
 {
-  "run_id": "e545b36d-0df4-4c47-a200-ab84cf778840",
+  "run_id": "31242038-6e4a-463a-aa01-4498fd2b9138",
   "query": "compare renewable share and emissions across European countries",
   "selected_agents": [
     "sql_agent"
@@ -24,7 +24,7 @@
     {
       "event_type": "agent_start",
       "component": "sql_agent",
-      "message": "Running sql_agent",
+      "message": "Running sql_agent in parallel",
       "metadata": {}
     },
     {
@@ -32,7 +32,7 @@
       "component": "sql_agent",
       "message": "Finished sql_agent",
       "metadata": {
-        "latency_ms": 0.7451999990735203,
+        "latency_ms": 0.8094999939203262,
         "cost_usd": 0.0,
         "sources_count": 4,
         "success": true,

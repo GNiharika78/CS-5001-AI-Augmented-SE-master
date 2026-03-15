@@ -1,3 +1,4 @@
+import asyncio
 import time
 
 from src.agents.sql_agent import SQLAgent
@@ -7,7 +8,7 @@ from src.agents.recommendation_agent import RecommendationAgent
 from src.agents.synthesizer_agent import SynthesizerAgent
 from src.agents.planner_agent import PlannerAgent
 from src.llm.ollama_provider import OllamaProvider
-from src.models.schemas import FinalResponse
+from src.models.schemas import FinalResponse, AgentResult
 from src.orchestration.execution_trace import ExecutionTracer
 from src.utils.cost_tracker import CostTracker
 
@@ -24,57 +25,98 @@ class CoordinatorAgent:
     def route(self, query: str) -> list[str]:
         return self.planner_agent.run(query)
 
-    def _summarize_sql_only(self, result, query: str) -> str:
-        rows = [source.metadata for source in result.sources if source.metadata]
+    async def _run_agent_async(self, agent_name: str, query: str) -> AgentResult:
+        if agent_name == "sql_agent":
+            return await asyncio.to_thread(self.sql_agent.run, query)
+        if agent_name == "paper_agent":
+            return await asyncio.to_thread(self.paper_agent.run, query)
+        if agent_name == "web_agent":
+            return await asyncio.to_thread(self.web_agent.run, query)
+        if agent_name == "recommendation_agent":
+            return await asyncio.to_thread(self.recommendation_agent.run, query)
 
-        if not rows:
-            return (
-                "1. Economic Impacts\n"
-                "The SQL agent returned no structured evidence.\n\n"
-                "2. Environmental Impacts\n"
-                "The SQL agent returned no structured evidence.\n\n"
-                "3. Recent Policy or Market Context\n"
-                "No policy or market context was retrieved from structured data alone.\n\n"
-                "4. Recommended Follow-up Reading\n"
-                "Additional paper or web sources would be needed for follow-up reading."
-            )
+        raise ValueError(f"Unknown agent: {agent_name}")
 
-        renewable_sorted = sorted(rows, key=lambda x: x["renewable_share_pct"], reverse=True)
-        emissions_sorted = sorted(rows, key=lambda x: x["co2_mt"], reverse=True)
-        investment_sorted = sorted(rows, key=lambda x: x["renewable_investment_billion_usd"], reverse=True)
+    def _build_recommendation_query(self, user_query: str, results: list[AgentResult]) -> str:
+        """
+        Make recommendation retrieval depend on already retrieved evidence.
+        """
+        titles = []
+        for result in results:
+            for source in result.sources[:2]:
+                titles.append(source.title)
 
-        highest_share = renewable_sorted[0]
-        highest_emissions = emissions_sorted[0]
-        highest_investment = investment_sorted[0]
-
-        country_lines = []
-        for row in rows:
-            country_lines.append(
-                f"- {row['country']}: renewable share {row['renewable_share_pct']}%, "
-                f"CO2 emissions {row['co2_mt']} Mt, "
-                f"renewable investment ${row['renewable_investment_billion_usd']}B, "
-                f"clean-energy jobs {row['clean_energy_jobs_thousands']} thousand."
-            )
+        evidence_context = "; ".join(titles[:6])
 
         return (
-            "1. Economic Impacts\n"
-            f"The retrieved data indicates that {highest_investment['country']} had the highest renewable investment "
-            f"(${highest_investment['renewable_investment_billion_usd']}B) in 2023. "
-            "Across the available countries, investment and clean-energy jobs appear associated in the retrieved data, "
-            "but causation is not established.\n\n"
-            "2. Environmental Impacts\n"
-            f"The retrieved data indicates that {highest_share['country']} had the highest renewable share "
-            f"({highest_share['renewable_share_pct']}%), while {highest_emissions['country']} had the highest CO2 emissions "
-            f"({highest_emissions['co2_mt']} Mt). The data supports comparison, but not causal conclusions.\n\n"
-            "3. Recent Policy or Market Context\n"
-            "Structured SQL data alone does not provide direct policy or market explanations for these differences.\n\n"
-            "4. Recommended Follow-up Reading\n"
-            "For policy interpretation and explanatory context, additional paper or web evidence should be consulted.\n\n"
-            "Country comparison:\n"
-            + "\n".join(country_lines)
+            f"{user_query}. Recommend follow-up reading and related reports based on these retrieved sources: "
+            f"{evidence_context}"
         )
 
-    def run(self, query: str) -> tuple[FinalResponse, str]:
+    def _looks_like_prompt_leak(self, text: str) -> bool:
+        leak_markers = [
+            "Evidence collected from specialized agents:",
+            "Required sections exactly:",
+            "Rules:",
+            "User query:",
+            "Source count:",
+            "Agent: Academic Paper Search Agent",
+            "Agent: Web Search Agent",
+            "Agent: Recommendation Agent",
+        ]
+        lowered = text.lower()
+        return any(marker.lower() in lowered for marker in leak_markers)
+
+    def _fallback_summary(self, query: str, results: list[AgentResult]) -> str:
+        sections = {
+            "Economic Impacts": [],
+            "Environmental Impacts": [],
+            "Recent Policy or Market Context": [],
+            "Recommended Follow-up Reading": [],
+        }
+
+        for result in results:
+            if result.agent_name == "sql_agent":
+                for source in result.sources[:4]:
+                    sections["Economic Impacts"].append(source.snippet)
+                    sections["Environmental Impacts"].append(source.snippet)
+
+            elif result.agent_name == "paper_agent":
+                for source in result.sources[:2]:
+                    sections["Recent Policy or Market Context"].append(source.snippet)
+                    sections["Recommended Follow-up Reading"].append(source.title)
+
+            elif result.agent_name == "web_agent":
+                for source in result.sources[:2]:
+                    sections["Recent Policy or Market Context"].append(source.snippet)
+                    sections["Recommended Follow-up Reading"].append(source.title)
+
+            elif result.agent_name == "recommendation_agent":
+                for source in result.sources[:4]:
+                    sections["Recommended Follow-up Reading"].append(source.title)
+
+        def format_section(title: str, items: list[str], limit: int) -> str:
+            if not items:
+                return f"{title}\nEvidence is limited."
+            unique_items = []
+            seen = set()
+            for item in items:
+                if item not in seen:
+                    unique_items.append(item)
+                    seen.add(item)
+            return f"{title}\n" + "\n".join(f"- {item}" for item in unique_items[:limit])
+
+        return (
+            format_section("1. Economic Impacts", sections["Economic Impacts"], 2)
+            + "\n\n"
+            + format_section("2. Environmental Impacts", sections["Environmental Impacts"], 2)
+            + "\n\n"
+            + format_section("3. Recent Policy or Market Context", sections["Recent Policy or Market Context"], 2)
+            + "\n\n"
+            + format_section("4. Recommended Follow-up Reading", sections["Recommended Follow-up Reading"], 4)
+        )
+
+    async def _run_async(self, query: str) -> tuple[FinalResponse, str]:
         start = time.perf_counter()
 
         tracer = ExecutionTracer(query=query)
@@ -91,52 +133,75 @@ class CoordinatorAgent:
             {"selected_agents": selected_agents},
         )
 
-        results = []
+        results: list[AgentResult] = []
 
-        for agent_name in selected_agents:
-            tracer.add_event("agent_start", agent_name, f"Running {agent_name}")
+        # Run primary retrieval agents in parallel first
+        parallel_agents = [a for a in selected_agents if a != "recommendation_agent"]
 
-            if agent_name == "sql_agent":
-                result = self.sql_agent.run(query)
-            elif agent_name == "paper_agent":
-                result = self.paper_agent.run(query)
-            elif agent_name == "web_agent":
-                result = self.web_agent.run(query)
-            elif agent_name == "recommendation_agent":
-                result = self.recommendation_agent.run(query)
-            else:
-                continue
+        tasks = []
+        for agent_name in parallel_agents:
+            tracer.add_event("agent_start", agent_name, f"Running {agent_name} in parallel")
+            tasks.append(self._run_agent_async(agent_name, query))
 
-            results.append(result)
-            cost_tracker.add(result.cost_usd)
+        if tasks:
+            parallel_results = await asyncio.gather(*tasks)
+
+            for agent_name, result in zip(parallel_agents, parallel_results):
+                results.append(result)
+                cost_tracker.add(result.cost_usd)
+
+                tracer.add_event(
+                    "agent_finish",
+                    agent_name,
+                    f"Finished {agent_name}",
+                    {
+                        "latency_ms": result.latency_ms,
+                        "cost_usd": result.cost_usd,
+                        "sources_count": len(result.sources),
+                        "success": result.success,
+                        "error": result.error,
+                    },
+                )
+
+        # Run recommendation agent after retrieval so it can use earlier evidence
+        if "recommendation_agent" in selected_agents:
+            tracer.add_event(
+                "agent_start",
+                "recommendation_agent",
+                "Running recommendation agent with evidence-aware query",
+            )
+
+            recommendation_query = self._build_recommendation_query(query, results)
+            recommendation_result = await self._run_agent_async("recommendation_agent", recommendation_query)
+
+            results.append(recommendation_result)
+            cost_tracker.add(recommendation_result.cost_usd)
 
             tracer.add_event(
                 "agent_finish",
-                agent_name,
-                f"Finished {agent_name}",
+                "recommendation_agent",
+                "Finished recommendation_agent",
                 {
-                    "latency_ms": result.latency_ms,
-                    "cost_usd": result.cost_usd,
-                    "sources_count": len(result.sources),
-                    "success": result.success,
-                    "error": result.error,
+                    "latency_ms": recommendation_result.latency_ms,
+                    "cost_usd": recommendation_result.cost_usd,
+                    "sources_count": len(recommendation_result.sources),
+                    "success": recommendation_result.success,
+                    "error": recommendation_result.error,
                 },
             )
 
-        if selected_agents == ["sql_agent"]:
-            synthesized_answer = self._summarize_sql_only(results[0], query)
+        # LLM synthesis with fallback if the model leaks the prompt
+        synthesized_answer = await asyncio.to_thread(self.synthesizer.run, query, results)
+
+        if self._looks_like_prompt_leak(synthesized_answer):
             tracer.add_event(
-                "synthesis",
+                "synthesis_fallback",
                 "coordinator",
-                "Generated deterministic SQL-only synthesis",
+                "LLM output leaked prompt; using fallback summary",
             )
+            synthesized_answer = self._fallback_summary(query, results)
         else:
-            synthesized_answer = self.synthesizer.run(query, results)
-            tracer.add_event(
-                "synthesis",
-                "synthesizer_agent",
-                "Generated dynamic LLM synthesis",
-            )
+            tracer.add_event("synthesis", "synthesizer_agent", "Generated dynamic LLM synthesis")
 
         total_latency_ms = (time.perf_counter() - start) * 1000
         trace_path = tracer.save()
@@ -151,3 +216,6 @@ class CoordinatorAgent:
         )
 
         return response, trace_path
+
+    def run(self, query: str) -> tuple[FinalResponse, str]:
+        return asyncio.run(self._run_async(query))
