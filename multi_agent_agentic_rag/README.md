@@ -92,7 +92,9 @@ The system includes cost tracking for LLM and external API usage. In this implem
 
 This improves transparency and reproducibility
 
-Project Structure: ![Project Structure](ProjectStructure.png)
+# Project Structure:
+
+ ![Project Structure](ProjectStructure.png)
 
 
 
