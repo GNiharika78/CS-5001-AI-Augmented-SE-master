@@ -7,7 +7,7 @@ The system inspired by Multi-agent agentic RAG architecture, where coordinator a
 
 This approach improves modularity, scalability and retrieval quality and allows the system to combine strcutural data, academic knowledge and live web information.
 
-System architecture:  SystemArchitecture.png
+System architecture:  ![SystemArchitecture.png](SystemArchitecture.png)
 
 
 Agents in the system:
@@ -90,27 +90,7 @@ Each agent tracks: execution latency, API cost (if applicable)
 This improves transparency and reproducibility
 
 Project Structure: ![Project Structure](ProjectStructure.png)
-multi_agent_agentic_rag
-│
-├── app.py
-├── requirements.txt
-├── README.md
-│
-├── data
-│   ├── papers
-│   ├── recommendations
-│   ├── structured
-│   └── web
-│
-├── runs
-│
-└── src
-    ├── agents
-    ├── llm
-    ├── models
-    ├── orchestration
-    ├── tools
-    └── utils
+
 
 
 How to run: 
