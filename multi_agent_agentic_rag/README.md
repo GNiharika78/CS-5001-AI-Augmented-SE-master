@@ -20,11 +20,8 @@ Responsibilities: Route queries, execute agents, collect results, track latency 
 Planner Agent:
  It analyzes the user query and determines which agent should run.
 
- Query Type                    Selected agents
-statistical comparision        SQL agent
-research/academic analysis     Paper agent
-currrent events or policies    web agent
-reading suggestions            recommendation agent
+
+![alt text](image.png)
 
 
 Sql agent:
@@ -144,9 +141,9 @@ Future Improvements:
 
 Potential enhancements include:
 
-more advanced inter-agent communication
-improved ranking of retrieved sources
-additional domain-specific agents
+more advanced inter-agent communication\n
+improved ranking of retrieved sources\n
+additional domain-specific agents\n
 
 Screenshots
 Example system runs are included in the repository.
