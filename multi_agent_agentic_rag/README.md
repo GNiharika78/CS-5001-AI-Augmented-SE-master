@@ -98,52 +98,43 @@ How to run:
 Enter your query:
 What are the economic and environmental impacts of renewable energy adoption in Europe?
 The system will:
-select relevant agents
-retrieve information
-synthesize a final response
+1. select relevant agents
+2. retrieve information
+3. synthesize a final response
 
 Example queries:
-Research Queries
-compare renewable share and emissions across European countries
-Research Queries
-what are the economic impacts of renewable energy adoption in Europe
-Recommendation Queries
-latest renewable energy policy updates in Europe
-Recommendation Queries
-recommend follow-up reading on renewable investment policy
+1. Research Queries: compare renewable share and emissions across European countries
+2. Research Queries: what are the economic impacts of renewable energy adoption in Europe
+3. Recommendation Queries: latest renewable energy policy updates in Europe
+4. Recommendation Queries: recommend follow-up reading on renewable investment policy
 
 Example Output
 
 The system returns:
-selected agents
-sources retrieved
-final synthesized answer
-latency statistics
-execution trace
+1. selected agents
+2. sources retrieved
+3. final synthesized answer
+4. latency statistics
+5. execution trace
 
 Technologies Used:
-Python
-Chroma Vector Database
-Sentence Transformers
-SQLite
-Ollama LLM
+Python, Chroma Vector Database, Sentence Transformers, SQLite, Ollama LLM
 
 
 Learning Goals:
 This project demonstrates key ideas in modern agent-based AI systems:
-multi-agent orchestration
-retrieval-augmented generation
-modular agent design
-hybrid data retrieval
-LLM-based synthesis
+1. multi-agent orchestration
+2. retrieval-augmented generation
+3. modular agent design
+4. hybrid data retrieval
+5. LLM-based synthesis
 
 Future Improvements:
 
 Potential enhancements include:
-
-more advanced inter-agent communication\n
-improved ranking of retrieved sources\n
-additional domain-specific agents\n
+1. more advanced inter-agent communication
+2. improved ranking of retrieved sources
+3. additional domain-specific agents
 
 Screenshots
 Example system runs are included in the repository.
