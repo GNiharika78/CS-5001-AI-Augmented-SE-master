@@ -1,30 +1,32 @@
-Multi-Agent agentic RAG system
+**Multi-Agent agentic RAG system**
 
-Overview:
+**Overview:**
 This projects implements a Muilti-Agent agentic Retrieval Augmented Generation(RAG) System, that answers complex questions by coordinating multiple specialized agents. Instead of reklying on single retrieval pipeline, the system distributes tasks across multiple agents for different data sources and retrieval strategies.
 
 The system inspired by Multi-agent agentic RAG architecture, where coordinator agent orchestrates specialized retrieval agents, integrates their outputs and generates a response using LLM.
 
 This approach improves modularity, scalability and retrieval quality and allows the system to combine strcutural data, academic knowledge and live web information.
 
-System architecture:  ![SystemArchitecture.png](SystemArchitecture.png)
+**System architecture:**
+
+  ![SystemArchitecture.png](SystemArchitecture.png)
 
 
-Agents in the system:
+##**Agents in the system:**
 
-Coordinator agent:
+**Coordinator agent:**
 This acts as a central orchestrator of the system . It receives the user query and calls the planner agents to determine which agents are needed, executes the selected agents and passes their outputs to the synthesizer agent.
 
 Responsibilities: Route queries, execute agents, collect results, track latency and cost and produce final response.
 
-Planner Agent:
+**Planner Agent:**
  It analyzes the user query and determines which agent should run.
 
 
 ![alt text](image.png)
 
 
-Sql agent:
+**Sql agent:**
 It retrieves the structured data from database.
 
 Data sources include: renewable energy share, emission data, investment statistics, employment indicators
@@ -76,13 +78,17 @@ Parallel Retrieval: Agents can run independently, enabling efficient information
 
 Modular Design: Agents can be easily added or removed without affecting the overall system.
 
-Hybrid Data Sources:
+**Hybrid Data Sources:**
 
 The system combines:structured databases, academic documents, live web information, curated recommendations
 
 Cost and Latency Tracking:
 
 Each agent tracks: execution latency, API cost (if applicable)
+
+
+
+The system includes cost tracking for LLM and external API usage. In this implementation the total cost is $0.0000 because the system uses a locally hosted LLM via Ollama and local data sources (SQLite database and vector store), avoiding any paid API services.
 
 This improves transparency and reproducibility
 
