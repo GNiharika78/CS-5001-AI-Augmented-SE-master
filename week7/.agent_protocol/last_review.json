@@ -1,0 +1,21 @@
+{
+  "review": {
+    "scope": {
+      "mode": "base",
+      "base": "main"
+    },
+    "changed_files": [],
+    "diff_bytes": 0,
+    "diff_excerpt": "",
+    "change_type": "chore",
+    "risk": "low",
+    "issues": [],
+    "evidence": []
+  },
+  "plan": {
+    "decision": "no_action",
+    "justification": "No strong risk signals detected beyond normal change review.",
+    "must_reference_evidence": true,
+    "recommended_kind": "none"
+  }
+}
