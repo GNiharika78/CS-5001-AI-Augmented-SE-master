@@ -143,6 +143,7 @@ Potential enhancements include:
 1. more advanced inter-agent communication
 2. improved ranking of retrieved sources
 3. additional domain-specific agents
+4. Agent Memory Integration
 
 ## Screenshots
 Example system runs are included in the repository.
