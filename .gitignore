@@ -212,3 +212,5 @@ __marimo__/
 Week_3/in-class-activity/code_generation_agent/output/*/.cca/
 Week_3/in-class-activity/code_generation_agent/output/**/__pycache__/
 Week_3/in-class-activity/code_generation_agent/output/**/*.pyc
+week7/.agent_protocol/
+week7/.agent_protocol/
