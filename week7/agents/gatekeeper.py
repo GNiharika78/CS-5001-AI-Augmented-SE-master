@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Dict
+import subprocess
 
 from protocols.a2a import A2AMessage
 
@@ -24,9 +25,11 @@ class GatekeeperAgent:
 
         issues = []
         missing = []
+
         for field in draft.get("required_fields", []):
             if field not in draft.get("fields", {}) or not str(draft["fields"][field]).strip():
                 missing.append(field)
+
         if missing:
             issues.append(f"Missing required fields: {', '.join(missing)}")
 
@@ -39,6 +42,7 @@ class GatekeeperAgent:
                 issues.append("Missing test plan.")
 
         verdict = "PASS" if not issues else "FAIL"
+
         return {
             "reflection": {
                 "verdict": verdict,
@@ -46,11 +50,17 @@ class GatekeeperAgent:
                 "checks": {
                     "missing_required_fields": missing,
                     "has_evidence": bool(evidence),
-                    "has_test_plan_if_pr": (draft.get("kind") != "pr") or bool(draft["fields"].get("test_plan", "").strip()),
+                    "has_test_plan_if_pr": (
+                        draft.get("kind") != "pr"
+                    ) or bool(draft["fields"].get("test_plan", "").strip()),
                     "issues": issues,
-                }
+                },
             }
         }
+
+    def current_branch(self) -> str:
+        out = subprocess.check_output(["git", "branch", "--show-current"])
+        return out.decode("utf-8", errors="replace").strip()
 
     def _approve_and_create(self, payload: Dict[str, Any]) -> Dict[str, Any]:
         draft = payload["draft"]
@@ -64,7 +74,12 @@ class GatekeeperAgent:
         body = draft["rendered"]
 
         if kind == "issue":
-            url = self.mcp.call("github", "gh_issue_create", title=title, body=body)
+            url = self.mcp.call(
+                "github",
+                "gh_issue_create",
+                title=title,
+                body=body,
+            )
             return {"result": f"[Tool] GitHub API call successful.\n{url}"}
 
         url = self.mcp.call(
@@ -72,7 +87,8 @@ class GatekeeperAgent:
             "gh_pr_create",
             title=title,
             body=body,
-            base=draft.get("gh", {}).get("base", "main")
+            base=draft.get("gh", {}).get("base", "main"),
+            head=self.current_branch(),
         )
         return {"result": f"[Tool] GitHub API call successful.\n{url}"}
 
@@ -81,12 +97,18 @@ class GatekeeperAgent:
         improved = payload["improved"]
 
         issues = []
+
         if not critique.get("points"):
             issues.append("Critique lacks specific points.")
-        if "Acceptance Criteria" not in improved.get("rendered", "") and "Acceptance criteria" not in improved.get("rendered", ""):
+
+        if (
+            "Acceptance Criteria" not in improved.get("rendered", "")
+            and "Acceptance criteria" not in improved.get("rendered", "")
+        ):
             issues.append("Improved version lacks acceptance criteria section.")
 
         verdict = "PASS" if not issues else "FAIL"
+
         return {
             "reflection": {
                 "verdict": verdict,
