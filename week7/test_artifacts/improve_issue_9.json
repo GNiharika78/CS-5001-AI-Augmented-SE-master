@@ -1,0 +1,25 @@
+{
+  "kind": "issue",
+  "number": 9,
+  "existing": {
+    "body": "# Remove hardcoded token and use environment variable instead\n\n## Problem\nRemove hardcoded token and use environment variable instead\n\n(Describe impact, who is affected, and current behavior.)\n\n## Evidence\n- **changed_files**: agentic_protocols/demo_security_case.py\n- **diff_excerpt**: diff --git a/agentic_protocols/demo_security_case.py b/agentic_protocols/demo_security_case.py\nnew file mode 100644\nindex 0000000..79ad966\n--- /dev/null\n+++ b/agentic_protocols/demo_security_case.py\n@@ -0,0 +1 @@\n+token = \"demo-token-not-real\" \n\n- **diff-signal**: Found assignment to password/secret/token in added lines.\n\n## Acceptance Criteria\n- [ ] Remove hardcoded secret/token from source code\n- [ ] Load the secret from environment variables or a secret manager\n- [ ] Fail safely when the secret is missing\n- [ ] Confirm no committed secrets remain in the repository history\n\n\n## Risk Level\n**high**\n",
+    "labels": [],
+    "title": "Remove hardcoded token and use environment variable instead",
+    "url": "https://github.com/GNiharika78/CS-5001-AI-Augmented-SE-master/issues/9"
+  },
+  "critique": {
+    "headline": "ISSUE is mostly clear.",
+    "points": [],
+    "rendered": "- No major gaps detected."
+  },
+  "improved": {
+    "rendered": "# Remove hardcoded token and use environment variable instead\n\n## Problem\n(Rewrite current behavior, expected behavior, and impact.)\n\n## Evidence\n- Link: https://github.com/GNiharika78/CS-5001-AI-Augmented-SE-master/issues/9\n- Repro steps:\n  1.\n  2.\n  3.\n\n## Acceptance Criteria\n- [ ] Define expected behavior clearly\n- [ ] Add or update tests\n- [ ] Verify the issue is resolved without regression\n\n## Risk Level\nLow / Medium / High (pick one and justify)\n"
+  },
+  "reflection": {
+    "verdict": "FAIL",
+    "summary": "Critique lacks specific points.",
+    "issues": [
+      "Critique lacks specific points."
+    ]
+  }
+}

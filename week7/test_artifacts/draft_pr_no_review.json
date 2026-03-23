@@ -1,0 +1,52 @@
+{
+  "plan": {
+    "kind": "pr",
+    "instruction": "Refactor duplicate logic",
+    "use_review": false,
+    "required_fields": [
+      "title",
+      "summary",
+      "files_affected",
+      "behavior_change",
+      "test_plan",
+      "risk_level"
+    ]
+  },
+  "draft": {
+    "kind": "pr",
+    "fields": {
+      "title": "PR: Refactor duplicate logic",
+      "summary": "Refactor duplicate logic\n\n(Explain what changed and why.)",
+      "files_affected": "(Unknown yet \u2014 run review first.)",
+      "behavior_change": "- Describe user-visible behavior changes (or explicitly state: none)\n",
+      "test_plan": "- [ ] Unit tests\n- [ ] Manual verification\n- [ ] Regression check\n",
+      "risk_level": "low"
+    },
+    "required_fields": [
+      "title",
+      "summary",
+      "files_affected",
+      "behavior_change",
+      "test_plan",
+      "risk_level"
+    ],
+    "evidence": [],
+    "rendered": "# PR: Refactor duplicate logic\n\n## Summary\nRefactor duplicate logic\n\n(Explain what changed and why.)\n\n## Files Affected\n(Unknown yet \u2014 run review first.)\n\n## Behavior Change\n- Describe user-visible behavior changes (or explicitly state: none)\n\n\n## Test Plan\n- [ ] Unit tests\n- [ ] Manual verification\n- [ ] Regression check\n\n\n## Risk Level\n**low**\n",
+    "gh": {
+      "action": "pr_create",
+      "base": "main"
+    }
+  },
+  "reflection": {
+    "verdict": "FAIL",
+    "summary": "Missing evidence references (diff hunks / file reads).",
+    "checks": {
+      "missing_required_fields": [],
+      "has_evidence": false,
+      "has_test_plan_if_pr": true,
+      "issues": [
+        "Missing evidence references (diff hunks / file reads)."
+      ]
+    }
+  }
+}

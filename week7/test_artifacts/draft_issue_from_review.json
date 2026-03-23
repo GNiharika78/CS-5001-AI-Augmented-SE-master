@@ -1,0 +1,63 @@
+{
+  "plan": {
+    "kind": "issue",
+    "instruction": "Remove hardcoded token and use environment variable",
+    "use_review": true,
+    "required_fields": [
+      "title",
+      "problem",
+      "evidence",
+      "acceptance_criteria",
+      "risk_level"
+    ]
+  },
+  "draft": {
+    "kind": "issue",
+    "fields": {
+      "title": "Remove hardcoded token and use environment variable",
+      "problem": "Remove hardcoded token and use environment variable\n\n(Describe impact, who is affected, and current behavior.)",
+      "evidence": "- **changed_files**: week7/.agent_protocol/last_review.json, week7/README.md, week7/app.py, week7/demo_security_case.py, week7/tools/github_mcp_server.py, week7/utils.py\n- **diff_excerpt**: diff --git a/week7/.agent_protocol/last_review.json b/week7/.agent_protocol/last_review.json\nindex 04459e7..2665132 100644\n--- a/week7/.agent_protocol/last_review.json\n+++ b/week7/.agent_protocol/last_review.json\n@@ -4,10 +4,12 @@\n       \"mode\": \"base\",\n       \"base\": \"main\"\n     },\n-    \"changed_files\": [],\n-    \"diff_bytes\": 0,\n-    \"diff_excerpt\": \"\",\n-    \"change_type\": \"chore\",\n+    \"changed_files\": [\n+      \"week7/README.md\"\n+    ],\n+    \"diff_bytes\": 149,\n+    \"diff_excerpt\": \"diff --git a/week7/README.md b/week7/README.md\\nnew file mode 100644\\nindex 0000000..4ea5e4d\\n--- /dev/null\\n+++ b/week7/README.md\\n@@ -0,0 +1 @@\\n+update\\n\",\n+    \"change_type\": \"docs\",\n     \"risk\": \"low\",\n     \"issues\": [],\n     \"evidence\": []\ndiff --git a/week7/README.md b/week7/README.md\nnew file mode 100644\nindex 0000000..4ea5e4d\n--- /dev/null\n+++ b/week7/README.md\n@@ -0,0 +1 @@\n+update\ndiff --git a/week7/app.py b/week7/app.py\nindex 5d07eba..bcb137e 100644\n--- a/week7/app.py\n+++ b/week7/app.py\n@@ -28,26 +28,48 @@ def build_system():\n \n \n def main() -> None:\n-    parser = argparse.ArgumentParser(prog=\"agent\", description=\"Protocol-based GitHub Repository Agent\")\n+    parser = argparse.ArgumentParser(\n+        prog=\"agent\",\n+        description=\"Protocol-based GitHub Repository Agent\"\n+    )\n     sub = parser.add_subparsers(dest=\"cmd\", required=True)\n \n+    # review\n     review = sub.add_parser(\"review\")\n     g = review.add_mutually_exclusive_group(required=True)\n     g.add_argument(\"--base\", \n- **diff-signal**: Found `print(...)` in added lines.\n- **diff-signal**: Found assignment to password/secret/token in added lines.",
+      "acceptance_criteria": "- [ ] Remove hardcoded secret/token from source code\n- [ ] Load the secret from environment variables or a secret manager\n- [ ] Fail safely when the secret is missing\n- [ ] Confirm no committed secrets remain in the repository history\n",
+      "risk_level": "high"
+    },
+    "required_fields": [
+      "title",
+      "problem",
+      "evidence",
+      "acceptance_criteria",
+      "risk_level"
+    ],
+    "evidence": [
+      {
+        "kind": "changed_files",
+        "text": "week7/.agent_protocol/last_review.json, week7/README.md, week7/app.py, week7/demo_security_case.py, week7/tools/github_mcp_server.py, week7/utils.py"
+      },
+      {
+        "kind": "diff_excerpt",
+        "text": "diff --git a/week7/.agent_protocol/last_review.json b/week7/.agent_protocol/last_review.json\nindex 04459e7..2665132 100644\n--- a/week7/.agent_protocol/last_review.json\n+++ b/week7/.agent_protocol/last_review.json\n@@ -4,10 +4,12 @@\n       \"mode\": \"base\",\n       \"base\": \"main\"\n     },\n-    \"changed_files\": [],\n-    \"diff_bytes\": 0,\n-    \"diff_excerpt\": \"\",\n-    \"change_type\": \"chore\",\n+    \"changed_files\": [\n+      \"week7/README.md\"\n+    ],\n+    \"diff_bytes\": 149,\n+    \"diff_excerpt\": \"diff --git a/week7/README.md b/week7/README.md\\nnew file mode 100644\\nindex 0000000..4ea5e4d\\n--- /dev/null\\n+++ b/week7/README.md\\n@@ -0,0 +1 @@\\n+update\\n\",\n+    \"change_type\": \"docs\",\n     \"risk\": \"low\",\n     \"issues\": [],\n     \"evidence\": []\ndiff --git a/week7/README.md b/week7/README.md\nnew file mode 100644\nindex 0000000..4ea5e4d\n--- /dev/null\n+++ b/week7/README.md\n@@ -0,0 +1 @@\n+update\ndiff --git a/week7/app.py b/week7/app.py\nindex 5d07eba..bcb137e 100644\n--- a/week7/app.py\n+++ b/week7/app.py\n@@ -28,26 +28,48 @@ def build_system():\n \n \n def main() -> None:\n-    parser = argparse.ArgumentParser(prog=\"agent\", description=\"Protocol-based GitHub Repository Agent\")\n+    parser = argparse.ArgumentParser(\n+        prog=\"agent\",\n+        description=\"Protocol-based GitHub Repository Agent\"\n+    )\n     sub = parser.add_subparsers(dest=\"cmd\", required=True)\n \n+    # review\n     review = sub.add_parser(\"review\")\n     g = review.add_mutually_exclusive_group(required=True)\n     g.add_argument(\"--base\", type=str)\n     g.add_argument(\"--range\", dest=\"commit_range\", type=str)\n+    review.add_argument(\n+        \"--save-artifact\",\n+        type=str,\n+        help=\"Save review output to test_artifacts/<name>.json\"\n+    )\n \n+    # draft\n     draft = sub.add_parser(\"draft\")\n     draft.add_argument(\"kind\", choices=[\"issue\", \"pr\"])\n     draft.add_argument(\"--instruction\", required=True)\n     draft.add_argument(\"--evidence-from-review\", action=\"store_true\")\n+    draft.add_argument(\n+        \"--save-artifact\",\n+        type=str,\n+        help=\"Save draft output to test_artifacts/<name>.json\"\n+    )\n \n+    # approve\n     approve = sub.add_parser(\"approve\")\n     approve.add_argument(\"--yes\", action=\"store_true\")\n     approve.add_argument(\"--no\", action=\"store_true\")\n \n+    # improve\n     improve = sub.add_parser(\"improve\")\n     improve.add_argument(\"kind\", choices=[\"issue\", \"pr\"])\n     improve.add_argument(\"--number\", required=True, type=int)\n+    improve.add_argument(\n+        \"--save-artifact\",\n+        type=str,\n+        help=\"Save improvement output to test_artifacts/<name>.json\"\n+    )\n \n     args = parser.parse_args()\n     store = DraftStore()\n@@ -60,14 +82,21 @@ def main() -> None:\n             task=\"review_changes\",\n             payload={\"base\": args.base, \"commit_range\": args.commit_range},\n         ))\n+\n         plan_result = bus.send(A2AMessage(\n             sender=\"orchestrator\",\n             recipient=\"planner\",\n             task=\"plan_from_review\",\n             payload=revi"
+      },
+      {
+        "kind": "diff-signal",
+        "text": "Found `print(...)` in added lines."
+      },
+      {
+        "kind": "diff-signal",
+        "text": "Found assignment to password/secret/token in added lines."
+      }
+    ],
+    "rendered": "# Remove hardcoded token and use environment variable\n\n## Problem\nRemove hardcoded token and use environment variable\n\n(Describe impact, who is affected, and current behavior.)\n\n## Evidence\n- **changed_files**: week7/.agent_protocol/last_review.json, week7/README.md, week7/app.py, week7/demo_security_case.py, week7/tools/github_mcp_server.py, week7/utils.py\n- **diff_excerpt**: diff --git a/week7/.agent_protocol/last_review.json b/week7/.agent_protocol/last_review.json\nindex 04459e7..2665132 100644\n--- a/week7/.agent_protocol/last_review.json\n+++ b/week7/.agent_protocol/last_review.json\n@@ -4,10 +4,12 @@\n       \"mode\": \"base\",\n       \"base\": \"main\"\n     },\n-    \"changed_files\": [],\n-    \"diff_bytes\": 0,\n-    \"diff_excerpt\": \"\",\n-    \"change_type\": \"chore\",\n+    \"changed_files\": [\n+      \"week7/README.md\"\n+    ],\n+    \"diff_bytes\": 149,\n+    \"diff_excerpt\": \"diff --git a/week7/README.md b/week7/README.md\\nnew file mode 100644\\nindex 0000000..4ea5e4d\\n--- /dev/null\\n+++ b/week7/README.md\\n@@ -0,0 +1 @@\\n+update\\n\",\n+    \"change_type\": \"docs\",\n     \"risk\": \"low\",\n     \"issues\": [],\n     \"evidence\": []\ndiff --git a/week7/README.md b/week7/README.md\nnew file mode 100644\nindex 0000000..4ea5e4d\n--- /dev/null\n+++ b/week7/README.md\n@@ -0,0 +1 @@\n+update\ndiff --git a/week7/app.py b/week7/app.py\nindex 5d07eba..bcb137e 100644\n--- a/week7/app.py\n+++ b/week7/app.py\n@@ -28,26 +28,48 @@ def build_system():\n \n \n def main() -> None:\n-    parser = argparse.ArgumentParser(prog=\"agent\", description=\"Protocol-based GitHub Repository Agent\")\n+    parser = argparse.ArgumentParser(\n+        prog=\"agent\",\n+        description=\"Protocol-based GitHub Repository Agent\"\n+    )\n     sub = parser.add_subparsers(dest=\"cmd\", required=True)\n \n+    # review\n     review = sub.add_parser(\"review\")\n     g = review.add_mutually_exclusive_group(required=True)\n     g.add_argument(\"--base\", \n- **diff-signal**: Found `print(...)` in added lines.\n- **diff-signal**: Found assignment to password/secret/token in added lines.\n\n## Acceptance Criteria\n- [ ] Remove hardcoded secret/token from source code\n- [ ] Load the secret from environment variables or a secret manager\n- [ ] Fail safely when the secret is missing\n- [ ] Confirm no committed secrets remain in the repository history\n\n\n## Risk Level\n**high**\n",
+    "gh": {
+      "action": "issue_create"
+    }
+  },
+  "reflection": {
+    "verdict": "PASS",
+    "summary": "All checks satisfied.",
+    "checks": {
+      "missing_required_fields": [],
+      "has_evidence": true,
+      "has_test_plan_if_pr": true,
+      "issues": []
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "plan": {
+    "kind": "pr",
+    "instruction": "Refactor duplicate logic",
+    "use_review": true,
+    "required_fields": [
+      "title",
+      "summary",
+      "files_affected",
+      "behavior_change",
+      "test_plan",
+      "risk_level"
+    ]
+  },
+  "draft": {
+    "kind": "pr",
+    "fields": {
+      "title": "PR: Refactor duplicate logic",
+      "summary": "Refactor duplicate logic\n\n(Explain what changed and why.)",
+      "files_affected": "week7/.agent_protocol/last_review.json, week7/README.md, week7/app.py, week7/tools/github_mcp_server.py, week7/utils.py",
+      "behavior_change": "- Describe user-visible behavior changes (or explicitly state: none)\n",
+      "test_plan": "- [ ] Unit tests\n- [ ] Manual verification\n- [ ] Regression check\n",
+      "risk_level": "medium"
+    },
+    "required_fields": [
+      "title",
+      "summary",
+      "files_affected",
+      "behavior_change",
+      "test_plan",
+      "risk_level"
+    ],
+    "evidence": [
+      {
+        "kind": "changed_files",
+        "text": "week7/.agent_protocol/last_review.json, week7/README.md, week7/app.py, week7/tools/github_mcp_server.py, week7/utils.py"
+      },
+      {
+        "kind": "diff_excerpt",
+        "text": "diff --git a/week7/.agent_protocol/last_review.json b/week7/.agent_protocol/last_review.json\nindex 04459e7..2665132 100644\n--- a/week7/.agent_protocol/last_review.json\n+++ b/week7/.agent_protocol/last_review.json\n@@ -4,10 +4,12 @@\n       \"mode\": \"base\",\n       \"base\": \"main\"\n     },\n-    \"changed_files\": [],\n-    \"diff_bytes\": 0,\n-    \"diff_excerpt\": \"\",\n-    \"change_type\": \"chore\",\n+    \"changed_files\": [\n+      \"week7/README.md\"\n+    ],\n+    \"diff_bytes\": 149,\n+    \"diff_excerpt\": \"diff --git a/week7/README.md b/week7/README.md\\nnew file mode 100644\\nindex 0000000..4ea5e4d\\n--- /dev/null\\n+++ b/week7/README.md\\n@@ -0,0 +1 @@\\n+update\\n\",\n+    \"change_type\": \"docs\",\n     \"risk\": \"low\",\n     \"issues\": [],\n     \"evidence\": []\ndiff --git a/week7/README.md b/week7/README.md\nnew file mode 100644\nindex 0000000..4ea5e4d\n--- /dev/null\n+++ b/week7/README.md\n@@ -0,0 +1 @@\n+update\ndiff --git a/week7/app.py b/week7/app.py\nindex 5d07eba..bcb137e 100644\n--- a/week7/app.py\n+++ b/week7/app.py\n@@ -28,26 +28,48 @@ def build_system():\n \n \n def main() -> None:\n-    parser = argparse.ArgumentParser(prog=\"agent\", description=\"Protocol-based GitHub Repository Agent\")\n+    parser = argparse.ArgumentParser(\n+        prog=\"agent\",\n+        description=\"Protocol-based GitHub Repository Agent\"\n+    )\n     sub = parser.add_subparsers(dest=\"cmd\", required=True)\n \n+    # review\n     review = sub.add_parser(\"review\")\n     g = review.add_mutually_exclusive_group(required=True)\n     g.add_argument(\"--base\", type=str)\n     g.add_argument(\"--range\", dest=\"commit_range\", type=str)\n+    review.add_argument(\n+        \"--save-artifact\",\n+        type=str,\n+        help=\"Save review output to test_artifacts/<name>.json\"\n+    )\n \n+    # draft\n     draft = sub.add_parser(\"draft\")\n     draft.add_argument(\"kind\", choices=[\"issue\", \"pr\"])\n     draft.add_argument(\"--instruction\", required=True)\n     draft.add_argument(\"--evidence-from-review\", action=\"store_true\")\n+    draft.add_argument(\n+        \"--save-artifact\",\n+        type=str,\n+        help=\"Save draft output to test_artifacts/<name>.json\"\n+    )\n \n+    # approve\n     approve = sub.add_parser(\"approve\")\n     approve.add_argument(\"--yes\", action=\"store_true\")\n     approve.add_argument(\"--no\", action=\"store_true\")\n \n+    # improve\n     improve = sub.add_parser(\"improve\")\n     improve.add_argument(\"kind\", choices=[\"issue\", \"pr\"])\n     improve.add_argument(\"--number\", required=True, type=int)\n+    improve.add_argument(\n+        \"--save-artifact\",\n+        type=str,\n+        help=\"Save improvement output to test_artifacts/<name>.json\"\n+    )\n \n     args = parser.parse_args()\n     store = DraftStore()\n@@ -60,14 +82,21 @@ def main() -> None:\n             task=\"review_changes\",\n             payload={\"base\": args.base, \"commit_range\": args.commit_range},\n         ))\n+\n         plan_result = bus.send(A2AMessage(\n             sender=\"orchestrator\",\n             recipient=\"planner\",\n             task=\"plan_from_review\",\n             payload=revi"
+      },
+      {
+        "kind": "diff-signal",
+        "text": "Found `print(...)` in added lines."
+      }
+    ],
+    "rendered": "# PR: Refactor duplicate logic\n\n## Summary\nRefactor duplicate logic\n\n(Explain what changed and why.)\n\n## Files Affected\nweek7/.agent_protocol/last_review.json, week7/README.md, week7/app.py, week7/tools/github_mcp_server.py, week7/utils.py\n\n## Behavior Change\n- Describe user-visible behavior changes (or explicitly state: none)\n\n\n## Test Plan\n- [ ] Unit tests\n- [ ] Manual verification\n- [ ] Regression check\n\n\n## Risk Level\n**medium**\n",
+    "gh": {
+      "action": "pr_create",
+      "base": "main"
+    }
+  },
+  "reflection": {
+    "verdict": "PASS",
+    "summary": "All checks satisfied.",
+    "checks": {
+      "missing_required_fields": [],
+      "has_evidence": true,
+      "has_test_plan_if_pr": true,
+      "issues": []
+    }
+  }
+}
