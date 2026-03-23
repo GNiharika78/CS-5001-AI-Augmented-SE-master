@@ -28,26 +28,48 @@ def build_system():
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(prog="agent", description="Protocol-based GitHub Repository Agent")
+    parser = argparse.ArgumentParser(
+        prog="agent",
+        description="Protocol-based GitHub Repository Agent"
+    )
     sub = parser.add_subparsers(dest="cmd", required=True)
 
+    # review
     review = sub.add_parser("review")
     g = review.add_mutually_exclusive_group(required=True)
     g.add_argument("--base", type=str)
     g.add_argument("--range", dest="commit_range", type=str)
+    review.add_argument(
+        "--save-artifact",
+        type=str,
+        help="Save review output to test_artifacts/<name>.json"
+    )
 
+    # draft
     draft = sub.add_parser("draft")
     draft.add_argument("kind", choices=["issue", "pr"])
     draft.add_argument("--instruction", required=True)
     draft.add_argument("--evidence-from-review", action="store_true")
+    draft.add_argument(
+        "--save-artifact",
+        type=str,
+        help="Save draft output to test_artifacts/<name>.json"
+    )
 
+    # approve
     approve = sub.add_parser("approve")
     approve.add_argument("--yes", action="store_true")
     approve.add_argument("--no", action="store_true")
 
+    # improve
     improve = sub.add_parser("improve")
     improve.add_argument("kind", choices=["issue", "pr"])
     improve.add_argument("--number", required=True, type=int)
+    improve.add_argument(
+        "--save-artifact",
+        type=str,
+        help="Save improvement output to test_artifacts/<name>.json"
+    )
 
     args = parser.parse_args()
     store = DraftStore()
@@ -60,14 +82,21 @@ def main() -> None:
             task="review_changes",
             payload={"base": args.base, "commit_range": args.commit_range},
         ))
+
         plan_result = bus.send(A2AMessage(
             sender="orchestrator",
             recipient="planner",
             task="plan_from_review",
             payload=review_result,
         ))
+
         output = {**review_result, **plan_result}
         store.save_review(output)
+
+        if args.save_artifact:
+            path = store.save_named_artifact(args.save_artifact, output)
+            print(f"[Artifact] Saved review artifact to {path}")
+
         print(json.dumps(output, indent=2))
         return
 
@@ -83,7 +112,8 @@ def main() -> None:
             },
         ))
 
-        review = store.load_review()["review"] if args.evidence_from_review and store.load_review() else None
+        saved_review = store.load_review()
+        review = saved_review["review"] if args.evidence_from_review and saved_review else None
 
         draft_result = bus.send(A2AMessage(
             sender="orchestrator",
@@ -102,9 +132,16 @@ def main() -> None:
         payload = {**plan_result, **draft_result, **reflection_result}
         store.save_draft(payload)
 
+        if args.save_artifact:
+            path = store.save_named_artifact(args.save_artifact, payload)
+            print(f"[Artifact] Saved draft artifact to {path}")
+
         print("[Planner] Scope validated.")
         print(f"[Writer] Draft {args.kind.upper()} created.")
-        print(f"[Gatekeeper] Reflection verdict: {payload['reflection']['verdict']} – {payload['reflection']['summary']}")
+        print(
+            f"[Gatekeeper] Reflection verdict: "
+            f"{payload['reflection']['verdict']} – {payload['reflection']['summary']}"
+        )
         print("\n--- DRAFT (must approve to create) ---\n")
         print(payload["draft"]["rendered"])
         print("\n--- REFLECTION ARTIFACT ---\n")
@@ -125,7 +162,10 @@ def main() -> None:
             return
 
         if payload["reflection"]["verdict"] != "PASS":
-            raise SystemExit(f"[Gatekeeper] Refusing to create. Reflection verdict is {payload['reflection']['verdict']}.")
+            raise SystemExit(
+                f"[Gatekeeper] Refusing to create. "
+                f"Reflection verdict is {payload['reflection']['verdict']}."
+            )
 
         result = bus.send(A2AMessage(
             sender="orchestrator",
@@ -158,6 +198,12 @@ def main() -> None:
             task="reflect_improvement",
             payload=improved,
         ))
+
+        improve_payload = {**existing, **improved, **reflection}
+
+        if args.save_artifact:
+            path = store.save_named_artifact(args.save_artifact, improve_payload)
+            print(f"[Artifact] Saved improvement artifact to {path}")
 
         print(f"[Reviewer] {improved['critique']['headline']}")
         print("\n--- CRITIQUE ---\n")
