@@ -4,10 +4,12 @@
       "mode": "base",
       "base": "main"
     },
-    "changed_files": [],
-    "diff_bytes": 0,
-    "diff_excerpt": "",
-    "change_type": "chore",
+    "changed_files": [
+      "week7/README.md"
+    ],
+    "diff_bytes": 149,
+    "diff_excerpt": "diff --git a/week7/README.md b/week7/README.md\nnew file mode 100644\nindex 0000000..4ea5e4d\n--- /dev/null\n+++ b/week7/README.md\n@@ -0,0 +1 @@\n+update\n",
+    "change_type": "docs",
     "risk": "low",
     "issues": [],
     "evidence": []

@@ -8,16 +8,22 @@ from protocols.mcp import MCPServer
 
 
 def _run(cmd: List[str]) -> str:
-    out = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
-    return out.decode("utf-8", errors="replace")
+    try:
+        out = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+        return out.decode("utf-8", errors="replace")
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError(e.output.decode("utf-8", errors="replace"))
 
 
 def gh_issue_create(title: str, body: str) -> str:
     return _run(["gh", "issue", "create", "--title", title, "--body", body]).strip()
 
 
-def gh_pr_create(title: str, body: str, base: str = "main") -> str:
-    return _run(["gh", "pr", "create", "--base", base, "--title", title, "--body", body]).strip()
+def gh_pr_create(title: str, body: str, base: str = "main", head: str | None = None) -> str:
+    cmd = ["gh", "pr", "create", "--base", base, "--title", title, "--body", body]
+    if head:
+        cmd.extend(["--head", head])
+    return _run(cmd).strip()
 
 
 def gh_issue_view(number: int) -> dict:
