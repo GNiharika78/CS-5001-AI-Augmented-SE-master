@@ -5,8 +5,8 @@
   "status": "repaired",
   "final_code": "def square_nums(nums):\n    square_nums = list(map(lambda x: x * x, nums))\n    return square_nums",
   "attempts": 2,
-  "llm_calls": 3,
-  "duration": 364.13,
+  "llm_calls": 5,
+  "duration": 247.26,
   "memory_type": "episodic_attempt_history",
   "history": [
     {
@@ -14,25 +14,37 @@
       "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
       "code_before_patch": "def square_nums(nums):\n square_nums = list(map(lambda x: x * 2, nums))\n return square_nums",
       "tests_passed_before_patch": false,
-      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert square_nums([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])==[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]\nE       assert [2, 4, 6, 8, 10, 12, ...] == [1, 4, 9, 16, 25, 36, ...]\nE         \nE         At index 0 diff: 2 != 1\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1sg3yyh_\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert square_nums([10,20,30])==([100,400,900])\nE       assert [20, 40, 60] == [100, 400, 900]\nE         \nE         At index 0 diff: 20 != 100\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1sg3yyh_\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert square_nums([12,15])==([144,225])\nE       assert [24, 30] == [144, 225]\nE         \nE         At index 0 diff: 24 != 144\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1sg3yyh_\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1sg3yyh_\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1sg3yyh_\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1sg3yyh_\\test_solution.py::test_case_2\n3 failed in 0.44s\n\n",
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert square_nums([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])==[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]\nE       assert [2, 4, 6, 8, 10, 12, ...] == [1, 4, 9, 16, 25, 36, ...]\nE         \nE         At index 0 diff: 2 != 1\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbve2xtke\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert square_nums([10,20,30])==([100,400,900])\nE       assert [20, 40, 60] == [100, 400, 900]\nE         \nE         At index 0 diff: 20 != 100\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbve2xtke\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert square_nums([12,15])==([144,225])\nE       assert [24, 30] == [144, 225]\nE         \nE         At index 0 diff: 24 != 144\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbve2xtke\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbve2xtke\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbve2xtke\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbve2xtke\\test_solution.py::test_case_2\n3 failed in 0.35s\n\n",
       "failure": "1. **What failed**: The function `square_nums` is not correctly squaring the elements of the input list. Instead, it is multiplying each element by 2.\n\n2. **Evidence**:\n   - For the test case `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`, the expected output is `[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]`, but the actual output is `[2, 4, 6, 8, 10, 12, 14, 16, 18, 20]`.\n   - For the test case `[10, 20, 30]`, the expected output is `[100, 400, 900]`, but the actual output is `[20, 40, 60]`.\n\n3. **Failure type**: The failure is due to a logical error in the lambda function used within the `map` function. The lambda function should be `lambda x:",
       "hypothesis": "1. **Failing behavior**: The function `square_nums` is not correctly squaring the elements of the input list. Instead, it is multiplying each element by 2.\n\n2. **Evidence**:\n   - For the test case `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`, the expected output is `[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]`, but the actual output is `[2, 4, 6, 8, 10, 12, 14, 16, 18, 20]`.\n   - For the test case `[10, 20, 30]`, the expected output is `[100, 400, 900]`, but the actual output is `[20, 40, 60]`.\n\n3. **Root cause**: The lambda function used within the `map` function is incorrectly multiplying each element by 2 instead of squaring it.\n\n4. **Why",
       "patched_code": "def square_nums(nums):\n    square_nums = list(map(lambda x: x * x, nums))\n    return square_nums",
       "decision": "patch_and_retry",
-      "duration_seconds": 363.3
+      "duration_seconds": 167.16
     },
     {
       "attempt": 2,
       "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
       "code_before_patch": "def square_nums(nums):\n    square_nums = list(map(lambda x: x * x, nums))\n    return square_nums",
       "tests_passed_before_patch": true,
-      "test_output": "...                                                                      [100%]\n3 passed in 0.51s\n\n",
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
       "failure": null,
       "hypothesis": null,
       "patched_code": null,
       "decision": "stop_success",
-      "duration_seconds": 0.83
+      "duration_seconds": 0.61
     }
   ],
-  "post": null
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### Coverage Summary\n\nThe coverage report indicates that both `solution.py` and `test_solution.py` have been fully tested, with no missing statements or branches. Here's a breakdown:\n\n- **solution.py**: 3 statements, all covered (100%).\n- **test_solution.py**: 7 statements, all covered (100%).\n\n### Missing Cases\n\nThere are no missing cases in either file as indicated by the coverage report.\n\n### Test Suggestions\n\nSince both files have 100% coverage and there are no missing cases, it suggests that your tests are comprehensive and cover all expected scenarios. However, here are a few suggestions to ensure robust testing:\n\n1. **Edge Cases**: Ensure that edge cases and boundary conditions are covered in your tests.\n2. **Complex Scenarios**: If `solution.py` contains complex logic or multiple functions, consider breaking down the tests into smaller, more focused test cases for each function.\n3. **Performance Testing**: Depending on the nature of the code, you might want to include performance testing to ensure that the solution is efficient under various conditions.\n4. **Code Refactoring**: If `solution.py` has been updated or refactored recently, consider re-running tests to ensure that existing coverage remains intact and new",
+    "generated_tests": [
+      "assert square_nums([]) == []",
+      "assert square_nums([-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]) == [25, 16, 9, 4, 1, 0, 1, 4, 9, 16, 25]",
+      "assert square_nums([1.5, 2.5, 3.5]) == [2.25, 6.25, 12.25]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.36s\n\n"
+  }
 }

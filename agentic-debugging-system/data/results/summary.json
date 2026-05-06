@@ -1,18 +1,18 @@
 {
-  "target_evaluated_tasks": 10,
-  "total_evaluated_tasks": 10,
-  "repaired": 9,
-  "failed": 1,
+  "target_evaluated_tasks": 20,
+  "total_evaluated_tasks": 20,
+  "repaired": 18,
+  "failed": 2,
   "failed_llm": 0,
   "success_rate": 0.9,
-  "average_attempts": 2.2,
-  "average_duration_seconds": 443.21999999999997,
-  "average_llm_calls": 3.6,
+  "average_attempts": 2.25,
+  "average_duration_seconds": 284.5545,
+  "average_llm_calls": 5.55,
   "bug_type_summary": {
     "operator_plus_to_minus": {
-      "total": 4,
-      "repaired": 4,
-      "failed": 0,
+      "total": 8,
+      "repaired": 7,
+      "failed": 1,
       "failed_llm": 0
     },
     "boolean_and_to_or": {
@@ -28,8 +28,8 @@
       "failed_llm": 0
     },
     "operator_mul_to_plus": {
-      "total": 3,
-      "repaired": 3,
+      "total": 6,
+      "repaired": 6,
       "failed": 0,
       "failed_llm": 0
     },
@@ -37,6 +37,24 @@
       "total": 1,
       "repaired": 0,
       "failed": 1,
+      "failed_llm": 0
+    },
+    "boundary_lt_to_lte": {
+      "total": 1,
+      "repaired": 1,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "builtin_min_to_max": {
+      "total": 1,
+      "repaired": 1,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "builtin_max_to_min": {
+      "total": 1,
+      "repaired": 1,
+      "failed": 0,
       "failed_llm": 0
     }
   }

@@ -1,0 +1,50 @@
+{
+  "task_id": 66,
+  "task_prompt": "Write a python function to count the number of positive numbers in a list.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def pos_count(lst):\n  pos_count = 0\n  for num in lst: \n    if num > 0: \n      pos_count += 1\n  return pos_count",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 250.59,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def pos_count(list):\n  pos_count= 0\n  for num in list: \n    if num >= 0: \n      pos_count -= 1\n  return pos_count ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert pos_count([1,-2,3,-4]) == 2\nE       assert -2 == 2\nE        +  where -2 = pos_count([1, -2, 3, -4])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp67muhzfl\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert pos_count([3,4,5,-1]) == 3\nE       assert -3 == 3\nE        +  where -3 = pos_count([3, 4, 5, -1])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp67muhzfl\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert pos_count([1,2,3,4]) == 4\nE       assert -4 == 4\nE        +  where -4 = pos_count([1, 2, 3, 4])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp67muhzfl\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp67muhzfl\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp67muhzfl\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp67muhzfl\\test_solution.py::test_case_2\n3 failed in 0.42s\n\n",
+      "failure": "1. **What failed**: The function `pos_count` is not correctly counting the number of positive numbers in the list. Instead, it is decrementing a counter for each non-negative number encountered.\n\n2. **Evidence**: \n   - For the input `[1,-2,3,-4]`, the expected output is `2` (since there are two positive numbers: 1 and 3), but the function returns `-2`.\n   - For the input `[3,4,5,-1]`, the expected output is `3` (since there are three positive numbers: 3, 4, and 5), but the function returns `-3`.\n   - For the input `[1,2,3,4]`, the expected output is `4` (since all four numbers are positive), but the function returns `-4`.\n\n3. **Failure type**: The failure is due to a logical error in the condition inside the loop. The condition `if num >= 0:` should increment the counter when the number is non-negative, not decrement it.\n\n4. **Suspected location**: The issue lies in the line where the counter is updated:\n   ```python\n   if num >= 0: \n     pos_count -= 1",
+      "hypothesis": "1. **Failing behavior**: The function `pos_count` is not correctly counting the number of positive numbers in the list. Instead, it is decrementing a counter for each non-negative number encountered.\n\n2. **Evidence**:\n   - For the input `[1,-2,3,-4]`, the expected output is `2` (since there are two positive numbers: 1 and 3), but the function returns `-2`.\n   - For the input `[3,4,5,-1]`, the expected output is `3` (since there are three positive numbers: 3, 4, and 5), but the function returns `-3`.\n   - For the input `[1,2,3,4]`, the expected output is `4` (since all four numbers are positive), but the function returns `-4`.\n\n3. **Root cause**: The failure is due to a logical error in the condition inside the loop. The condition `if num >= 0:` should increment the counter when the number is non-negative, not decrement it.\n\n4. **Why this explains failure**: The current implementation decrements the counter for every non-negative number, which leads to an incorrect count of positive numbers. For example, with the input",
+      "patched_code": "def pos_count(lst):\n  pos_count = 0\n  for num in lst: \n    if num > 0: \n      pos_count += 1\n  return pos_count",
+      "decision": "patch_and_retry",
+      "duration_seconds": 170.87
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def pos_count(lst):\n  pos_count = 0\n  for num in lst: \n    if num > 0: \n      pos_count += 1\n  return pos_count",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.37s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.7
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "### Coverage Summary\n\nThe coverage report indicates that both `solution.py` and `test_solution.py` have been fully tested, with no lines of code missing from either file. Here's a breakdown:\n\n- **solution.py**: 6 statements, all covered (100%).\n- **test_solution.py**: 7 statements, all covered (100%).\n\n### Missing Cases\n\nThere are no missing cases in the provided coverage report. All lines of code in both `solution.py` and `test_solution.py` have been tested.\n\n### Test Suggestions\n\nSince there are no missing cases, it suggests that your tests are comprehensive and cover all necessary scenarios for the functions defined in `solution.py`. However, here are a few general suggestions to ensure robust testing:\n\n1. **Edge Cases**: Ensure that edge cases and boundary conditions are covered.\n2. **Complex Scenarios**: Test complex or multi-step processes to ensure they handle various inputs correctly.\n3. **Performance Testing**: If applicable, consider adding performance tests to measure the efficiency of your solution.\n4. **Integration Tests**: If `solution.py` interacts with other modules or external systems, add integration tests to verify these interactions.\n5. **Code Coverage Tools**: Consider using more advanced code coverage tools to identify potential",
+    "generated_tests": [
+      "assert pos_count([]) == 0",
+      "assert pos_count([0, -1, 0, -2]) == 0",
+      "assert pos_count([float('inf'), -1, 3.5, float('-inf')]) == 2"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.36s\n\n"
+  }
+}

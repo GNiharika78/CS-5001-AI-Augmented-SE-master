@@ -3,7 +3,7 @@ import time
 from pathlib import Path
 
 from app.tools.test_runner import run_tests
-# from app.tools.coverage_runner import run_coverage
+from app.tools.coverage_runner import run_coverage
 
 from app.llm_client import reset_llm_call_count, get_llm_call_count
 
@@ -68,9 +68,7 @@ class DebuggingOrchestrator:
                 record["duration_seconds"] = round(time.time() - attempt_start, 2)
                 history.append(record)
 
-                # Post-success agents are currently disabled for faster testing.
-                # post = self.post_success(task, code, tests)
-                post = None
+                post = self.post_success(task, code, tests)
 
                 return self.result(
                     task=task,
@@ -208,32 +206,71 @@ class DebuggingOrchestrator:
             }
         )
 
+        post = None
+        if status == "repaired":
+            post = self.post_success(task, code, tests)
+
         return self.result(
             task=task,
             bug_type=bug_type,
             code=code,
             status=status,
             history=history,
-            post=None,
+            post=post,
             start=task_start,
         )
 
     def post_success(self, task, code, tests):
-        # Re-enable this only after the core debugging loop is stable.
-        # coverage = run_coverage(code, tests)
-        #
-        # analysis = self.coverage_agent.run(
-        #     task["prompt"], code, coverage["coverage_output"]
-        # )
-        #
-        # new_tests = self.test_generation_agent.run(task["prompt"], code, tests)
-        #
-        # return {
-        #     "coverage": analysis,
-        #     "generated_tests": new_tests,
-        # }
+        print("Running post-success coverage analysis...")
 
-        return None
+        coverage = run_coverage(code, tests)
+
+        print("Calling Coverage Analysis Agent...")
+
+        coverage_analysis = self.coverage_agent.run(
+            task["prompt"],
+            code,
+            coverage["coverage_output"],
+        )
+
+        if coverage_analysis == "LLM_FAILED":
+            coverage_analysis = "Coverage analysis failed."
+
+        print("Calling Test Generation Agent...")
+
+        generated_tests = self.test_generation_agent.run(
+            task["prompt"],
+            code,
+            tests,
+        )
+
+        generated_test_result = None
+
+        if generated_tests:
+            print("Running original + generated tests...")
+
+            generated_test_result = run_tests(
+                code,
+                tests + generated_tests,
+            )
+
+        return {
+            "coverage_tests_passed": coverage.get("tests_passed"),
+            "coverage_output": coverage.get("coverage_output"),
+            "coverage_analysis": coverage_analysis,
+            "generated_tests": generated_tests,
+            "generated_tests_count": len(generated_tests),
+            "generated_tests_passed": (
+                generated_test_result["passed"]
+                if generated_test_result
+                else None
+            ),
+            "generated_test_output": (
+                generated_test_result["output"]
+                if generated_test_result
+                else None
+            ),
+        }
 
     def result(self, task, bug_type, code, status, history, post, start):
         return {

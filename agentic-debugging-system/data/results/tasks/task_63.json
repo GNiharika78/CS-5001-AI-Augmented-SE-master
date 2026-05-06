@@ -1,0 +1,50 @@
+{
+  "task_id": 63,
+  "task_prompt": "Write a function to find the maximum difference between available pairs in the given tuple list.",
+  "bug_type": "builtin_max_to_min",
+  "status": "repaired",
+  "final_code": "def max_difference(test_list):\n  temp = [abs(b - a) for a, b in test_list]\n  res = max(temp)\n  return (res)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 248.49,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_difference(test_list):\n  temp = [abs(b - a) for a, b in test_list]\n  res = min(temp)\n  return (res) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert max_difference([(3, 5), (1, 7), (10, 3), (1, 2)]) == 7\nE       assert 1 == 7\nE        +  where 1 = max_difference([(3, 5), (1, 7), (10, 3), (1, 2)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpimiwtqmp\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert max_difference([(4, 6), (2, 17), (9, 13), (11, 12)]) == 15\nE       assert 1 == 15\nE        +  where 1 = max_difference([(4, 6), (2, 17), (9, 13), (11, 12)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpimiwtqmp\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert max_difference([(12, 35), (21, 27), (13, 23), (41, 22)]) == 23\nE       assert 6 == 23\nE        +  where 6 = max_difference([(12, 35), (21, 27), (13, 23), (41, 22)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpimiwtqmp\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpimiwtqmp\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpimiwtqmp\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpimiwtqmp\\test_solution.py::test_case_2\n3 failed in 0.40s\n\n",
+      "failure": "1. **What failed**: The function `max_difference` is not returning the expected maximum difference between available pairs in the given tuple list. Instead, it is returning the minimum difference.\n\n2. **Evidence**: \n   - For the test case `[(3, 5), (1, 7), (10, 3), (1, 2)]`, the function should return `7` because the maximum difference between pairs `(1, 7)` and `(1, 2)` is `6`. However, it returns `1`.\n   - For the test case `[(4, 6), (2, 17), (9, 13), (11, 12)]`, the function should return `15` because the maximum difference between pairs `(2, 17)` is `15`. However, it returns `1`.\n\n3. **Failure type**: The failure is due to a logical error in the function where it calculates the minimum difference instead of the maximum difference.\n\n4. **Suspected location**: The issue lies in the line `res = min(temp)`. This line should be `res = max(temp)` to correctly find the maximum difference between pairs.",
+      "hypothesis": "1. **Failing behavior**:\n   - The function `max_difference` is returning the minimum difference between pairs in the tuple list instead of the maximum difference.\n\n2. **Evidence**:\n   - For the test case `[(3, 5), (1, 7), (10, 3), (1, 2)]`, the function returns `1` instead of `6`.\n   - For the test case `[(4, 6), (2, 17), (9, 13), (11, 12)]`, the function returns `1` instead of `15`.\n\n3. **Root cause**:\n   - The line `res = min(temp)` is incorrectly calculating the minimum difference rather than the maximum difference.\n\n4. **Why this explains failure**:\n   - The function's intention was to find the maximum difference between pairs, but it mistakenly used the `min` function instead of the `max` function.\n\n5. **Repair plan**:\n   - Change the line `res = min(temp)` to `res = max(temp)` to correctly calculate the maximum difference between pairs.\n\n6. **Confidence (0 to 1)**:\n   - Confidence: 1\n   -",
+      "patched_code": "def max_difference(test_list):\n  temp = [abs(b - a) for a, b in test_list]\n  res = max(temp)\n  return (res)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 168.35
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_difference(test_list):\n  temp = [abs(b - a) for a, b in test_list]\n  res = max(temp)\n  return (res)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.67
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### Coverage Summary\n\nThe coverage report indicates that both `solution.py` and `test_solution.py` have been fully tested, with no lines of code missing from either file. Here's a breakdown:\n\n- **solution.py**: 4 statements, all covered (100%).\n- **test_solution.py**: 7 statements, all covered (100%).\n\n### Missing Cases\n\nThere are no missing cases in the provided coverage report. All lines of code in both `solution.py` and `test_solution.py` have been tested.\n\n### Test Suggestions\n\nSince there are no missing cases, it suggests that your tests are comprehensive and cover all necessary scenarios for the functions defined in `solution.py`. However, here are a few general suggestions to ensure robust testing:\n\n1. **Edge Cases**: Ensure that edge cases and boundary conditions are covered.\n2. **Complex Scenarios**: Test complex or multi-step processes to ensure they handle various inputs correctly.\n3. **Performance Testing**: If applicable, consider adding performance tests to measure the efficiency of your solution.\n4. **Code Coverage Tools**: Use code coverage tools like `coverage.py` (for Python) to continuously monitor and improve test coverage over time.\n\nIf you have specific functions or scenarios in mind that might need additional testing",
+    "generated_tests": [
+      "assert max_difference([(0, 0), (1, 1), (5, 5)]) == 0",
+      "assert max_difference([(1000000, 1), (2, 2000000), (3000000, 4000000)]) == 3999999",
+      "assert max_difference([(10, 5), (3, 1), (9, 9)]) == 5"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....F.                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert max_difference([(1000000, 1), (2, 2000000), (3000000, 4000000)]) == 3999999\nE       assert 1999998 == 3999999\nE        +  where 1999998 = max_difference([(1000000, 1), (2, 2000000), (3000000, 4000000)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1o3bqk9_\\test_solution.py:16: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1o3bqk9_\\test_solution.py::test_case_4\n1 failed, 5 passed in 0.37s\n\n"
+  }
+}

@@ -15,7 +15,7 @@ def get_llm_call_count():
 
 def call_llm(
     prompt: str,
-    model: str = "deepseek-coder:latest",
+    model: str = "ministral-3:8b-cloud",
     retries: int = 2,
     timeout: int = 300,
     max_tokens: int = 256,
