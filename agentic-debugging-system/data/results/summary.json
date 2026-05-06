@@ -1,17 +1,17 @@
 {
-  "target_evaluated_tasks": 20,
-  "total_evaluated_tasks": 20,
-  "repaired": 18,
-  "failed": 2,
+  "target_evaluated_tasks": 50,
+  "total_evaluated_tasks": 50,
+  "repaired": 45,
+  "failed": 5,
   "failed_llm": 0,
   "success_rate": 0.9,
-  "average_attempts": 2.25,
-  "average_duration_seconds": 284.5545,
-  "average_llm_calls": 5.55,
+  "average_attempts": 2.16,
+  "average_duration_seconds": 28.991,
+  "average_llm_calls": 5.28,
   "bug_type_summary": {
     "operator_plus_to_minus": {
-      "total": 8,
-      "repaired": 7,
+      "total": 20,
+      "repaired": 19,
       "failed": 1,
       "failed_llm": 0
     },
@@ -28,14 +28,14 @@
       "failed_llm": 0
     },
     "operator_mul_to_plus": {
-      "total": 6,
-      "repaired": 6,
-      "failed": 0,
+      "total": 13,
+      "repaired": 10,
+      "failed": 3,
       "failed_llm": 0
     },
     "operator_neq_to_eq": {
-      "total": 1,
-      "repaired": 0,
+      "total": 4,
+      "repaired": 3,
       "failed": 1,
       "failed_llm": 0
     },
@@ -46,12 +46,36 @@
       "failed_llm": 0
     },
     "builtin_min_to_max": {
+      "total": 3,
+      "repaired": 3,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "builtin_max_to_min": {
       "total": 1,
       "repaired": 1,
       "failed": 0,
       "failed_llm": 0
     },
-    "builtin_max_to_min": {
+    "operator_eq_to_neq": {
+      "total": 3,
+      "repaired": 3,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "boundary_gt_to_gte": {
+      "total": 1,
+      "repaired": 1,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "boolean_true_to_false": {
+      "total": 1,
+      "repaired": 1,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "boolean_or_to_and": {
       "total": 1,
       "repaired": 1,
       "failed": 0,

@@ -1,0 +1,50 @@
+{
+  "task_id": 94,
+  "task_prompt": "Given a list of tuples, write a function that returns the first value of the tuple with the smallest second value.",
+  "bug_type": "builtin_min_to_max",
+  "status": "repaired",
+  "final_code": "from operator import itemgetter\ndef index_minimum(test_list):\n  res = min(test_list, key=itemgetter(1))[0]\n  return res",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 25.16,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "from operator import itemgetter \ndef index_minimum(test_list):\n  res = max(test_list, key = itemgetter(1))[0]\n  return (res) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert index_minimum([('Rash', 143), ('Manjeet', 200), ('Varsha', 100)]) == 'Varsha'\nE       AssertionError: assert 'Manjeet' == 'Varsha'\nE         \nE         - Varsha\nE         + Manjeet\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpnmekw4cn\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert index_minimum([('Yash', 185), ('Dawood', 125), ('Sanya', 175)]) == 'Dawood'\nE       AssertionError: assert 'Yash' == 'Dawood'\nE         \nE         - Dawood\nE         + Yash\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpnmekw4cn\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert index_minimum([('Sai', 345), ('Salman', 145), ('Ayesha', 96)]) == 'Ayesha'\nE       AssertionError: assert 'Sai' == 'Ayesha'\nE         \nE         - Ayesha\nE         + Sai\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpnmekw4cn\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpnmekw4cn\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpnmekw4cn\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpnmekw4cn\\test_solution.py::test_case_2\n3 failed in 0.68s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function is supposed to return the **first value** (name) of the tuple with the **smallest second value** (score), but instead it's returning the first value of the tuple with the **largest second value** (score).\n\n2. **Evidence**:\n   - Test case 0: Input `[('Rash', 143), ('Manjeet', 200), ('Varsha', 100)]` \u2192 Expected `'Varsha'` (smallest score 100) but got `'Manjeet'` (largest score 200).\n   - Test case 1: Input `[('Yash', 185), ('Dawood', 125), ('Sanya', 175)]` \u2192 Expected `'Dawood'` (smallest score 125) but got `'Yash'` (largest score 185).\n\n3. **Failure type**:\n   The function uses `max()` with `key=itemgetter(1)`, which finds the tuple with the **maximum** second value, but the requirement is to find the tuple with the **minimum** second",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n1. **Failing behavior**:\n   The function returns the first value of the tuple with the **highest** second value (score) instead of the **lowest** second value.\n\n2. **Evidence**:\n   - Test case 0: Input `[('Rash', 143), ('Manjeet', 200), ('Varsha', 100)]` \u2192 Returns `'Manjeet'` (score 200) but should return `'Varsha'` (score 100).\n   - Test case 1: Input `[('Yash', 185), ('Dawood', 125), ('Sanya', 175)]` \u2192 Returns `'Yash'` (score 185) but should return `'Dawood'` (score 125).\n\n3. **Root cause**:\n   The function uses `max()` with `key=itemgetter(1)`, which finds the tuple with the **maximum** second value. However, the requirement is to find the tuple with the **minimum** second value. This is a logical error in the choice of `max()` vs `min()`.\n\n4",
+      "patched_code": "from operator import itemgetter\ndef index_minimum(test_list):\n  res = min(test_list, key=itemgetter(1))[0]\n  return res",
+      "decision": "patch_and_retry",
+      "duration_seconds": 14.41
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "from operator import itemgetter\ndef index_minimum(test_list):\n  res = min(test_list, key=itemgetter(1))[0]\n  return res",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.63s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 1.13
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Perfect Coverage (100%)**: Your codebase (11 statements total) has **full statement coverage** in both the production (`solution.py`) and test (`test_solution.py`) files. This means:\n  - Every line of code in `solution.py` is executed by at least one test case.\n  - Every line in `test_solution.py` is also executed (likely due to assertions or test setup/teardown).\n\n### 2. **Missing Cases**\n- **None**: Since `Miss = 0` for all files, there are **no uncovered statements** in your code. This is excellent\u2014your tests are thorough in terms of statement coverage.\n\n### 3. **Test Suggestions**\nWhile your coverage is perfect, here are some **refinements** to consider for **better quality** (even if not strictly needed for coverage):\n\n#### **A. Branch Coverage Check**\n- **Current**: Your coverage tool (likely `coverage.py`) only measures **statement coverage** (lines executed).\n- **Suggestion**: Verify **branch coverage** (e.g., `if/else`, loops, function calls)",
+    "generated_tests": [
+      "assert index_minimum([('Alice', 0), ('Bob', 1), ('Charlie', -1)]) == 'Charlie'",
+      "assert index_minimum([('A', 1000000000), ('B', 999999999), ('C', 1000000001)]) == 'B'",
+      "assert index_minimum([('Single', 5)]) == 'Single'"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.63s\n\n"
+  }
+}

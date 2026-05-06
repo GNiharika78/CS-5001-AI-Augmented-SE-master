@@ -14,4 +14,4 @@ Return:
 2. Missing cases
 3. Test suggestions
 """
-        return call_llm(prompt, model="qwen2.5-coder:7b")
+        return call_llm(prompt, model="ministral-3:8b-cloud")

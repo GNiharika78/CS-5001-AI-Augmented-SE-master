@@ -34,7 +34,7 @@ Failure Analysis:
 Hypothesis:
 {hypothesis[:1000]}
 """
-        response = call_llm(prompt, model="qwen2.5-coder:7b")
+        response = call_llm(prompt, model="ministral-3:8b-cloud")
 
         if response == "LLM_FAILED":
             return "LLM_FAILED"

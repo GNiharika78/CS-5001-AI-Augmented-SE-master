@@ -18,7 +18,7 @@ Return only:
 """
         return call_llm(
             prompt,
-            model="qwen2.5-coder:7b",
+            model="ministral-3:8b-cloud",
             timeout=180,
             max_tokens=160,
         )

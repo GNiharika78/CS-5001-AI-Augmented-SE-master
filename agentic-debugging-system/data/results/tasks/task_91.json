@@ -1,0 +1,50 @@
+{
+  "task_id": 91,
+  "task_prompt": "Write a function to check if a string is present as a substring in a given list of string values.",
+  "bug_type": "boolean_true_to_false",
+  "status": "repaired",
+  "final_code": "def find_substring(str1, sub_str):\n    if any(sub_str in s for s in str1):\n        return True\n    return False",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 24.08,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def find_substring(str1, sub_str):\n   if any(sub_str in s for s in str1):\n       return False\n   return False",
+      "tests_passed_before_patch": false,
+      "test_output": "F.F                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert find_substring([\"red\", \"black\", \"white\", \"green\", \"orange\"],\"ack\")==True\nE       AssertionError: assert False == True\nE        +  where False = find_substring(['red', 'black', 'white', 'green', 'orange'], 'ack')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkx675q6c\\test_solution.py:4: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert find_substring([\"red\", \"black\", \"white\", \"green\", \"orange\"],\"ange\")==True\nE       AssertionError: assert False == True\nE        +  where False = find_substring(['red', 'black', 'white', 'green', 'orange'], 'ange')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkx675q6c\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkx675q6c\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkx675q6c\\test_solution.py::test_case_2\n2 failed, 1 passed in 0.71s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `find_substring()` is not correctly identifying when a substring exists in any of the strings in the list. Instead of returning `True` when the substring is found, it always returns `False`.\n\n2. **Evidence**:\n   - The test cases expect `True` when the substring is found (e.g., \"ack\" in \"black\" or \"ange\" in \"orange\"), but the function returns `False` in both cases.\n   - The current implementation has a logical error: it returns `False` regardless of whether the substring is found (the `any()` check is correct, but the return logic is wrong).\n\n3. **Failure type**:\n   - **Logical Error**: The function's logic is incorrect. The `any()` check correctly identifies if the substring exists, but the return statement always returns `False` instead of returning the result of the `any()` check.\n\n4. **Suspected location**:\n   The issue is in the return statements of the function. The function should return the result of the `any()` check, not always `False`.\n\n### Corrected Code:\n```python\ndef find_substring(str1, sub_str):\n    return any",
+      "hypothesis": "Here's the corrected analysis and repair plan for the `find_substring` function:\n\n---\n\n### **1. Failing Behavior:**\nThe function always returns `False` regardless of whether the substring exists in any of the strings in the list. For example:\n- Input: `find_substring([\"black\", \"orange\"], \"ack\")` \u2192 Expected: `True` (since \"ack\" is in \"black\"), but the function returns `False`.\n- Input: `find_substring([\"apple\", \"banana\"], \"ban\")` \u2192 Expected: `True` (since \"ban\" is in \"banana\"), but the function returns `False`.\n\n---\n\n### **2. Evidence:**\n- The `any(sub_str in s for s in str1)` correctly checks if `sub_str` exists in any string of the list, but the function ignores this result and always returns `False`.\n- The test cases expect `True` when the substring is found, but the function fails to reflect this.\n\n---\n\n### **3. Root Cause:**\nThe function's logic is flawed because:\n- The `any()` check is correct (it returns `True` if the substring is found, `False` otherwise).\n- However, the function does not return the result of `",
+      "patched_code": "def find_substring(str1, sub_str):\n    if any(sub_str in s for s in str1):\n        return True\n    return False",
+      "decision": "patch_and_retry",
+      "duration_seconds": 13.22
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def find_substring(str1, sub_str):\n    if any(sub_str in s for s in str1):\n        return True\n    return False",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.65s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 1.14
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Perfect Coverage (100%)**: Your codebase (11 statements total) has **full statement coverage** in both the production (`solution.py`) and test (`test_solution.py`) files. This means:\n  - Every line of code in `solution.py` is executed by at least one test case.\n  - Every line in `test_solution.py` is also executed (likely due to assertions or test setup/teardown).\n\n### 2. **Missing Cases**\n- **None**: Since `Miss = 0` for all files, there are **no uncovered statements** in your code. This is excellent\u2014your tests are thorough in terms of statement coverage.\n\n### 3. **Test Suggestions**\nWhile your coverage is perfect, here are some **refinements** to consider for **better quality** (even if not strictly needed for coverage):\n\n#### **A. Branch Coverage Check**\n- **Current**: Your coverage tool (likely `coverage.py`) only measures **statement coverage** (lines executed).\n- **Suggestion**: Verify **branch coverage** (e.g., `if/else`, loops, function calls)",
+    "generated_tests": [
+      "assert find_substring([\"\"], \"a\") == False",
+      "assert find_substring([\"a\" * 1000, \"b\" * 1000], \"b\" * 500) == True",
+      "assert find_substring([None, \"test\", \"case\"], \"test\") == True"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert find_substring([None, \"test\", \"case\"], \"test\") == True\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp068wn9sf\\test_solution.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp068wn9sf\\solution.py:2: in find_substring\n    if any(sub_str in s for s in str1):\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n.0 = <list_iterator object at 0x000001BD7B2E9C30>\n\n>   if any(sub_str in s for s in str1):\n           ^^^^^^^^^^^^\nE   TypeError: argument of type 'NoneType' is not iterable\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp068wn9sf\\solution.py:2: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp068wn9sf\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.66s\n\n"
+  }
+}

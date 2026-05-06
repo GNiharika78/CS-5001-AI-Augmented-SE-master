@@ -20,10 +20,10 @@ def save_json(data, path: str):
 def main():
     tasks = load_all_mbpp_tasks()
 
-    target_evaluated_tasks = 20
+    target_evaluated_tasks = 300
     evaluated_count = 0
 
-    orchestrator = DebuggingOrchestrator(max_attempts=3)
+    orchestrator = DebuggingOrchestrator(max_attempts=2)
 
     results = []
 

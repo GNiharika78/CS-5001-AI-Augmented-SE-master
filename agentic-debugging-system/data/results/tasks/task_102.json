@@ -1,0 +1,62 @@
+{
+  "task_id": 102,
+  "task_prompt": "Write a function to convert a snake case string to camel case string.",
+  "bug_type": "boolean_or_to_and",
+  "status": "repaired",
+  "final_code": "def snake_to_camel(word):\n    parts = word.split('_')\n    return parts[0].capitalize() + ''.join(x.capitalize() for x in parts[1:])",
+  "attempts": 3,
+  "llm_calls": 8,
+  "duration": 37.23,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def snake_to_camel(word):\n        import re\n        return ''.join(x.capitalize() and '_' for x in word.split('_'))",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert snake_to_camel('python_program')=='PythonProgram'\nE       AssertionError: assert '__' == 'PythonProgram'\nE         \nE         - PythonProgram\nE         + __\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdsbgap0w\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert snake_to_camel('python_language')==('PythonLanguage')\nE       AssertionError: assert '__' == 'PythonLanguage'\nE         \nE         - PythonLanguage\nE         + __\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdsbgap0w\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert snake_to_camel('programming_language')==('ProgrammingLanguage')\nE       AssertionError: assert '__' == 'ProgrammingLanguage'\nE         \nE         - ProgrammingLanguage\nE         + __\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdsbgap0w\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdsbgap0w\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdsbgap0w\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdsbgap0w\\test_solution.py::test_case_2\n3 failed in 0.69s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `snake_to_camel()` is not correctly converting snake_case strings to camelCase. Instead of producing the expected camelCase output, it's returning an empty string (represented as `__` in the error message) because the current implementation is incorrect.\n\n2. **Evidence**:\n   - The test expects `'python_program'` to become `'PythonProgram'`, but the function returns `__` (empty string)\n   - The test expects `'python_language'` to become `'PythonLanguage'`, but the function returns `__`\n   - The error shows the function is returning `'__'` (likely from the generator expression) rather than the processed string\n\n3. **Failure type**:\n   - **Logical Error**: The function's logic is completely wrong for the intended conversion\n   - The current implementation uses a generator expression that doesn't properly handle the conversion\n\n4. **Suspected location**:\n   The problematic code is in the function body:\n   ```python\n   return ''.join(x.capitalize() and '_' for x in word.split('_'))\n   ```\n   This has several issues:\n   - The `and` operator is being used incorrectly in a generator expression\n   - The",
+      "hypothesis": "Here's the detailed analysis and repair plan for the `snake_to_camel` function:\n\n1. **Failing behavior**:\n   The function returns an empty string (or `__` in the error representation) instead of converting snake_case to camelCase. For example, `'python_program'` becomes `__` instead of `'PythonProgram'`.\n\n2. **Evidence**:\n   - Input `'python_program'` \u2192 Expected `'PythonProgram'` but got `__`\n   - Input `'python_language'` \u2192 Expected `'PythonLanguage'` but got `__`\n   - The generator expression `x.capitalize() and '_'` is malformed and doesn't produce the intended output\n\n3. **Root cause**:\n   The current implementation has three main problems:\n   - Uses `and` operator incorrectly in a generator expression (this is not valid Python syntax for this purpose)\n   - The generator expression only produces underscores (`_`) when `x.capitalize()` is truthy\n   - Doesn't properly handle the first word (which should remain lowercase) and subsequent words (which should be capitalized)\n\n4. **Why this explains failure**:\n   The generator expression `x.capitalize() and '_'` is syntactically incorrect for this use case. The `and` operator is",
+      "patched_code": "def snake_to_camel(word):\n    parts = word.split('_')\n    return parts[0] + ''.join(x.capitalize() for x in parts[1:])",
+      "decision": "patch_and_retry",
+      "duration_seconds": 13.34
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def snake_to_camel(word):\n    parts = word.split('_')\n    return parts[0] + ''.join(x.capitalize() for x in parts[1:])",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert snake_to_camel('python_program')=='PythonProgram'\nE       AssertionError: assert 'pythonProgram' == 'PythonProgram'\nE         \nE         - PythonProgram\nE         ? ^\nE         + pythonProgram\nE         ? ^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpf7o7tk9o\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert snake_to_camel('python_language')==('PythonLanguage')\nE       AssertionError: assert 'pythonLanguage' == 'PythonLanguage'\nE         \nE         - PythonLanguage\nE         ? ^\nE         + pythonLanguage\nE         ? ^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpf7o7tk9o\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert snake_to_camel('programming_language')==('ProgrammingLanguage')\nE       AssertionError: assert 'programmingLanguage' == 'ProgrammingLanguage'\nE         \nE         - ProgrammingLanguage\nE         ? ^\nE         + programmingLanguage\nE         ? ^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpf7o7tk9o\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpf7o7tk9o\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpf7o7tk9o\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpf7o7tk9o\\test_solution.py::test_case_2\n3 failed in 0.68s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `snake_to_camel()` is not correctly capitalizing the first letter of each word after the first one in the snake_case string. Instead of capitalizing the first letter of each subsequent part (which should create camelCase), it's only capitalizing the first letter of each part but not properly combining them.\n\n2. **Evidence**:\n   - Input: `'python_program'` \u2192 Expected: `'PythonProgram'` but got `'pythonProgram'`\n   - Input: `'python_language'` \u2192 Expected: `'PythonLanguage'` but got `'pythonLanguage'`\n   The function is not capitalizing the first letter of the first word (`'python'` should become `'Python'`).\n\n3. **Failure type**:\n   - The function is not handling the first word's capitalization correctly. It should capitalize the first letter of the first word and then capitalize the first letter of each subsequent word (which is already being done for the rest, but the first word is not being capitalized).\n\n4. **Suspected location**:\n   The issue is in the function logic where it doesn't capitalize the first word (`parts[0]`). The current implementation only capitalizes the parts after the first one",
+      "hypothesis": "Here's the detailed analysis and repair plan for the `snake_to_camel` function:\n\n---\n\n### **1. Failing Behavior:**\nThe function fails to capitalize the first word of the snake_case string. Instead, it leaves the first word in lowercase while only capitalizing subsequent words. For example:\n- Input: `'python_program'` \u2192 Output: `'pythonProgram'` (incorrect)\n- Expected: `'PythonProgram'` (correct)\n\n---\n\n### **2. Evidence:**\n- The function splits the string into parts using `split('_')`, which works correctly.\n- It correctly capitalizes all parts after the first (`parts[1:]`), but does not capitalize the first part (`parts[0]`).\n- The issue is in the return statement: `parts[0] + ''.join(x.capitalize() for x in parts[1:])` does not modify `parts[0]`.\n\n---\n\n### **3. Root Cause:**\nThe function does not capitalize the first word (`parts[0]`) because it only processes `parts[1:]` for capitalization. The first word remains unchanged, which violates the camelCase convention where the first word should also be capitalized (unless it's a single-word input, which should remain lowercase",
+      "patched_code": "def snake_to_camel(word):\n    parts = word.split('_')\n    return parts[0].capitalize() + ''.join(x.capitalize() for x in parts[1:])",
+      "decision": "patch_and_retry",
+      "duration_seconds": 13.29
+    },
+    {
+      "attempt": 3,
+      "planning": "Final validation after maximum repair attempts.",
+      "code_before_patch": "def snake_to_camel(word):\n    parts = word.split('_')\n    return parts[0].capitalize() + ''.join(x.capitalize() for x in parts[1:])",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.62s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "final_validation",
+      "duration_seconds": 1.16
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Total Statements**: 10 (7 in tests + 3 in production code)\n- **Perfect Coverage**: 100% (0 statements missed)\n- **Production Code**: 3 statements (100% covered)\n- **Test Code**: 7 statements (100% covered)\n\n**Key Insight**: Your codebase achieves **full statement coverage**, meaning every line of executable code in both the solution and tests has been executed at least once during testing.\n\n---\n\n### 2. **Missing Cases (None)**\nSince the report shows **0 missed statements**, there are no uncovered branches, loops, or edge cases. This suggests:\n- All paths in your logic (e.g., `if/else`, loops, function calls) were tested.\n- No conditional branches (e.g., `if x > 5`) were left untested.\n- No input/output combinations were omitted.\n\n**Verification Tip**: Double-check for:\n   - **Branch Coverage**: Run `coverage report -m` to confirm 100% branch coverage (e.g., `if`/`else` paths).\n   - **Complex Logic**:",
+    "generated_tests": [
+      "assert snake_to_camel('') == ''",
+      "assert snake_to_camel('single_word') == 'SingleWord'",
+      "assert snake_to_camel('__multiple__underscores__') == 'MultipleUnderscores'"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.65s\n\n"
+  }
+}

@@ -21,4 +21,4 @@ Return:
 3. Failure type
 4. Suspected location
 """
-        return call_llm(prompt, model="qwen2.5-coder:7b")
+        return call_llm(prompt, model="ministral-3:8b-cloud")
