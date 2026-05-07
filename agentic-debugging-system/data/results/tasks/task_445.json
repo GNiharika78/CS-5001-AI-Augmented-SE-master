@@ -1,0 +1,50 @@
+{
+  "task_id": 445,
+  "task_prompt": "Write a function to perform index wise multiplication of tuple elements in the given two tuples.",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def index_multiplication(test_tup1, test_tup2):\n    res = tuple(tuple(a * b for a, b in zip(tup1, tup2)) for tup1, tup2 in zip(test_tup1, test_tup2))\n    return res",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.4,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def index_multiplication(test_tup1, test_tup2):\n  res = tuple(tuple(a + b for a, b in zip(tup1, tup2))\n   for tup1, tup2 in zip(test_tup1, test_tup2))\n  return (res) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert index_multiplication(((1, 3), (4, 5), (2, 9), (1, 10)),((6, 7), (3, 9), (1, 1), (7, 3)) ) == ((6, 21), (12, 45), (2, 9), (7, 30))\nE       assert ((7, 10), (7,... 10), (8, 13)) == ((6, 21), (12..., 9), (7, 30))\nE         \nE         At index 0 diff: (7, 10) != (6, 21)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgnpb75x4\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert index_multiplication(((2, 4), (5, 6), (3, 10), (2, 11)),((7, 8), (4, 10), (2, 2), (8, 4)) ) == ((14, 32), (20, 60), (6, 20), (16, 44))\nE       assert ((9, 12), (9,...12), (10, 15)) == ((14, 32), (2...20), (16, 44))\nE         \nE         At index 0 diff: (9, 12) != (14, 32)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgnpb75x4\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert index_multiplication(((3, 5), (6, 7), (4, 11), (3, 12)),((8, 9), (5, 11), (3, 3), (9, 5)) ) == ((24, 45), (30, 77), (12, 33), (27, 60))\nE       assert ((11, 14), (1...14), (12, 17)) == ((24, 45), (3...33), (27, 60))\nE         \nE         At index 0 diff: (11, 14) != (24, 45)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgnpb75x4\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgnpb75x4\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgnpb75x4\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgnpb75x4\\test_solution.py::test_case_2\n3 failed in 0.37s\n\n",
+      "failure": "Let me analyze the failure and provide a corrected solution.\n\n1. **What failed**:\nThe function is supposed to perform element-wise multiplication between corresponding tuples in the input tuples, but it's incorrectly adding elements instead of multiplying them.\n\n2. **Evidence**:\n- The test expects multiplication results (e.g., (6,21) which is 1*6 and 3*7)\n- The function is actually adding elements (e.g., (7,10) which is 1+6 and 3+7)\n- The error shows the first tuple's first element should be 6 (1*6) but got 7 (1+6)\n\n3. **Failure type**:\nLogical error - the function is performing addition instead of multiplication in the inner loop.\n\n4. **Suspected location**:\nThe line `tuple(a + b for a, b in zip(tup1, tup2))` should be `tuple(a * b for a, b in zip(tup1, tup2))`\n\nHere's the corrected function:\n\n```python\ndef index_multiplication(test_tup1, test_tup2):\n    res = tuple(tuple(a * b for a, b in zip(tup1, tup2))",
+      "hypothesis": "Here's the structured analysis and corrected solution:\n\n1. **Failing behavior**:\n   The function returns incorrect results by performing element-wise addition instead of multiplication between corresponding tuples. For example, given input `((1, 3), (2, 4))` and `((6, 7), (8, 9))`, it returns `((7, 10), (10, 13))` when it should return `((6, 21), (16, 36))`.\n\n2. **Evidence**:\n   - The test expects multiplication results (e.g., `1*6=6` and `3*7=21`)\n   - The function incorrectly adds elements (e.g., `1+6=7` and `3+7=10`)\n   - The error shows the first tuple's first element should be `6` but got `7`\n\n3. **Root cause**:\n   The logical error is in the inner generator expression where `a + b` is used instead of `a * b`. This is a simple operator substitution error that causes the entire function to perform addition rather than multiplication.\n\n4. **Why this explains failure**:\n   The function's purpose is clearly element-wise",
+      "patched_code": "def index_multiplication(test_tup1, test_tup2):\n    res = tuple(tuple(a * b for a, b in zip(tup1, tup2)) for tup1, tup2 in zip(test_tup1, test_tup2))\n    return res",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.52
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def index_multiplication(test_tup1, test_tup2):\n    res = tuple(tuple(a * b for a, b in zip(tup1, tup2)) for tup1, tup2 in zip(test_tup1, test_tup2))\n    return res",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.58
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Total Statements**: 10 (7 in tests + 3 in production code)\n- **Perfect Coverage**: 100% (0 statements missed)\n- **Production Code**: 3 statements (100% covered)\n- **Test Code**: 7 statements (100% covered)\n\n**Key Insight**: Your codebase achieves **full statement coverage**, meaning every line of executable code in both the solution and tests has been executed at least once during testing.\n\n---\n\n### 2. **Missing Cases (None)**\nSince the report shows **0 missed statements**, there are no gaps in coverage. However, if you want to ensure robustness, consider:\n- **Edge Cases**: Test boundary conditions (e.g., empty inputs, max/min values).\n- **Error Paths**: Verify how the code handles exceptions (e.g., invalid inputs, network failures if applicable).\n- **Alternative Branches**: If your logic includes `if/else` or loops, ensure all branches are tested (though statement coverage doesn\u2019t guarantee branch coverage).\n\n---\n\n### 3. **Test Suggestions**\nWhile your tests are fully covering statements, here are ways to **",
+    "generated_tests": [
+      "assert index_multiplication((), ()) == ()",
+      "assert index_multiplication(((0, 0), (0, 0)), ((1, 2), (3, 4))) == ((0, 0), (0, 0))",
+      "assert index_multiplication(((1,), (2,)), ((3, 0), (4, 5))) == ((3, 0), (8, 10))"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert index_multiplication(((1,), (2,)), ((3, 0), (4, 5))) == ((3, 0), (8, 10))\nE       assert ((3,), (8,)) == ((3, 0), (8, 10))\nE         \nE         At index 0 diff: (3,) != (3, 0)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4c_c5bnw\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4c_c5bnw\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.35s\n\n"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "task_id": 737,
+  "task_prompt": "Write a function to check whether the given string is starting with a vowel or not using regex.",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import re \nregex = '^[aeiouAEIOU][A-Za-z0-9_]+'\ndef check_str(string): \n\treturn re.search(regex, string)",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 54.18,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re \nregex = '^[aeiouAEIOU][A-Za-z0-9_]+'\ndef check_str(string): \n\treturn re.search(regex, string)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Perfect Coverage (100%)**: Your codebase (11 statements total) has **full statement coverage** in both the production (`solution.py`) and test (`test_solution.py`) files. This means:\n  - Every line of code in `solution.py` is executed by at least one test case.\n  - Every line in `test_solution.py` is also executed (likely due to assertions or test setup/teardown).\n\n### 2. **Missing Cases**\n- **None**: Since `Miss = 0` for all files, there are **no uncovered statements** in either the implementation or tests. This is ideal\u2014your tests exercise all possible execution paths in `solution.py`.\n\n### 3. **Test Suggestions**\nWhile your coverage is perfect, here are **refinements** to consider for robustness (even if not strictly needed for coverage):\n\n#### **A. Edge Cases (If Applicable)**\n- If `solution.py` handles inputs like:\n  - Empty inputs (e.g., `[]`, `\"\"`, `None`).\n  - Boundary values (e.g., min/max integers, zero).\n  -",
+    "generated_tests": [
+      "assert check_str(\"A1b2c3\")",
+      "assert check_str(\"\")",
+      "assert check_str(\"123\")"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....FF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert check_str(\"\")\nE       AssertionError: assert None\nE        +  where None = check_str('')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn62wl3cq\\test_solution.py:16: AssertionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert check_str(\"123\")\nE       AssertionError: assert None\nE        +  where None = check_str('123')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn62wl3cq\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn62wl3cq\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn62wl3cq\\test_solution.py::test_case_5\n2 failed, 4 passed in 0.37s\n\n"
+  }
+}

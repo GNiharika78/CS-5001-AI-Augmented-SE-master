@@ -1,0 +1,50 @@
+{
+  "task_id": 229,
+  "task_prompt": "Write a function that takes in an array and an integer n, and re-arranges the first n elements of the given array so that all negative elements appear before positive ones, and where the relative order among negative and positive elements is preserved.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "failed",
+  "final_code": "def re_arrange_array(arr, n):\n    negatives = []\n    positives = []\n    for i in range(n):\n        if arr[i] < 0:\n            negatives.append(arr[i])\n        else:\n            positives.append(arr[i])\n    return negatives + positives[:n - len(negatives)]",
+  "attempts": 3,
+  "llm_calls": 6,
+  "duration": 27.74,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def re_arrange_array(arr, n):\n  j=0\n  for i in range(0, n):\n    if (arr[i] < 0):\n      temp = arr[i]\n      arr[i] = arr[j]\n      arr[j] = temp\n      j = j - 1\n  return arr",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert re_arrange_array([-1, 2, -3, 4, 5, 6, -7, 8, 9], 9) == [-1, -3, -7, 4, 5, 6, 2, 8, 9]\nE       assert [-1, 2, 9, 4, 5, -3, ...] == [-1, -3, -7, 4, 5, 6, ...]\nE         \nE         At index 1 diff: 2 != -3\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmprlrm1xmx\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert re_arrange_array([12, -14, -26, 13, 15], 5) == [-14, -26, 12, 13, 15]\nE       assert [-14, 12, 15, -26, 13] == [-14, -26, 12, 13, 15]\nE         \nE         At index 1 diff: 12 != -26\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmprlrm1xmx\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert re_arrange_array([10, 24, 36, -42, -39, -78, 85], 7) == [-42, -39, -78, 10, 24, 36, 85]\nE       assert [-42, 24, 36,...-39, -78, ...] == [-42, -39, -7..., 24, 36, ...]\nE         \nE         At index 1 diff: 24 != -39\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmprlrm1xmx\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmprlrm1xmx\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmprlrm1xmx\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmprlrm1xmx\\test_solution.py::test_case_2\n3 failed in 0.36s\n\n",
+      "failure": "Let's analyze the failure step by step:\n\n1. **What failed**:\n   The function is not correctly rearranging the first `n` elements to have all negative numbers before positive numbers while preserving their relative order. The current implementation is moving negative numbers to the front but not maintaining the correct order of positives after negatives.\n\n2. **Evidence**:\n   - For test case 0: Input `[-1, 2, -3, 4, 5, 6, -7, 8, 9]` with n=9 should output `[-1, -3, -7, 4, 5, 6, 2, 8, 9]`, but the function returns `[-1, 2, 9, 4, 5, -3, ...]` (incorrect order of positives and negatives).\n   - For test case 1: Input `[12, -14, -26, 13, 15]` with n=5 should output `[-14, -26, 12, 13, 15]`, but the function returns `[-14, 12, 15, -26, 1",
+      "hypothesis": "Here's the detailed analysis and repair plan for the `re_arrange_array` function:\n\n---\n\n### **1. Failing Behavior**\nThe function incorrectly rearranges the first `n` elements by:\n- Moving negative numbers to the front but **not preserving their relative order** (e.g., `-3` should come before `-1` if it appeared earlier in the original array).\n- **Shifting positives incorrectly** by decrementing `j` (which causes positives to be misplaced).\n- **Not handling the relative order of positives** after negatives (e.g., `2` should appear after `-1` and `-3` in the output).\n\n---\n\n### **2. Evidence**\n- **Test Case 0**:\n  Input: `[-1, 2, -3, 4, 5, 6, -7, 8, 9]`, `n=9`\n  Expected Output: `[-1, -3, -7, 2, 4, 5, 6, 8, 9]` (negatives first in original order, positives in original order).\n  Actual Output: `[-1, 2, 9, 4, 5, -3, ...]` (negatives",
+      "patched_code": "def re_arrange_array(arr, n):\n    negatives = []\n    positives = []\n    for i in range(n):\n        if arr[i] < 0:\n            negatives.append(arr[i])\n        else:\n            positives.append(arr[i])\n    return negatives + positives",
+      "decision": "patch_and_retry",
+      "duration_seconds": 16.0
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def re_arrange_array(arr, n):\n    negatives = []\n    positives = []\n    for i in range(n):\n        if arr[i] < 0:\n            negatives.append(arr[i])\n        else:\n            positives.append(arr[i])\n    return negatives + positives",
+      "tests_passed_before_patch": false,
+      "test_output": "F..                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert re_arrange_array([-1, 2, -3, 4, 5, 6, -7, 8, 9], 9) == [-1, -3, -7, 4, 5, 6, 2, 8, 9]\nE       assert [-1, -3, -7, 2, 4, 5, ...] == [-1, -3, -7, 4, 5, 6, ...]\nE         \nE         At index 3 diff: 2 != 4\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptqrkfbij\\test_solution.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptqrkfbij\\test_solution.py::test_case_0\n1 failed, 2 passed in 0.34s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function did not preserve the relative order of positive elements in the output. The test expected the positives to appear in their original order (4, 5, 6, 8, 9), but the current implementation returns them in the order they were encountered (2, 4, 5, 6, 8, 9).\n\n2. **Evidence**:\n   - Input array: `[-1, 2, -3, 4, 5, 6, -7, 8, 9]`\n   - Expected output: `[-1, -3, -7, 4, 5, 6, 2, 8, 9]` (positives in original order)\n   - Actual output: `[-1, -3, -7, 2, 4, 5, 6, 8, 9]` (positives in encountered order)\n\n3. **Failure type**:\n   - **Logical Error**: The function correctly separates negatives and positives but fails to maintain the original order of positives (and negatives) in the output.\n\n4. **Suspected location**:\n   The issue is in how",
+      "hypothesis": "Here's the detailed failure analysis and repair plan for the given function:\n\n---\n\n### **1. Failing Behavior**\nThe function `re_arrange_array` rearranges the first `n` elements of the input array such that all negative elements appear before positive ones. However, it **does not preserve the original relative order** of either negatives or positives in the output. Instead, it appends negatives and positives in the order they are encountered (i.e., the first negative encountered comes first, and the first positive encountered comes first), which violates the requirement to maintain the original order of both groups.\n\n---\n\n### **2. Evidence**\n- **Input array**: `[-1, 2, -3, 4, 5, 6, -7, 8, 9]`, `n = 9`\n- **Expected output**: `[-1, -3, -7, 4, 5, 6, 8, 9, 2]` (negatives in original order, positives in original order)\n  - Wait, the expected output in the original question seems incorrect. The first `n` elements are `[-1, 2, -3, 4, 5, 6, -7,",
+      "patched_code": "def re_arrange_array(arr, n):\n    negatives = []\n    positives = []\n    for i in range(n):\n        if arr[i] < 0:\n            negatives.append(arr[i])\n        else:\n            positives.append(arr[i])\n    return negatives + positives[:n - len(negatives)]",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.13
+    },
+    {
+      "attempt": 3,
+      "planning": "Final validation after maximum repair attempts.",
+      "code_before_patch": "def re_arrange_array(arr, n):\n    negatives = []\n    positives = []\n    for i in range(n):\n        if arr[i] < 0:\n            negatives.append(arr[i])\n        else:\n            positives.append(arr[i])\n    return negatives + positives[:n - len(negatives)]",
+      "tests_passed_before_patch": false,
+      "test_output": "F..                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert re_arrange_array([-1, 2, -3, 4, 5, 6, -7, 8, 9], 9) == [-1, -3, -7, 4, 5, 6, 2, 8, 9]\nE       assert [-1, -3, -7, 2, 4, 5, ...] == [-1, -3, -7, 4, 5, 6, ...]\nE         \nE         At index 3 diff: 2 != 4\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkef_sayc\\test_solution.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkef_sayc\\test_solution.py::test_case_0\n1 failed, 2 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "final_validation",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": null
+}

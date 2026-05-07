@@ -1,0 +1,38 @@
+{
+  "task_id": 407,
+  "task_prompt": "Write a function to create the next bigger number by rearranging the digits of a given number.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def rearrange_bigger(n):\n    nums = list(str(n))\n    for i in range(len(nums)-2,-1,-1):\n        if nums[i] < nums[i-1]:\n            z = nums[i:]\n            y = min(filter(lambda x: x > z[0], z))\n            z.remove(y)\n            z.sort()\n            nums[i:] = [y] + z\n            return int(\"\".join(nums))\n    return False",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 8.98,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def rearrange_bigger(n):\n    nums = list(str(n))\n    for i in range(len(nums)-2,-1,-1):\n        if nums[i] < nums[i-1]:\n            z = nums[i:]\n            y = min(filter(lambda x: x > z[0], z))\n            z.remove(y)\n            z.sort()\n            nums[i:] = [y] + z\n            return int(\"\".join(nums))\n    return False",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.62
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           11      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 18      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Total Statements**: 18 (11 in `solution.py`, 7 in `test_solution.py`)\n- **Fully Covered**: 100% (0 statements missed)\n- **Perfect Test Suite**: Your tests exercise all possible code paths in both the implementation and test files.\n\n### 2. **Missing Cases**\n- **None**: The report shows **0 missed statements**, meaning:\n  - Every line in `solution.py` was executed by at least one test.\n  - Every line in `test_solution.py` was executed (likely due to test assertions or setup/teardown).\n\n### 3. **Test Suggestions**\nSince coverage is already perfect, here are **refinement suggestions** (not gaps):\n\n#### **A. Edge-Case Validation**\n- **Check for boundary conditions** (e.g., empty inputs, max/min values) if your logic involves them.\n- **Example**: If `solution.py` processes lists, test:\n  ```python\n  assert solution([]) == expected_empty_result  # Edge case\n  assert solution([1, 2, 3]) == expected_normal  # Normal",
+    "generated_tests": [
+      "assert rearrange_bigger(9876543210) == False",
+      "assert rearrange_bigger(123456789) == 123456798",
+      "assert rearrange_bigger(0) == False"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...FF.                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert rearrange_bigger(9876543210) == False\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8jlu3dg6\\test_solution.py:13: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nn = 9876543210\n\n    def rearrange_bigger(n):\n        nums = list(str(n))\n        for i in range(len(nums)-2,-1,-1):\n            if nums[i] < nums[i-1]:\n                z = nums[i:]\n>               y = min(filter(lambda x: x > z[0], z))\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE               ValueError: min() iterable argument is empty\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8jlu3dg6\\solution.py:6: ValueError\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert rearrange_bigger(123456789) == 123456798\nE       assert 213456789 == 123456798\nE        +  where 213456789 = rearrange_bigger(123456789)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8jlu3dg6\\test_solution.py:16: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8jlu3dg6\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8jlu3dg6\\test_solution.py::test_case_4\n2 failed, 4 passed in 0.36s\n\n"
+  }
+}

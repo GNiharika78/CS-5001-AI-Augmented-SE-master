@@ -1,0 +1,50 @@
+{
+  "task_id": 138,
+  "task_prompt": "Write a python function to check whether the given number can be represented as sum of non-zero powers of 2 or not.",
+  "bug_type": "operator_eq_to_neq",
+  "status": "failed",
+  "final_code": "def is_Sum_Of_Powers_Of_Two(n):\n    if n <= 0:\n        return False\n    return (n & (n - 1)) == 0",
+  "attempts": 3,
+  "llm_calls": 6,
+  "duration": 23.12,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def is_Sum_Of_Powers_Of_Two(n): \n    if (n % 2 != 1): \n        return False\n    else: \n        return True",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert is_Sum_Of_Powers_Of_Two(10) == True\nE       assert False == True\nE        +  where False = is_Sum_Of_Powers_Of_Two(10)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8orz0q63\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert is_Sum_Of_Powers_Of_Two(7) == False\nE       assert True == False\nE        +  where True = is_Sum_Of_Powers_Of_Two(7)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8orz0q63\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert is_Sum_Of_Powers_Of_Two(14) == True\nE       assert False == True\nE        +  where False = is_Sum_Of_Powers_Of_Two(14)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8orz0q63\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8orz0q63\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8orz0q63\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8orz0q63\\test_solution.py::test_case_2\n3 failed in 0.37s\n\n",
+      "failure": "Here's the analysis of the failures and the corrected solution:\n\n1. **What failed**:\n   - The current implementation incorrectly assumes that any odd number can be represented as a sum of non-zero powers of 2 (which is true for all positive integers, but the test cases suggest we need a different interpretation).\n   - The test cases reveal that the function should actually check if the number can be represented as a sum of **distinct** non-zero powers of 2 (which is equivalent to checking if the number has no consecutive 1s in its binary representation).\n\n2. **Evidence**:\n   - Test case 0: 10 (1010 in binary) should return True (can be represented as 8 + 2)\n   - Test case 1: 7 (0111 in binary) should return False (has consecutive 1s, can't be represented as distinct powers)\n   - Test case 2: 14 (1110 in binary) should return True (can be represented as 8 + 4 + 2)\n\n3. **Failure type**:\n   - The current implementation is too simplistic and doesn't properly check the binary representation constraints.\n\n4. **Suspected location**:\n   -",
+      "hypothesis": "Here's the detailed analysis and corrected solution for the problem:\n\n---\n\n### **1. Failing Behavior:**\nThe original function `is_Sum_Of_Powers_Of_Two(n)` incorrectly returns `True` for **all odd numbers** (e.g., `7` returns `True`, but it should return `False` because `7 = 4 + 2 + 1` has consecutive powers of 2). It fails to account for the **distinctness** and **non-zero** constraints of the powers of 2.\n\n---\n\n### **2. Evidence:**\n- **Test Case 0:** `10` (binary `1010`) \u2192 `True` (correct, since `10 = 8 + 2` are distinct powers).\n- **Test Case 1:** `7` (binary `0111`) \u2192 `False` (correct, since `7 = 4 + 2 + 1` has consecutive powers).\n- **Test Case 2:** `14` (binary `1110`) \u2192 `True` (correct, since `14 = 8 + 4 + 2` are distinct powers).\n\nThe original function fails because it only checks if `n",
+      "patched_code": "def is_Sum_Of_Powers_Of_Two(n):\n    if n <= 0:\n        return False\n    while n > 0:\n        if (n & (n + 1)) == 0:\n            return True\n        n = n & (n - 1)\n    return False",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.2
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def is_Sum_Of_Powers_Of_Two(n):\n    if n <= 0:\n        return False\n    while n > 0:\n        if (n & (n + 1)) == 0:\n            return True\n        n = n & (n - 1)\n    return False",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert is_Sum_Of_Powers_Of_Two(10) == True\nE       assert False == True\nE        +  where False = is_Sum_Of_Powers_Of_Two(10)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq4slyu4s\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert is_Sum_Of_Powers_Of_Two(7) == False\nE       assert True == False\nE        +  where True = is_Sum_Of_Powers_Of_Two(7)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq4slyu4s\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert is_Sum_Of_Powers_Of_Two(14) == True\nE       assert False == True\nE        +  where False = is_Sum_Of_Powers_Of_Two(14)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq4slyu4s\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq4slyu4s\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq4slyu4s\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq4slyu4s\\test_solution.py::test_case_2\n3 failed in 0.36s\n\n",
+      "failure": "Let's analyze the failures and the function step by step.\n\n### 1. What failed\nThe function `is_Sum_Of_Powers_Of_Two(n)` is supposed to check whether a number can be represented as the sum of **non-zero distinct powers of 2** (i.e., numbers that are sums of distinct powers of 2 like 3 = 2 + 1, 5 = 4 + 1, etc.). However, the current implementation is incorrect for this task.\n\n### 2. Evidence\nThe test cases show:\n- `is_Sum_Of_Powers_Of_Two(10)` returns `False` but should return `True` (since 10 = 8 + 2, both powers of 2).\n- `is_Sum_Of_Powers_Of_Two(7)` returns `True` but should return `False` (since 7 = 4 + 2 + 1, which is a sum of distinct powers of 2, but the problem likely expects **only one power of 2** or **non-overlapping powers**\u2014this is ambiguous).\n- `is_Sum_Of_Powers_Of_Two(14)` returns `",
+      "hypothesis": "Here's the detailed analysis and repair plan for the function:\n\n---\n\n### **1. Failing Behavior**\nThe current function incorrectly returns:\n- `False` for `10` (should be `True` because 10 = 8 + 2, both powers of 2).\n- `True` for `7` (should be `False` if the problem requires **only one power of 2** or **non-overlapping powers**\u2014this is ambiguous, but likely the task is to check if the number is a **single power of 2** or a **sum of distinct powers of 2**).\n\nThe function's logic (`(n & (n + 1)) == 0`) checks if `n` is a **power of 2**, not a sum of distinct powers of 2.\n\n---\n\n### **2. Evidence**\n- **Test Case 10**: `10` is `1010` in binary (8 + 2), which is a sum of distinct powers of 2. The function incorrectly returns `False`.\n- **Test Case 7**: `7` is `111` in binary (4 + 2 + 1), which is a sum of distinct powers",
+      "patched_code": "def is_Sum_Of_Powers_Of_Two(n):\n    if n <= 0:\n        return False\n    return (n & (n - 1)) == 0",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.3
+    },
+    {
+      "attempt": 3,
+      "planning": "Final validation after maximum repair attempts.",
+      "code_before_patch": "def is_Sum_Of_Powers_Of_Two(n):\n    if n <= 0:\n        return False\n    return (n & (n - 1)) == 0",
+      "tests_passed_before_patch": false,
+      "test_output": "F.F                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert is_Sum_Of_Powers_Of_Two(10) == True\nE       assert False == True\nE        +  where False = is_Sum_Of_Powers_Of_Two(10)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7enqxhtm\\test_solution.py:4: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert is_Sum_Of_Powers_Of_Two(14) == True\nE       assert False == True\nE        +  where False = is_Sum_Of_Powers_Of_Two(14)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7enqxhtm\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7enqxhtm\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7enqxhtm\\test_solution.py::test_case_2\n2 failed, 1 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "final_validation",
+      "duration_seconds": 0.62
+    }
+  ],
+  "post": null
+}

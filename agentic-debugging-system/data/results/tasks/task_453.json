@@ -1,0 +1,50 @@
+{
+  "task_id": 453,
+  "task_prompt": "Write a python function to find the sum of even factors of a number.",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import math\n\ndef sumofFactors(n):\n    if n == 1:\n        return 0\n    res = 0\n    for i in range(2, n + 1, 2):\n        if n % i == 0:\n            res += i\n    return res",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 37.94,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math \ndef sumofFactors(n) : \n    if (n % 2 != 0) : \n        return 0\n    res = 1\n    for i in range(2, (int)(math.sqrt(n)) + 1) :    \n        count = 0\n        curr_sum = 1\n        curr_term = 1\n        while (n % i == 0) : \n            count= count + 1\n            n = n // i \n            if (i == 2 and count == 1) : \n                curr_sum = 0\n            curr_term = curr_term + i \n            curr_sum = curr_sum + curr_term \n        res = res * curr_sum  \n    if (n >= 2) : \n        res = res * (1 + n) \n    return res",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert sumofFactors(18) == 26\nE       assert 36 == 26\nE        +  where 36 = sumofFactors(18)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmjpzc2xn\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert sumofFactors(30) == 48\nE       assert 105 == 48\nE        +  where 105 = sumofFactors(30)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmjpzc2xn\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert sumofFactors(6) == 8\nE       assert 12 == 8\nE        +  where 12 = sumofFactors(6)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmjpzc2xn\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmjpzc2xn\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmjpzc2xn\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmjpzc2xn\\test_solution.py::test_case_2\n3 failed in 0.36s\n\n",
+      "failure": "Here's the analysis of the failures in the provided code:\n\n### 1. What Failed\nThe function `sumofFactors(n)` is supposed to return the **sum of all even factors** of a number `n`, but it's currently returning incorrect results for the test cases. The function is instead calculating the **sum of all factors** (including odd ones) and applying some incorrect logic for even factors.\n\n### 2. Evidence\n- **Test Case 0 (n=18):**\n  - Expected: `26` (sum of even factors: 2, 6, 18 \u2192 2 + 6 + 18 = 26)\n  - Actual: `36` (sum of all factors: 1, 2, 3, 6, 9, 18 \u2192 1+2+3+6+9+18 = 39, but the function returns 36 due to incorrect logic)\n  - The function incorrectly includes odd factors and miscalculates the sum.\n\n- **Test Case 1 (n=30):**\n  - Expected: `48` (sum of even factors: 2, 6, 10",
+      "hypothesis": "Here's the detailed analysis and repair plan for the function to correctly sum only the **even factors** of a number:\n\n---\n\n### **1. Failing Behavior**\nThe function `sumofFactors(n)` currently:\n- Incorrectly includes **odd factors** in the sum (e.g., for `n=18`, it returns `36` instead of `26`).\n- Misapplies the logic for even factors (e.g., the `if (i == 2 and count == 1)` condition is flawed and disrupts the sum calculation).\n- The `curr_sum` and `curr_term` logic is overly complex and incorrect for filtering even factors.\n\n---\n\n### **2. Evidence**\n- **Test Case 0 (n=18):**\n  - **Expected:** `26` (even factors: 2, 6, 18 \u2192 sum = 26).\n  - **Actual:** `36` (incorrectly includes odd factors like 3, 9).\n- **Test Case 1 (n=30):**\n  - **Expected:** `48` (even factors: 2, 6, 10, 30 \u2192 sum = 48",
+      "patched_code": "import math\n\ndef sumofFactors(n):\n    if n == 1:\n        return 0\n    res = 0\n    for i in range(2, n + 1, 2):\n        if n % i == 0:\n            res += i\n    return res",
+      "decision": "patch_and_retry",
+      "duration_seconds": 13.17
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\n\ndef sumofFactors(n):\n    if n == 1:\n        return 0\n    res = 0\n    for i in range(2, n + 1, 2):\n        if n % i == 0:\n            res += i\n    return res",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.59
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            9      1    89%   5\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 16      1    94%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nYour code has **94% statement coverage**, meaning **1 out of 16 statements** in your test suite is not being executed. This is a good start, but **100% coverage** is often a target for critical applications.\n\n- **`solution.py`** (9 statements) has **89% coverage** (1 missing).\n- **`test_solution.py`** (7 statements) has **100% coverage** (all tests pass).\n\n### **2. Missing Cases (Statement #5 in `solution.py`)**\nThe missing statement is likely **line 5** in `solution.py`. To identify it precisely, you should:\n- Check the **exact line number** in your coverage report (if available).\n- Look for **conditional branches** (e.g., `if`, `elif`, `for`, `while`) that may not be triggered in all test cases.\n\n#### **Possible Reasons for Missing Coverage:**\n- **Edge cases not tested** (e.g., empty input, `None`, boundary values).\n- **A branch condition** (e.g., `if x > 10`) where only one side (`x <= 10`) is",
+    "generated_tests": [
+      "assert sumofFactors(0) == 0",
+      "assert sumofFactors(2) == 2",
+      "assert sumofFactors(1000000007) == 0"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 15.69s\n\n"
+  }
+}

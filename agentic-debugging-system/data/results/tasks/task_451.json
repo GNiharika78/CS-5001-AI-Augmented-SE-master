@@ -1,0 +1,50 @@
+{
+  "task_id": 451,
+  "task_prompt": "Write a function to remove all whitespaces from the given string.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "import re\ndef remove_whitespaces(text1):\n    return re.sub(r'\\s', '', text1)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 23.44,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef remove_whitespaces(text1):\n  return (re.sub(r'\\s-', '',text1))",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert remove_whitespaces(' Google    Flutter ') == 'GoogleFlutter'\nE       AssertionError: assert ' Google    Flutter ' == 'GoogleFlutter'\nE         \nE         - GoogleFlutter\nE         +  Google    Flutter \nE         ? +      ++++       +\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpropb0d4_\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert remove_whitespaces(' Google    Dart ') == 'GoogleDart'\nE       AssertionError: assert ' Google    Dart ' == 'GoogleDart'\nE         \nE         - GoogleDart\nE         +  Google    Dart \nE         ? +      ++++    +\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpropb0d4_\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert remove_whitespaces(' iOS    Swift ') == 'iOSSwift'\nE       AssertionError: assert ' iOS    Swift ' == 'iOSSwift'\nE         \nE         - iOSSwift\nE         +  iOS    Swift\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpropb0d4_\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpropb0d4_\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpropb0d4_\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpropb0d4_\\test_solution.py::test_case_2\n3 failed in 0.37s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `remove_whitespaces()` is not correctly removing all whitespace characters from the input string. The test expects the leading/trailing spaces and multiple internal spaces to be completely removed, but the current implementation is either:\n   - Not removing all whitespace (based on the test output showing the original string with spaces)\n   - Or has a bug in the regex pattern (the pattern `r'\\s-'` is incorrect)\n\n2. **Evidence**:\n   - Input: `' Google    Flutter '` \u2192 Expected: `'GoogleFlutter'` \u2192 Actual: `' Google    Flutter '` (unchanged)\n   - Input: `' Google    Dart '` \u2192 Expected: `'GoogleDart'` \u2192 Actual: `' Google    Dart '` (unchanged)\n   - The test output shows the original string with spaces was returned unchanged\n\n3. **Failure type**:\n   - **Functional failure**: The function doesn't perform the required operation\n   - **Pattern mismatch**: The regex pattern is incorrect for removing all whitespace\n\n4. **Suspected location**:\n   The issue is in the regex pattern `r'\\s-'` in the `re.sub()` call. The correct pattern should",
+      "hypothesis": "Here's the detailed analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `remove_whitespaces(text1)` fails to remove **all whitespace characters** (spaces, tabs, newlines, etc.) from the input string. Instead, it returns the original string unchanged, indicating the regex pattern is either:\n- Incorrectly written (e.g., `r'\\s-'` is malformed).\n- Not matching any whitespace characters.\n\n---\n\n### **2. Evidence**\n- **Input:** `' Google    Flutter '` \u2192 **Expected:** `'GoogleFlutter'` \u2192 **Actual:** `' Google    Flutter '` (no change).\n- **Input:** `' Google    Dart '` \u2192 **Expected:** `'GoogleDart'` \u2192 **Actual:** `' Google    Dart '` (no change).\n- The test output shows the original string with spaces was returned **unchanged**, confirming the regex pattern is ineffective.\n\n---\n\n### **3. Root Cause**\nThe regex pattern `r'\\s-'` is **incorrect** for two reasons:\n1. **Syntax Error**: The hyphen `-` after `\\s` is invalid in this context. In regex, `\\s` already matches **all whitespace characters** (spaces",
+      "patched_code": "import re\ndef remove_whitespaces(text1):\n    return re.sub(r'\\s', '', text1)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 13.53
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef remove_whitespaces(text1):\n    return re.sub(r'\\s', '', text1)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Total Statements**: 10 (7 in tests + 3 in production code)\n- **Perfect Coverage**: 100% (0 statements missed)\n- **Production Code**: 3 statements (100% covered)\n- **Test Code**: 7 statements (100% covered)\n\n**Key Insight**: Your codebase achieves **full statement coverage**, meaning every line of executable code in both your production (`solution.py`) and test (`test_solution.py`) files is executed at least once during testing.\n\n---\n\n### 2. **Missing Cases (None)**\nSince the report shows **0 missed statements**, there are no gaps in coverage. However, if you want to explore deeper, consider:\n- **Branch Coverage**: Check if all conditional branches (e.g., `if/else`, loops) are tested. Tools like `pytest-cov` can show this.\n- **Edge Cases**: Verify if boundary conditions (e.g., empty inputs, max/min values) are tested.\n- **Error Paths**: Ensure exceptions/errors are triggered and handled.\n\n**Example Check**:\nIf `solution.py` had logic like:\n```python",
+    "generated_tests": [
+      "assert remove_whitespaces('') == ''",
+      "assert remove_whitespaces('   \\t\\n\\r\\v\\f') == ''",
+      "assert remove_whitespaces(None) == ''"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert remove_whitespaces(None) == ''\n               ^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpcgp1g4fw\\test_solution.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpcgp1g4fw\\solution.py:3: in remove_whitespaces\n    return re.sub(r'\\s', '', text1)\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\npattern = '\\\\s', repl = '', string = None, count = 0, flags = 0\n\n    def sub(pattern, repl, string, count=0, flags=0):\n        \"\"\"Return the string obtained by replacing the leftmost\n        non-overlapping occurrences of the pattern in string by the\n        replacement repl.  repl can be either a string or a callable;\n        if a string, backslash escapes in it are processed.  If it is\n        a callable, it's passed the Match object and must return\n        a replacement string to be used.\"\"\"\n>       return _compile(pattern, flags).sub(repl, string, count)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       TypeError: expected string or bytes-like object, got 'NoneType'\n\n..\\..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\re\\__init__.py:186: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpcgp1g4fw\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.38s\n\n"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "task_id": 223,
+  "task_prompt": "Write a function that takes in a sorted array, its length (n), and an element and returns whether the element is the majority element in the given sorted array. (The majority element is the element that occurs more than n/2 times.)",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def is_majority(arr, n, x):\n\ti = binary_search(arr, 0, n-1, x)\n\tif i == -1:\n\t\treturn False\n\tif ((i - n//2) <= (n -1)) and arr[i + n//2] == x:\n\t\treturn True\n\telse:\n\t\treturn False\ndef binary_search(arr, low, high, x):\n\tif high >= low:\n\t\tmid = (low + high)//2 \n\t\tif (mid == 0 or x > arr[mid-1]) and (arr[mid] == x):\n\t\t\treturn mid\n\t\telif x > arr[mid]:\n\t\t\treturn binary_search(arr, (mid + 1), high, x)\n\t\telse:\n\t\t\treturn binary_search(arr, low, (mid -1), x)\n\treturn -1",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 8.74,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def is_majority(arr, n, x):\n\ti = binary_search(arr, 0, n-1, x)\n\tif i == -1:\n\t\treturn False\n\tif ((i - n//2) <= (n -1)) and arr[i + n//2] == x:\n\t\treturn True\n\telse:\n\t\treturn False\ndef binary_search(arr, low, high, x):\n\tif high >= low:\n\t\tmid = (low + high)//2 \n\t\tif (mid == 0 or x > arr[mid-1]) and (arr[mid] == x):\n\t\t\treturn mid\n\t\telif x > arr[mid]:\n\t\t\treturn binary_search(arr, (mid + 1), high, x)\n\t\telse:\n\t\t\treturn binary_search(arr, low, (mid -1), x)\n\treturn -1",
+      "tests_passed_before_patch": true,
+      "test_output": "....                                                                     [100%]\n4 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.59
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           16      2    88%   4, 18\ntest_solution.py       9      0   100%\n------------------------------------------------\nTOTAL                 25      2    92%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nYour code has **92% statement coverage**, meaning 2 out of 25 statements in `solution.py` are not executed by your tests (`test_solution.py`). This is a decent start, but **100% coverage** is often a good target for ensuring robustness.\n\n---\n\n### **2. Missing Cases (Statements 4 & 18)**\nThe missing statements (`4` and `18`) suggest that some branches or edge cases are not being tested. Here\u2019s how to interpret them:\n\n#### **Possible Reasons for Missing Coverage:**\n- **Conditional branches** (e.g., `if`, `elif`, `for` loops) are not fully exercised.\n- **Error handling** (e.g., exceptions, invalid inputs) is not tested.\n- **Boundary conditions** (e.g., empty inputs, max/min values) are missing.\n- **Alternative code paths** (e.g., different function calls) are not covered.\n\n#### **How to Find the Missing Logic:**\n1. **Check `solution.py` (Statements 4 & 18):**\n   - If these are in an `if`/`else` block, ensure both branches are tested.\n   -",
+    "generated_tests": [
+      "assert is_majority([], 0, 1) == False",
+      "assert is_majority([5, 5, 5, 5, 5, 5, 5, 5, 5, 5], 10, 5) == True",
+      "assert is_majority([1, 1, 1, 1, 2, 2, 2, 2, 2, 2], 10, 1) == False"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": ".......                                                                  [100%]\n7 passed in 0.34s\n\n"
+  }
+}

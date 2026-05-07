@@ -1,0 +1,38 @@
+{
+  "task_id": 133,
+  "task_prompt": "Write a function to calculate the sum of the negative numbers of a given list of numbers.",
+  "bug_type": "boundary_lt_to_lte",
+  "status": "repaired",
+  "final_code": "def sum_negativenum(nums):\n  sum_negativenum = list(filter(lambda nums:nums<=0,nums))\n  return sum(sum_negativenum)",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 8.34,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def sum_negativenum(nums):\n  sum_negativenum = list(filter(lambda nums:nums<=0,nums))\n  return sum(sum_negativenum)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Total Statements**: 10 (3 in `solution.py`, 7 in `test_solution.py`)\n- **Fully Covered**: 100% (0 statements missed)\n- **Perfect Coverage**: Your tests achieve **full statement coverage**, meaning every line of code in both the implementation and tests has been executed at least once.\n\n---\n\n### 2. **Missing Cases (None)**\nSince the report shows **0 missed statements**, there are no uncovered cases in either file. This means:\n- All branches, loops, and edge cases in `solution.py` are tested.\n- All test cases in `test_solution.py` execute all possible paths.\n\n---\n\n### 3. **Test Suggestions (If Any)**\nSince coverage is already perfect, here are **general best practices** to consider for future projects (even if not applicable here):\n\n#### **For `solution.py` (Implementation):**\n- **Check for Unreachable Code**: If you later modify the file, ensure no dead code remains.\n- **Edge Cases**: Verify if the logic handles:\n  - Empty inputs (if applicable).\n  - Boundary values (e.g., min",
+    "generated_tests": [
+      "assert sum_negativenum([]) == 0",
+      "assert sum_negativenum([0, 0, 0]) == 0",
+      "assert sum_negativenum([-0.5, 1.2, -3.7]) == -4.2"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.32s\n\n"
+  }
+}

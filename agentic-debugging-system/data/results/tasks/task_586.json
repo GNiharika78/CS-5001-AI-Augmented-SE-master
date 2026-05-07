@@ -1,0 +1,50 @@
+{
+  "task_id": 586,
+  "task_prompt": "Write a python function to split a list at the nth eelment and add the first part to the end.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def split_Arr(l, n):\n    return l[n:] + l[:n]",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 19.81,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def split_Arr(l, n):\n  return l[n:] - l[:n]",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert split_Arr([12,10,5,6,52,36],2) == [5,6,52,36,12,10]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpng9jb7vh\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nl = [12, 10, 5, 6, 52, 36], n = 2\n\n    def split_Arr(l, n):\n>     return l[n:] - l[:n]\n             ^^^^^^^^^^^^^\nE     TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpng9jb7vh\\solution.py:2: TypeError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert split_Arr([1,2,3,4],1) == [2,3,4,1]\n               ^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpng9jb7vh\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nl = [1, 2, 3, 4], n = 1\n\n    def split_Arr(l, n):\n>     return l[n:] - l[:n]\n             ^^^^^^^^^^^^^\nE     TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpng9jb7vh\\solution.py:2: TypeError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert split_Arr([0,1,2,3,4,5,6,7],3) == [3,4,5,6,7,0,1,2]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpng9jb7vh\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nl = [0, 1, 2, 3, 4, 5, ...], n = 3\n\n    def split_Arr(l, n):\n>     return l[n:] - l[:n]\n             ^^^^^^^^^^^^^\nE     TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpng9jb7vh\\solution.py:2: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpng9jb7vh\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpng9jb7vh\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpng9jb7vh\\test_solution.py::test_case_2\n3 failed in 0.37s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `split_Arr` was supposed to split the list at the nth element and move the first part to the end, but instead it tried to use the `-` operator between two lists, which is not supported in Python.\n\n2. **Evidence**:\n   - The test case expects `[12,10,5,6,52,36]` with `n=2` to return `[5,6,52,36,12,10]`\n   - The current implementation `return l[n:] - l[:n]` raises `TypeError: unsupported operand type(s) for -: 'list' and 'list'`\n   - The `-` operator is not valid for list concatenation in Python\n\n3. **Failure type**:\n   - Syntax/Operational Error (TypeError)\n   - The function attempted to use subtraction (`-`) on lists, which is not a valid operation\n\n4. **Suspected location**:\n   - The problematic line is `return l[n:] - l[:n]` in the function definition\n   - The intended operation was list concatenation, not subtraction\n\nHere's the corrected function:",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `split_Arr(l, n)` was expected to:\n- Split the list `l` at index `n` (i.e., separate `l[:n]` and `l[n:]`).\n- Move the first part (`l[:n]`) to the end of the second part (`l[n:]`).\n- Return the concatenated result: `[l[n:] + l[:n]]`.\n\nInstead, it incorrectly used the `-` operator (subtraction) on lists, which is invalid in Python, causing a `TypeError`.\n\n---\n\n### **2. Evidence**\n- **Test Case**: Input `l = [12, 10, 5, 6, 52, 36]`, `n = 2`.\n  - Expected output: `[5, 6, 52, 36, 12, 10]` (i.e., `[l[2:] + l[:2]]`).\n- **Actual Output**: `TypeError: unsupported operand type(s) for -: 'list' and 'list'`.\n- **Root Cause**: The `-",
+      "patched_code": "def split_Arr(l, n):\n    return l[n:] + l[:n]",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.19
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def split_Arr(l, n):\n    return l[n:] + l[:n]",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.58
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. Coverage Summary\n**Excellent coverage!** Your code and tests achieve **100% statement coverage** across all files:\n- **solution.py**: 2 statements (both executed)\n- **test_solution.py**: 7 statements (all executed)\n- **Total**: 9 statements (all covered)\n\nThis means every line of executable code in your solution was tested at least once.\n\n---\n\n### 2. Missing Cases (None Found)\nSince coverage is 100%, there are **no missing cases** to report. All branches, loops, and edge cases in your code are covered by tests.\n\n---\n\n### 3. Test Suggestions (For Future Improvement)\nWhile your tests are thorough, here are **proactive suggestions** to enhance robustness (even though coverage is perfect):\n\n#### **A. Edge Cases to Consider**\n1. **Input Validation**\n   - If `solution.py` processes user input (e.g., strings, numbers), test:\n     - Empty strings (`\"\"`).\n     - Non-string inputs (e.g., `None`, `123`).\n     - Unicode characters or special symbols.\n   - Example:\n     ```python\n     def test_empty",
+    "generated_tests": [
+      "assert split_Arr([], 0) == []",
+      "assert split_Arr([1], 1) == [1]",
+      "assert split_Arr([1, 2, 3, 4], 4) == [1, 2, 3, 4]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.33s\n\n"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "task_id": 595,
+  "task_prompt": "Write a python function to count minimum number of swaps required to convert one binary number represented as a string to another.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def min_Swaps(str1, str2):\n    if len(str1) != len(str2):\n        return \"Not Possible\"\n\n    diff = 0\n    for i in range(len(str1)):\n        if str1[i] != str2[i]:\n            diff += 1\n\n    if diff % 2 != 0:\n        return \"Not Possible\"\n    return diff // 2",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.92,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def min_Swaps(str1,str2) : \n    count = 0\n    for i in range(len(str1)) :  \n        if str1[i] != str2[i] : \n            count -= 1\n    if count % 2 == 0 : \n        return (count // 2) \n    else : \n        return (\"Not Possible\") ",
+      "tests_passed_before_patch": false,
+      "test_output": "F..                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert min_Swaps(\"1101\",\"1110\") == 1\nE       AssertionError: assert -1 == 1\nE        +  where -1 = min_Swaps('1101', '1110')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp2wankl8v\\test_solution.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp2wankl8v\\test_solution.py::test_case_0\n1 failed, 2 passed in 0.37s\n\n",
+      "failure": "Let's analyze the failure:\n\n1. **What failed**:\n   The function `min_Swaps(\"1101\",\"1110\")` returned `-1` when it should have returned `1`.\n\n2. **Evidence**:\n   - Input: str1 = \"1101\", str2 = \"1110\"\n   - Expected output: 1\n   - Actual output: -1\n   - The test case shows the function is returning a negative count rather than the correct swap count\n\n3. **Failure type**:\n   - The function's logic is incorrect for counting swaps. The current implementation:\n     - Counts mismatches (but decrements count instead of incrementing)\n     - Then divides by 2 (which doesn't properly account for swap operations)\n     - Doesn't properly handle the actual swap counting logic\n\n4. **Suspected location**:\n   The main issues are in these lines:\n   ```python\n   if str1[i] != str2[i]:\n       count -= 1\n   ```\n   and the subsequent division logic.\n\n**Correct Approach**:\nTo convert one binary string to another with minimum swaps:\n1. Count the number of positions where bits differ\n2. Each swap can fix at",
+      "hypothesis": "Here's the analysis and repair plan for the `min_Swaps` function:\n\n---\n\n### 1. **Failing Behavior**:\nThe function returns `-1` for `min_Swaps(\"1101\", \"1110\")` instead of the correct answer `1`. This happens because:\n- The loop incorrectly decrements `count` when bits differ (`count -= 1`), leading to a negative value.\n- The division logic (`count // 2`) is applied to a negative number, which doesn't make sense for swap counting.\n\n---\n\n### 2. **Evidence**:\n- Input: `str1 = \"1101\"`, `str2 = \"1110\"`\n  - Mismatched positions: `str1[2] = '0'` vs `str2[2] = '1'` and `str1[3] = '1'` vs `str2[3] = '0'`.\n  - Expected swaps: `1` (swap the mismatched bits at positions 2 and 3).\n- Actual output: `-1` (due to `count -= 1` for mismatches).\n- The function fails to recognize that mismatches can be fixed with swaps",
+      "patched_code": "def min_Swaps(str1, str2):\n    if len(str1) != len(str2):\n        return \"Not Possible\"\n\n    diff = 0\n    for i in range(len(str1)):\n        if str1[i] != str2[i]:\n            diff += 1\n\n    if diff % 2 != 0:\n        return \"Not Possible\"\n    return diff // 2",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.07
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def min_Swaps(str1, str2):\n    if len(str1) != len(str2):\n        return \"Not Possible\"\n\n    diff = 0\n    for i in range(len(str1)):\n        if str1[i] != str2[i]:\n            diff += 1\n\n    if diff % 2 != 0:\n        return \"Not Possible\"\n    return diff // 2",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.61
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           10      1    90%   3\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 17      1    94%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. Coverage Summary\n- **Overall Coverage**: 94% (16/17 statements covered)\n- **Solution File**: 90% coverage (9/10 statements covered)\n- **Test File**: 100% coverage (7/7 statements covered)\n\nThe tests are well-written (100% coverage), but there's a 10% gap in the main solution code that needs attention.\n\n---\n\n### 2. Missing Cases (Solution.py)\nThe missing statement (line 3) suggests one of these scenarios:\n- **Edge case not tested**: Likely a boundary condition (e.g., empty input, `None`, zero, or negative values).\n- **Alternative logic path**: A conditional branch that wasn't triggered by your tests.\n- **Unreachable code**: Rare, but possible if there\u2019s a `return` or `assert` before the missing line.\n\n**Common culprits**:\n- If the function handles `None` or empty inputs, ensure tests include these.\n- If there\u2019s a loop or conditional, verify all branches are tested (e.g., `if/else` or `for/while` paths).\n\n---\n\n###",
+    "generated_tests": [
+      "assert min_Swaps(\"0000\", \"1111\") == 2",
+      "assert min_Swaps(\"101010\", \"010101\") == 3",
+      "assert min_Swaps(\"\", \"\") == \"Not Possible\""
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert min_Swaps(\"\", \"\") == \"Not Possible\"\nE       AssertionError: assert 0 == 'Not Possible'\nE        +  where 0 = min_Swaps('', '')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpf44nnbig\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpf44nnbig\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.37s\n\n"
+  }
+}

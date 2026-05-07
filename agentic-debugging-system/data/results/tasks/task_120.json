@@ -1,0 +1,50 @@
+{
+  "task_id": 120,
+  "task_prompt": "Write a function to find the maximum absolute product between numbers in pairs of tuples within a given list.",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def max_product_tuple(list1):\n    return max(abs(x * y) for x, y in list1)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 19.8,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_product_tuple(list1):\n    result_max = max([abs(x + y) for x, y in list1] )\n    return result_max",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert max_product_tuple([(2, 7), (2, 6), (1, 8), (4, 9)] )==36\nE       assert 13 == 36\nE        +  where 13 = max_product_tuple([(2, 7), (2, 6), (1, 8), (4, 9)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp23yt4ylz\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert max_product_tuple([(10,20), (15,2), (5,10)] )==200\nE       assert 30 == 200\nE        +  where 30 = max_product_tuple([(10, 20), (15, 2), (5, 10)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp23yt4ylz\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert max_product_tuple([(11,44), (10,15), (20,5), (12, 9)] )==484\nE       assert 55 == 484\nE        +  where 55 = max_product_tuple([(11, 44), (10, 15), (20, 5), (12, 9)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp23yt4ylz\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp23yt4ylz\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp23yt4ylz\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp23yt4ylz\\test_solution.py::test_case_2\n3 failed in 0.36s\n\n",
+      "failure": "Here's the analysis of the failures:\n\n1. **What failed**:\n   The function `max_product_tuple()` is supposed to find the **maximum absolute product** between numbers in pairs of tuples, but it's currently calculating the maximum absolute **sum** instead. The test cases expect the product (x*y) rather than the sum (x+y).\n\n2. **Evidence**:\n   - Test case 0 expects 36 (which is 4*9 or 6*6), but the function returns 13 (which is 2+7+2+6+1+8+4+9, but actually just the max of individual sums like 2+7=9, 2+6=8, etc., with max being 9+4=13? Wait no, the current implementation is `max([abs(x + y) for x, y in list1])` which gives max of individual tuple sums, not the overall max sum. The test expects 36 which is the max product (4*9=36).\n   - Test case 1 expects 200 (10*20=200), but the function returns 30 (which is 15+2",
+      "hypothesis": "Here's the structured failure analysis and repair plan for the `max_product_tuple` function:\n\n---\n\n### **1. Failing Behavior**\nThe function currently computes the **maximum absolute sum** of pairs in tuples (`abs(x + y)`) instead of the **maximum absolute product** (`abs(x * y)`). This causes incorrect results for test cases where the expected output is based on products (e.g., `4*9=36` or `10*20=200`).\n\n---\n\n### **2. Evidence**\n- **Test Case 0**:\n  Input: `[(2, 7), (2, 6), (1, 8), (4, 9)]`\n  Expected Output: `36` (from `4*9` or `6*6` if present, but `4*9=36` is the max product).\n  Current Output: `13` (from `abs(9 + 4) = 13`, which is the max sum, not product).\n  **Mismatch**: The function returns a sum-based result, but the test expects a product-based result.\n\n- **Test Case 1**:\n  Input: `[(10, 20",
+      "patched_code": "def max_product_tuple(list1):\n    return max(abs(x * y) for x, y in list1)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.23
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_product_tuple(list1):\n    return max(abs(x * y) for x, y in list1)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.58
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n---\n\n### **1. Coverage Summary**\n- **Total Statements Tested**: 9/9 (100%)\n  - **`solution.py`**: 2 statements (100% coverage)\n  - **`test_solution.py`**: 7 statements (100% coverage)\n- **No missing statements** in either file, indicating exhaustive testing of all code paths.\n\n---\n\n### **2. Missing Cases (None)**\nSince **all statements are covered (0 misses)**, there are no missing cases to report. This suggests:\n- The test suite fully exercises all branches, loops, and edge cases in `solution.py`.\n- No dead code or unreachable paths exist.\n\n---\n\n### **3. Test Suggestions**\nWhile your coverage is perfect, here are **proactive suggestions** to ensure robustness and maintainability:\n\n#### **A. Edge Case Validation**\n- **Input Validation**: If `solution.py` processes user input (e.g., strings, numbers), verify:\n  - Empty inputs (e.g., `\"\"`, `None`).\n  - Invalid types (e.g., passing a list to a function expecting a string).\n  - Extremely large/small values (e.g",
+    "generated_tests": [
+      "assert max_product_tuple([(0, 5), (-3, 4), (1, -10)]) == 40",
+      "assert max_product_tuple([(1e10, 1e10), (1e-10, 1e-10)]) == 10000000000000000000",
+      "assert max_product_tuple([(1, 0), (0, 0), (-1, -1)]) == 1"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...FF.                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert max_product_tuple([(0, 5), (-3, 4), (1, -10)]) == 40\nE       assert 12 == 40\nE        +  where 12 = max_product_tuple([(0, 5), (-3, 4), (1, -10)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjs80n8_i\\test_solution.py:13: AssertionError\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert max_product_tuple([(1e10, 1e10), (1e-10, 1e-10)]) == 10000000000000000000\nE       assert 1e+20 == 10000000000000000000\nE        +  where 1e+20 = max_product_tuple([(10000000000.0, 10000000000.0), (1e-10, 1e-10)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjs80n8_i\\test_solution.py:16: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjs80n8_i\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjs80n8_i\\test_solution.py::test_case_4\n2 failed, 4 passed in 0.35s\n\n"
+  }
+}

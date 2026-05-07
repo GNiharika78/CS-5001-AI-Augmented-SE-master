@@ -1,0 +1,38 @@
+{
+  "task_id": 113,
+  "task_prompt": "Write a function to check if a string represents an integer or not.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def check_integer(text):\n text = text.strip()\n if len(text) < 1:\n    return None\n else:\n     if all(text[i] in \"0123456789\" for i in range(len(text))):\n          return True\n     elif (text[0] in \"--\") and \\\n         all(text[i] in \"0123456789\" for i in range(1,len(text))):\n         return True\n     else:\n        return False",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 8.4,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def check_integer(text):\n text = text.strip()\n if len(text) < 1:\n    return None\n else:\n     if all(text[i] in \"0123456789\" for i in range(len(text))):\n          return True\n     elif (text[0] in \"--\") and \\\n         all(text[i] in \"0123456789\" for i in range(1,len(text))):\n         return True\n     else:\n        return False",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            9      2    78%   4, 10\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 16      2    88%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe coverage report indicates that:\n- **Total statements tested**: 14/16 (88% coverage)\n- **Missing statements**: 2 out of 9 in `solution.py` (lines 4 and 10)\n- **Test file (`test_solution.py`)** has full coverage (100%).\n\n### **2. Missing Cases (Lines 4 & 10 in `solution.py`)**\nSince the exact logic of `solution.py` is not provided, I\u2019ll assume common patterns where such lines might be missing coverage. Possible scenarios:\n\n#### **Possible Missing Cases:**\n- **Line 4**: Could be an **edge case** (e.g., empty input, `None`, or boundary values like `0`/`1`).\n- **Line 10**: Might handle a **specific condition** (e.g., a loop exit, a conditional branch, or a function return).\n\n#### **How to Identify Missing Cases:**\n- **Check the code logic**: If `solution.py` processes inputs (e.g., lists, numbers), ensure tests cover:\n  - Empty inputs (`[]`, `\"\"`, `None`).\n  - Single-element inputs.\n  - Extremes (",
+    "generated_tests": [
+      "assert check_integer(\" -123 \") == True",
+      "assert check_integer(\"\") == None",
+      "assert check_integer(\"1.23\") == False"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.33s\n\n"
+  }
+}

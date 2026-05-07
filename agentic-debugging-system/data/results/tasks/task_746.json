@@ -1,0 +1,50 @@
+{
+  "task_id": 746,
+  "task_prompt": "Write a function to find area of a sector. The function takes the radius and angle as inputs. Function should return None if the angle is larger than 360 degrees.",
+  "bug_type": "operator_pow_to_mul",
+  "status": "repaired",
+  "final_code": "import math\ndef sector_area(r,a):\n    if a > 360:\n        return None\n    return math.pi * r * r * (a / 360)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.72,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef sector_area(r,a):\n    if a > 360:\n        return None\n    return (math.pi*r*2) * (a/360)",
+      "tests_passed_before_patch": false,
+      "test_output": "FF.                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert sector_area(4,45)==6.283185307179586\nE       assert 3.141592653589793 == 6.283185307179586\nE        +  where 3.141592653589793 = sector_area(4, 45)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqovvsb9o\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert sector_area(9,45)==31.808625617596654\nE       assert 7.0685834705770345 == 31.808625617596654\nE        +  where 7.0685834705770345 = sector_area(9, 45)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqovvsb9o\\test_solution.py:7: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqovvsb9o\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqovvsb9o\\test_solution.py::test_case_1\n2 failed, 1 passed in 0.37s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `sector_area()` is not calculating the correct area of a sector. The test cases expect different results than what the current implementation produces.\n\n2. **Evidence**:\n   - For `sector_area(4, 45)`, the test expects `6.283185307179586` but gets `3.141592653589793`\n   - For `sector_area(9, 45)`, the test expects `31.808625617596654` but gets `7.0685834705770345`\n   - The current implementation multiplies the full circle area (`\u03c0r\u00b2`) by the fraction of the angle (a/360), but there's a syntax error in the calculation.\n\n3. **Failure type**:\n   - **Logical error**: The formula is conceptually correct but incorrectly implemented\n   - **Syntax error**: The expression `(math.pi*r*2)` is wrong - it should be `math.pi*r",
+      "hypothesis": "Here's the detailed analysis and repair plan for the `sector_area` function:\n\n1. **Failing behavior**:\n   The function returns incorrect area values that are exactly half of the expected results. For example, when radius=4 and angle=45\u00b0, it returns ~3.14 instead of ~6.28, which is half of \u03c0r\u00b2 (\u03c0*4\u00b2=50.265, but the test expects ~6.28 for 45\u00b0 sector).\n\n2. **Evidence**:\n   - The test expects `(\u03c0r\u00b2) * (a/360)` but the current implementation uses `(\u03c0r*2) * (a/360)`\n   - The `(math.pi*r*2)` part is incorrect - it's missing the second `r` and has an extra multiplication by 2\n   - The formula should be `\u03c0r\u00b2 * (a/360)` not `\u03c0r * 2 * (a/360)`\n\n3. **Root cause**:\n   The logical error is in the formula implementation. The current code:\n   - Uses `math.pi*r*2` instead of `math.pi*r*r` (missing one",
+      "patched_code": "import math\ndef sector_area(r,a):\n    if a > 360:\n        return None\n    return math.pi * r * r * (a / 360)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.92
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef sector_area(r,a):\n    if a > 360:\n        return None\n    return math.pi * r * r * (a / 360)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.58
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            5      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 12      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nYour code and tests achieve **100% statement coverage**, meaning every line of executable code in `solution.py` and `test_solution.py` has been executed at least once during testing.\n\n- **`solution.py` (5 statements, 0 missed)** \u2192 Fully covered.\n- **`test_solution.py` (7 statements, 0 missed)** \u2192 Fully covered.\n- **Total (12 statements, 0 missed)** \u2192 **Perfect coverage**.\n\n---\n\n### **2. Missing Cases (If Any)**\nSince coverage is **100%**, there are **no missing cases** in terms of executed statements. However, consider checking for:\n- **Branch Coverage** (if/else, loops, etc.) \u2013 Even if statements are covered, branches might not be.\n- **Path Coverage** \u2013 All possible execution paths (e.g., happy path, edge cases).\n- **Input Validation** \u2013 Are all edge cases (empty input, invalid types, etc.) tested?\n\n#### **How to Check Branch Coverage?**\nRun:\n```bash\ncoverage run -m pytest\ncoverage report -m\n```\nIf branch coverage is lower, you may need additional test cases.\n\n---",
+    "generated_tests": [
+      "assert sector_area(0, 90) == 0",
+      "assert sector_area(10, 360) == 314.1592653589793",
+      "assert sector_area(-5, 180) == None"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert sector_area(-5, 180) == None\nE       assert 39.269908169872416 == None\nE        +  where 39.269908169872416 = sector_area(-5, 180)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbnj6rmd2\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbnj6rmd2\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.35s\n\n"
+  }
+}

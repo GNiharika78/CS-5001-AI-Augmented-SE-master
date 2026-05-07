@@ -1,0 +1,50 @@
+{
+  "task_id": 119,
+  "task_prompt": "Write a python function to find the element that appears only once in a sorted array.",
+  "bug_type": "loop_range_n_to_n_minus_1",
+  "status": "repaired",
+  "final_code": "def search(arr):\n    n = len(arr)\n    XOR = 0\n    for i in range(n):\n        XOR = XOR ^ arr[i]\n    return XOR",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 19.71,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def search(arr):\n    n = len(arr)\n    XOR = 0\n    for i in range(n - 1) :\n        XOR = XOR ^ arr[i]\n    return (XOR)",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert search([1,1,2,2,3]) == 3\nE       assert 0 == 3\nE        +  where 0 = search([1, 1, 2, 2, 3])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmph2do44vo\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert search([1,1,3,3,4,4,5,5,7,7,8]) == 8\nE       assert 0 == 8\nE        +  where 0 = search([1, 1, 3, 3, 4, 4, ...])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmph2do44vo\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert search([1,2,2,3,3,4,4]) == 1\nE       assert 5 == 1\nE        +  where 5 = search([1, 2, 2, 3, 3, 4, ...])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmph2do44vo\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmph2do44vo\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmph2do44vo\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmph2do44vo\\test_solution.py::test_case_2\n3 failed in 0.36s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `search()` is not correctly identifying the unique element in the sorted array. Instead of returning the single unique element, it's returning `0` (or incorrect values) for all test cases.\n\n2. **Evidence**:\n   - For input `[1,1,2,2,3]`, expected output is `3` but got `0`\n   - For input `[1,1,3,3,4,4,5,5,7,7,8]`, expected output is `8` but got `0`\n   - For input `[1,2,2,3,3,4,4]`, expected output is `1` but got `5`\n\n3. **Failure type**:\n   - **Logical Error**: The current implementation only XORs all elements except the last one, which doesn't properly account for the unique element in a sorted array.\n   - **Incorrect Algorithm**: The XOR approach is being misapplied - it should XOR all elements (including the last one) to find the unique element, but the current implementation skips the last element.\n\n4. **Suspected location**:\n   The issue is in",
+      "hypothesis": "Here's the detailed failure analysis and repair plan for the given function:\n\n---\n\n### **1. Failing Behavior**\nThe function `search(arr)` incorrectly returns `0` (or other wrong values) instead of the unique element in the sorted array. This happens because the current implementation only XORs all elements **except the last one**, which is insufficient for finding the unique element in a sorted array where duplicates are adjacent.\n\n---\n\n### **2. Evidence**\n- **Test Case 1**: `[1,1,2,2,3]` \u2192 Expected: `3`, Got: `0`\n  - Current XOR: `1 ^ 1 ^ 2 ^ 2 = 0` (skips `3`).\n- **Test Case 2**: `[1,1,3,3,4,4,5,5,7,7,8]` \u2192 Expected: `8`, Got: `0`\n  - Current XOR: `1 ^ 1 ^ 3 ^ 3 ^ 4 ^ 4 ^ 5 ^ 5 ^ 7 ^ 7 = 0` (skips `8`).\n- **Test Case 3**: `[1,2,2,3,3,4,",
+      "patched_code": "def search(arr):\n    n = len(arr)\n    XOR = 0\n    for i in range(n):\n        XOR = XOR ^ arr[i]\n    return XOR",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.04
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def search(arr):\n    n = len(arr)\n    XOR = 0\n    for i in range(n):\n        XOR = XOR ^ arr[i]\n    return XOR",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.58
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Perfect Coverage (100%)**: Your code and tests achieve **100% statement coverage**, meaning every line of executable code in `solution.py` and `test_solution.py` has been executed at least once during testing.\n- **No Gaps**: No statements were missed in either the implementation or the test suite.\n\n---\n\n### 2. **Missing Cases (None)**\nSince the report shows **0 missed statements**, there are no uncovered code paths or edge cases in your current implementation. This suggests:\n- All branches (if-elif-else, loops, etc.) are tested.\n- All functions/methods are exercised.\n- No dead code exists.\n\n---\n\n### 3. **Test Suggestions (For Further Robustness)**\nWhile your coverage is perfect, consider these **best practices** to ensure **branch/condition coverage** (if applicable) and **edge-case resilience**:\n\n#### **A. Check for Branch Coverage**\nIf your code contains:\n- Conditional statements (`if/else`, `switch`),\n- Loops with early exits,\n- Function calls with side effects,\n\n**Verify** that all branches are tested. For example:",
+    "generated_tests": [
+      "assert search([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 5]) == 5",
+      "assert search([0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3]) == 3",
+      "assert search([-1, -1, 0, 0, 1, 1, 2, 2, 3]) == 3"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.32s\n\n"
+  }
+}

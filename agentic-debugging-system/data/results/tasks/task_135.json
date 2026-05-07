@@ -1,0 +1,50 @@
+{
+  "task_id": 135,
+  "task_prompt": "Write a function to find the nth hexagonal number.",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def hexagonal_num(n):\n\treturn n * (2 * n - 1)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 19.15,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def hexagonal_num(n): \n\treturn n+(2*n - 1) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert hexagonal_num(10) == 190\nE       assert 29 == 190\nE        +  where 29 = hexagonal_num(10)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpwxefhf9_\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert hexagonal_num(5) == 45\nE       assert 14 == 45\nE        +  where 14 = hexagonal_num(5)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpwxefhf9_\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert hexagonal_num(7) == 91\nE       assert 20 == 91\nE        +  where 20 = hexagonal_num(7)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpwxefhf9_\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpwxefhf9_\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpwxefhf9_\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpwxefhf9_\\test_solution.py::test_case_2\n3 failed in 0.36s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `hexagonal_num(n)` is not correctly calculating hexagonal numbers. The current implementation returns incorrect values for all test cases.\n\n2. **Evidence**:\n   - For input `10`, expected output is `190` but got `29`\n   - For input `5`, expected output is `45` but got `14`\n   - For input `7`, expected output is `91` but got `20`\n\n3. **Failure type**:\n   The function is using the wrong formula for hexagonal numbers. The current implementation appears to be calculating something like `n + (2n - 1)`, which is actually the formula for the nth **centered hexagonal number** (also known as centered octagonal numbers), not the standard hexagonal numbers.\n\n4. **Suspected location**:\n   The formula in the function is incorrect. The correct formula for the nth hexagonal number (also known as centered hexagonal numbers) should be:\n   `H(n) = 3n(n-1) + 1`\n\nHere's the corrected function:\n\n```python\ndef hexagonal_num(n):\n    return 3 * n * (n - 1)",
+      "hypothesis": "Here's the detailed analysis and repair plan for the hexagonal number function:\n\n---\n\n### **1. Failing Behavior**\nThe function `hexagonal_num(n)` returns incorrect values for hexagonal numbers. For example:\n- Input `10` \u2192 Expected `190` but got `29`\n- Input `5` \u2192 Expected `45` but got `14`\n- Input `7` \u2192 Expected `91` but got `20`\n\n---\n\n### **2. Evidence**\nThe current implementation (`n + (2n - 1)`) simplifies to `3n - 1`, which is **not** the correct formula for hexagonal numbers. Instead, it matches the formula for **centered hexagonal numbers** (also called centered octagonal numbers), which is `3n(n - 1) + 1`.\n\n---\n\n### **3. Root Cause**\nThe **incorrect formula** (`n + (2n - 1)`) was used instead of the correct formula for **standard hexagonal numbers** (also called **hexagonal numbers** or **centered hexagonal numbers** in some contexts). The correct formula for the **nth hexagonal number** is:\n\\[\nH(n) = n(2n - 1)",
+      "patched_code": "def hexagonal_num(n):\n\treturn n * (2 * n - 1)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 10.88
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def hexagonal_num(n):\n\treturn n * (2 * n - 1)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.62
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n---\n\n### **1. Coverage Summary**\n- **Total Statements Tested**: 9/9 (100%)\n  - **`solution.py`**: 2 statements (100% coverage)\n  - **`test_solution.py`**: 7 statements (100% coverage)\n- **No missing statements** in either file, indicating exhaustive testing of all code paths.\n\n---\n\n### **2. Missing Cases (None)**\nSince **all statements are covered (0 misses)**, there are no missing cases to report. This suggests:\n- The test suite fully exercises all branches, loops, and edge cases in `solution.py`.\n- No dead code or unreachable paths exist.\n\n---\n\n### **3. Test Suggestions**\nWhile your coverage is perfect, here are **proactive suggestions** to ensure robustness and maintainability:\n\n#### **A. Edge-Case Validation**\n- **Input Validation**: If `solution.py` processes user input (e.g., strings, numbers), verify:\n  - Empty inputs (e.g., `\"\"`, `None`).\n  - Invalid types (e.g., passing a list to a function expecting a string).\n  - Extremely large/small values (e",
+    "generated_tests": [
+      "assert hexagonal_num(0) == 0",
+      "assert hexagonal_num(-1) == -3",
+      "assert hexagonal_num(10**6) == 3999999999999900"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....FF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert hexagonal_num(-1) == -3\nE       assert 3 == -3\nE        +  where 3 = hexagonal_num(-1)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp2cquz9f7\\test_solution.py:16: AssertionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert hexagonal_num(10**6) == 3999999999999900\nE       assert 1999999000000 == 3999999999999900\nE        +  where 1999999000000 = hexagonal_num((10 ** 6))\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp2cquz9f7\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp2cquz9f7\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp2cquz9f7\\test_solution.py::test_case_5\n2 failed, 4 passed in 0.35s\n\n"
+  }
+}

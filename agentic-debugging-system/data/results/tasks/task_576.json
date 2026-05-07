@@ -1,0 +1,50 @@
+{
+  "task_id": 576,
+  "task_prompt": "Write a python function to check whether a list is sublist of another or not.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def is_Sub_Array(A, B):\n    n = len(A)\n    m = len(B)\n    if n == 0:\n        return True\n    if m < n:\n        return False\n    for i in range(m - n + 1):\n        if B[i:i+n] == A:\n            return True\n    return False",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 40.97,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def is_Sub_Array(A,B): \n    n = len(A)\n    m = len(B)\n    i = 0; j = 0; \n    while (i < n and j < m):  \n        if (A[i] == B[j]): \n            i -= 1; \n            j += 1; \n            if (j == m): \n                return True;  \n        else: \n            i = i - j + 1; \n            j = 0;       \n    return False; ",
+      "tests_passed_before_patch": false,
+      "test_output": "Command '['python', '-m', 'pytest', 'C:\\\\Users\\\\gurra\\\\AppData\\\\Local\\\\Temp\\\\tmp_oidor43\\\\test_solution.py', '-q']' timed out after 20 seconds",
+      "failure": "Here's the analysis of the provided code and the failure:\n\n### 1. What failed:\nThe function `is_Sub_Array(A, B)` is supposed to check if list `A` is a sublist of list `B`, but it has logical errors that cause it to either:\n- Incorrectly return `True` for some cases\n- Incorrectly return `False` for valid sublist cases\n- Potentially enter infinite loops in certain edge cases (which could explain the timeout)\n\n### 2. Evidence:\nThe timeout suggests the function gets stuck in an infinite loop for certain inputs. The main issues in the code are:\n\n- **Incorrect index handling**: The line `i -= 1` is problematic because it can make `i` negative, which is invalid for list indexing.\n- **Incorrect sublist matching logic**: The current implementation tries to match elements in reverse order (due to `i -= 1`), which is not how sublist checking should work.\n- **Reset logic**: The `i = i - j + 1` line can cause incorrect skipping behavior.\n\n### 3. Failure type:\n- **Logical error**: The core algorithm is flawed in how it attempts to match sublists.\n- **Index out of",
+      "hypothesis": "Here's the detailed analysis and repair plan for the `is_Sub_Array` function:\n\n---\n\n### **1. Failing Behavior**\nThe function fails in several ways:\n- **Incorrectly returns `True`** for cases where `A` is not a contiguous sublist of `B` (e.g., `A = [1, 2, 3]`, `B = [1, 0, 2, 3]` incorrectly returns `True`).\n- **Incorrectly returns `False`** for valid sublist cases (e.g., `A = [2, 3]`, `B = [1, 2, 3, 4]` should return `True` but may not due to flawed logic).\n- **Timeouts** due to infinite loops (e.g., when `A` or `B` is empty or when the reset logic (`i = i - j + 1`) causes `i` to stay stuck).\n\n---\n\n### **2. Evidence**\n- **Reverse matching**: The line `i -= 1` suggests the function tries to match `A` in reverse order, which is incorrect for sublist checks.\n- **Negative indices**: `i -= 1` can make `i",
+      "patched_code": "def is_Sub_Array(A, B):\n    n = len(A)\n    m = len(B)\n    if n == 0:\n        return True\n    if m < n:\n        return False\n    for i in range(m - n + 1):\n        if B[i:i+n] == A:\n            return True\n    return False",
+      "decision": "patch_and_retry",
+      "duration_seconds": 31.79
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def is_Sub_Array(A, B):\n    n = len(A)\n    m = len(B)\n    if n == 0:\n        return True\n    if m < n:\n        return False\n    for i in range(m - n + 1):\n        if B[i:i+n] == A:\n            return True\n    return False",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.57
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           11      2    82%   5, 11\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 18      2    89%\n\n",
+    "coverage_analysis": "Here\u2019s a detailed analysis of your coverage report:\n\n---\n\n### **1. Coverage Summary**\n- **Total Statements**: 18 (across `solution.py` and `test_solution.py`).\n- **Covered Statements**: 16 (89%).\n- **Uncovered Statements**: 2 (lines 5 and 11 in `solution.py`).\n- **Test Coverage**: `test_solution.py` fully covers its own statements (100%), but the main logic in `solution.py` has gaps.\n\n---\n\n### **2. Missing Cases (Lines 5 and 11 in `solution.py`)**\nThe uncovered lines likely represent:\n- **Edge cases** (e.g., empty input, invalid data, boundary values).\n- **Alternative code paths** (e.g., conditional branches not triggered by tests).\n- **Logic not exercised** (e.g., a function returning early or a loop not completing).\n\n#### Possible Scenarios:\n- **Line 5**: Could be a function call, conditional check, or input validation that fails in tests.\n- **Line 11**: Might be the final return statement or a critical operation (e.g., error handling).\n\n**Example Hypotheses**:\n-",
+    "generated_tests": [
+      "assert is_Sub_Array([], [1, 2, 3]) == True",
+      "assert is_Sub_Array([1, 2, 3], [1, 2, 3, 1, 2, 3]) == True",
+      "assert is_Sub_Array([1, 2, 3], [1, 2, 3, 1, 2, 3, 1, 2, 3]) == False"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert is_Sub_Array([1, 2, 3], [1, 2, 3, 1, 2, 3, 1, 2, 3]) == False\nE       assert True == False\nE        +  where True = is_Sub_Array([1, 2, 3], [1, 2, 3, 1, 2, 3, ...])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4ahkaj3p\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4ahkaj3p\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.35s\n\n"
+  }
+}

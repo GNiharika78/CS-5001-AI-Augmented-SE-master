@@ -1,0 +1,50 @@
+{
+  "task_id": 441,
+  "task_prompt": "Write a function to find the surface area of a cube of a given size.",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def surfacearea_cube(l):\n  return 6 * l * l",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 21.23,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def surfacearea_cube(l):\n  surfacearea= 6+l*l\n  return surfacearea",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert surfacearea_cube(5)==150\nE       assert 31 == 150\nE        +  where 31 = surfacearea_cube(5)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp54ynhnns\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert surfacearea_cube(3)==54\nE       assert 15 == 54\nE        +  where 15 = surfacearea_cube(3)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp54ynhnns\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert surfacearea_cube(10)==600\nE       assert 106 == 600\nE        +  where 106 = surfacearea_cube(10)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp54ynhnns\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp54ynhnns\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp54ynhnns\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp54ynhnns\\test_solution.py::test_case_2\n3 failed in 0.36s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `surfacearea_cube(l)` is not correctly calculating the surface area of a cube. The test cases expect the function to return the correct surface area (6 times the square of the side length), but the current implementation is incorrect.\n\n2. **Evidence**:\n   - For input `5`, expected output is `150` but got `31` (6 + 5*5 = 6 + 25 = 31)\n   - For input `3`, expected output is `54` but got `15` (6 + 3*3 = 6 + 9 = 15)\n   - For input `10`, expected output is `600` but got `106` (6 + 10*10 = 6 + 100 = 106)\n\n3. **Failure type**:\n   The function is performing a simple addition (`6 + l*l`) instead of the correct calculation for cube surface area, which should be `6 * (l * l)`.\n\n4. **Suspected location**:\n   The error is in the formula implementation in the function.",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n1. **Failing behavior**:\n   The function returns incorrect surface area values (e.g., 31 for side length 5 instead of 150) because it incorrectly implements the formula as `6 + l*l` instead of the proper cube surface area formula.\n\n2. **Evidence**:\n   - Input 5 \u2192 Expected 150 (6\u00d75\u00b2) but got 31 (6+25)\n   - Input 3 \u2192 Expected 54 (6\u00d73\u00b2) but got 15 (6+9)\n   - Input 10 \u2192 Expected 600 (6\u00d710\u00b2) but got 106 (6+100)\n\n3. **Root cause**:\n   The formula `6 + l*l` is mathematically incorrect for cube surface area. A cube has 6 identical square faces, so the correct formula is `6 * (l * l)` or `6 * l\u00b2`.\n\n4. **Why this explains failure**:\n   The current implementation adds 6 to the square of the side length, which is not how surface area is calculated. The correct approach multiplies 6 by the",
+      "patched_code": "def surfacearea_cube(l):\n  return 6 * l * l",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.86
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def surfacearea_cube(l):\n  return 6 * l * l",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.58
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. Coverage Summary\n**Excellent coverage!** Your code and tests achieve **100% statement coverage** across all files:\n- **solution.py**: 2 statements (both executed)\n- **test_solution.py**: 7 statements (all executed)\n- **Total**: 9 statements (all covered)\n\nThis means every line of code in `solution.py` is executed at least once during your tests.\n\n---\n\n### 2. Missing Cases (None Found)\nSince coverage is 100%, there are **no missing cases** in terms of statement execution. However, consider checking for:\n- **Branch coverage**: Are all `if/else`, loops, and function branches tested?\n- **Edge cases**: Are boundary conditions (e.g., empty inputs, max/min values) covered?\n- **Error paths**: Are exceptions or invalid inputs handled?\n\n---\n\n### 3. Test Suggestions (If You Want to Improve Further)\nEven with 100% coverage, here are ways to enhance robustness:\n\n#### A. **Check Branch Coverage**\nIf your code has conditional logic (e.g., `if/else`, `for` loops), ensure both branches are tested.",
+    "generated_tests": [
+      "assert surfacearea_cube(0) == 0",
+      "assert surfacearea_cube(-1) == 6",
+      "assert surfacearea_cube(2.5) == 37.5"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.32s\n\n"
+  }
+}

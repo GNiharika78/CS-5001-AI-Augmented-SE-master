@@ -1,83 +1,107 @@
 {
-  "target_evaluated_tasks": 50,
-  "total_evaluated_tasks": 50,
-  "repaired": 45,
-  "failed": 5,
+  "target_evaluated_tasks": 300,
+  "total_evaluated_tasks": 300,
+  "repaired": 260,
+  "failed": 40,
   "failed_llm": 0,
-  "success_rate": 0.9,
-  "average_attempts": 2.16,
-  "average_duration_seconds": 28.991,
-  "average_llm_calls": 5.28,
+  "success_rate": 0.8666666666666667,
+  "average_attempts": 2.0733333333333333,
+  "average_duration_seconds": 25.05506666666667,
+  "average_llm_calls": 4.953333333333333,
   "bug_type_summary": {
     "operator_plus_to_minus": {
-      "total": 20,
-      "repaired": 19,
-      "failed": 1,
+      "total": 123,
+      "repaired": 107,
+      "failed": 16,
       "failed_llm": 0
     },
     "boolean_and_to_or": {
-      "total": 1,
-      "repaired": 1,
+      "total": 2,
+      "repaired": 2,
       "failed": 0,
       "failed_llm": 0
     },
     "operator_pow_to_mul": {
-      "total": 1,
-      "repaired": 1,
-      "failed": 0,
-      "failed_llm": 0
-    },
-    "operator_mul_to_plus": {
-      "total": 13,
-      "repaired": 10,
-      "failed": 3,
-      "failed_llm": 0
-    },
-    "operator_neq_to_eq": {
-      "total": 4,
-      "repaired": 3,
+      "total": 7,
+      "repaired": 6,
       "failed": 1,
       "failed_llm": 0
     },
+    "operator_mul_to_plus": {
+      "total": 81,
+      "repaired": 66,
+      "failed": 15,
+      "failed_llm": 0
+    },
+    "operator_neq_to_eq": {
+      "total": 8,
+      "repaired": 6,
+      "failed": 2,
+      "failed_llm": 0
+    },
     "boundary_lt_to_lte": {
-      "total": 1,
-      "repaired": 1,
+      "total": 6,
+      "repaired": 6,
       "failed": 0,
       "failed_llm": 0
     },
     "builtin_min_to_max": {
-      "total": 3,
-      "repaired": 3,
+      "total": 7,
+      "repaired": 7,
       "failed": 0,
       "failed_llm": 0
     },
     "builtin_max_to_min": {
-      "total": 1,
-      "repaired": 1,
+      "total": 8,
+      "repaired": 8,
       "failed": 0,
       "failed_llm": 0
     },
     "operator_eq_to_neq": {
-      "total": 3,
-      "repaired": 3,
-      "failed": 0,
+      "total": 27,
+      "repaired": 22,
+      "failed": 5,
       "failed_llm": 0
     },
     "boundary_gt_to_gte": {
-      "total": 1,
-      "repaired": 1,
+      "total": 5,
+      "repaired": 5,
       "failed": 0,
       "failed_llm": 0
     },
     "boolean_true_to_false": {
-      "total": 1,
-      "repaired": 1,
+      "total": 7,
+      "repaired": 7,
       "failed": 0,
       "failed_llm": 0
     },
     "boolean_or_to_and": {
-      "total": 1,
+      "total": 2,
       "repaired": 1,
+      "failed": 1,
+      "failed_llm": 0
+    },
+    "loop_range_n_to_n_minus_1": {
+      "total": 4,
+      "repaired": 4,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "len_to_len_minus_1": {
+      "total": 6,
+      "repaired": 6,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "boundary_lte_to_lt": {
+      "total": 2,
+      "repaired": 2,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "boundary_gte_to_gt": {
+      "total": 5,
+      "repaired": 5,
       "failed": 0,
       "failed_llm": 0
     }

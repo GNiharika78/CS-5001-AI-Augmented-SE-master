@@ -1,0 +1,50 @@
+{
+  "task_id": 743,
+  "task_prompt": "Write a function to rotate a given list by specified number of items to the right direction. https://www.geeksforgeeks.org/python-program-right-rotate-list-n/",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def rotate_right(lst, m):\n    m = m % len(lst)\n    return lst[-m:] + lst[:-m]",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 19.89,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def rotate_right(list, m):\n  result =  list[-m:] - list[:-m]\n  return result",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert rotate_right([1, 2, 3, 4, 5, 6, 7, 8, 9, 10],3)==[8, 9, 10, 1, 2, 3, 4, 5, 6, 7]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmtbkp4uz\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nlist = [1, 2, 3, 4, 5, 6, ...], m = 3\n\n    def rotate_right(list, m):\n>     result =  list[-m:] - list[:-m]\n                ^^^^^^^^^^^^^^^^^^^^^\nE     TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmtbkp4uz\\solution.py:2: TypeError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert rotate_right([1, 2, 3, 4, 5, 6, 7, 8, 9, 10],2)==[9, 10, 1, 2, 3, 4, 5, 6, 7, 8]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmtbkp4uz\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nlist = [1, 2, 3, 4, 5, 6, ...], m = 2\n\n    def rotate_right(list, m):\n>     result =  list[-m:] - list[:-m]\n                ^^^^^^^^^^^^^^^^^^^^^\nE     TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmtbkp4uz\\solution.py:2: TypeError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert rotate_right([1, 2, 3, 4, 5, 6, 7, 8, 9, 10],5)==[6, 7, 8, 9, 10, 1, 2, 3, 4, 5]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmtbkp4uz\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nlist = [1, 2, 3, 4, 5, 6, ...], m = 5\n\n    def rotate_right(list, m):\n>     result =  list[-m:] - list[:-m]\n                ^^^^^^^^^^^^^^^^^^^^^\nE     TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmtbkp4uz\\solution.py:2: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmtbkp4uz\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmtbkp4uz\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmtbkp4uz\\test_solution.py::test_case_2\n3 failed in 0.37s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `rotate_right()` is supposed to rotate a list to the right by `m` positions, but it's returning incorrect results and raising a `TypeError`.\n\n2. **Evidence**:\n   - The test expects `[8, 9, 10, 1, 2, 3, 4, 5, 6, 7]` for input `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` with `m=3`\n   - The current implementation uses `-` operator between lists (`list[-m:] - list[:-m]`), which is invalid in Python (lists don't support subtraction)\n   - The error message shows `TypeError: unsupported operand type(s) for -: 'list' and 'list'`\n\n3. **Failure type**:\n   - Syntax/Logical Error: Incorrect operation being performed on lists\n   - TypeError: Attempting to use subtraction on lists\n\n4. **Suspected location**:\n   The problematic line is:\n   ```python\n   result = list[-m:] - list[:-m]",
+      "hypothesis": "Here's the detailed analysis and repair plan for the failing `rotate_right` function:\n\n---\n\n### **1. Failing Behavior**\nThe function fails to produce the correct right-rotated list. Instead of rotating the list `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` right by `3` positions to `[8, 9, 10, 1, 2, 3, 4, 5, 6, 7]`, it raises a `TypeError` because it incorrectly attempts to subtract two lists (`list[-m:] - list[:-m]`), which is not a valid operation in Python.\n\n---\n\n### **2. Evidence**\n- **Expected Output**: `[8, 9, 10, 1, 2, 3, 4, 5, 6, 7]` for input `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` with `m=3`.\n- **Actual Output**: `TypeError: unsupported operand type(s) for -: 'list' and 'list'",
+      "patched_code": "def rotate_right(lst, m):\n    m = m % len(lst)\n    return lst[-m:] + lst[:-m]",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.25
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def rotate_right(lst, m):\n    m = m % len(lst)\n    return lst[-m:] + lst[:-m]",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.59
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Total Statements**: 10 (3 in `solution.py`, 7 in `test_solution.py`)\n- **Fully Covered**: 100% (0 statements missed)\n- **Perfect Coverage**: Your tests achieve **full statement coverage**, meaning every line of code in both the implementation and tests has been executed at least once.\n\n---\n\n### 2. **Missing Cases**\nSince **no statements are missed**, there are **no missing cases** in your coverage. This suggests:\n- All branches, loops, and edge cases in `solution.py` are tested.\n- The test suite (`test_solution.py`) exercises all possible paths.\n\n---\n\n### 3. **Test Suggestions**\nWhile your coverage is perfect, here are **refinements** to consider for **better quality** (even if not strictly needed for coverage):\n\n#### **A. Branch Coverage (If Applicable)**\n- If `solution.py` contains **conditional logic** (e.g., `if/else`, `for/while` loops), verify that **both branches** are tested.\n  - Example: If a function has `if x > 0:",
+    "generated_tests": [
+      "assert rotate_right([], 0) == []",
+      "assert rotate_right([1], 10) == [1]",
+      "assert rotate_right([1, 2, 3, 4], -1) == [4, 1, 2, 3]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...F.F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert rotate_right([], 0) == []\n               ^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpztni7pgl\\test_solution.py:13: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nlst = [], m = 0\n\n    def rotate_right(lst, m):\n>       m = m % len(lst)\n            ^^^^^^^^^^^^\nE       ZeroDivisionError: integer modulo by zero\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpztni7pgl\\solution.py:2: ZeroDivisionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert rotate_right([1, 2, 3, 4], -1) == [4, 1, 2, 3]\nE       assert [2, 3, 4, 1] == [4, 1, 2, 3]\nE         \nE         At index 0 diff: 2 != 4\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpztni7pgl\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpztni7pgl\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpztni7pgl\\test_solution.py::test_case_5\n2 failed, 4 passed in 0.36s\n\n"
+  }
+}

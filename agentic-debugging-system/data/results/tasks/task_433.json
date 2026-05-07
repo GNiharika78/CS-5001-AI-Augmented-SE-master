@@ -1,0 +1,38 @@
+{
+  "task_id": 433,
+  "task_prompt": "Write a function to check whether the entered number is greater than the elements of the given array.",
+  "bug_type": "boundary_gt_to_gte",
+  "status": "repaired",
+  "final_code": "def check_greater(arr, number):\n  arr.sort()\n  return number >= arr[-1]",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 8.83,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def check_greater(arr, number):\n  arr.sort()\n  return number >= arr[-1]",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.59
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Total Statements**: 10 (7 in tests + 3 in production code)\n- **Perfect Coverage**: 100% (0 statements missed)\n- **Production Code**: 3 statements (100% covered)\n- **Test Code**: 7 statements (100% covered)\n\n**Key Insight**: Your codebase achieves **full statement coverage**, meaning every line of executable code in both the solution and tests has been executed at least once during testing.\n\n---\n\n### 2. **Missing Cases (None)**\nSince the report shows **0 missed statements**, there are no uncovered branches, loops, or edge cases. This suggests:\n- All paths in your logic (e.g., `if/else`, loops, function calls) were tested.\n- No conditional branches (e.g., `if x > 5`) were left untested.\n- No input/output combinations were omitted.\n\n**Verification Tip**: Double-check for:\n   - **Branch Coverage**: Run `coverage report -m` to confirm 100% branch coverage (e.g., `if`/`else` paths).\n   - **Complex Logic**:",
+    "generated_tests": [
+      "assert check_greater([], 5) == True",
+      "assert check_greater([10], 10) == True",
+      "assert check_greater([-5, -3, -1], -10) == True"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...F.F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert check_greater([], 5) == True\n               ^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5891v3vp\\test_solution.py:13: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\narr = [], number = 5\n\n    def check_greater(arr, number):\n      arr.sort()\n>     return number >= arr[-1]\n                       ^^^^^^^\nE     IndexError: list index out of range\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5891v3vp\\solution.py:3: IndexError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert check_greater([-5, -3, -1], -10) == True\nE       assert False == True\nE        +  where False = check_greater([-5, -3, -1], -10)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5891v3vp\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5891v3vp\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5891v3vp\\test_solution.py::test_case_5\n2 failed, 4 passed in 0.37s\n\n"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "task_id": 563,
+  "task_prompt": "Write a function to extract values between quotation marks from a string.",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import re\ndef extract_values(text):\n return (re.findall(r'\"(.+?)\"', text))",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 9.08,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef extract_values(text):\n return (re.findall(r'\"(.+?)\"', text))",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n---\n\n### **1. Coverage Summary**\n- **Total Statements**: 10 (7 in `test_solution.py`, 3 in `solution.py`).\n- **Fully Covered**: **100%** (0 statements missed).\n- **Key Insight**: Your test suite successfully executes **all possible code paths** in both the implementation (`solution.py`) and tests (`test_solution.py`). This is excellent\u2014it means:\n  - No edge cases or branches are left untested.\n  - The implementation is robust against the tested scenarios.\n\n---\n\n### **2. Missing Cases (None Found)**\nSince **no statements are missed**, there are **no missing cases** to report. However, if you had uncovered code, here\u2019s what you\u2019d typically check:\n- **Conditional branches** (e.g., `if/else`, loops) with `Miss > 0`.\n- **Functions/methods** with zero test calls.\n- **Error paths** (e.g., exceptions, invalid inputs).\n- **Boundary conditions** (e.g., empty inputs, max/min values).\n\n**Your case**: All paths are exercised, so no further investigation is needed.\n\n---\n\n### **3",
+    "generated_tests": [
+      "assert extract_values('\"  leading space  \"', '\"trailing space  \"', '\"mixed  spaces  \"') == ['leading space', 'trailing space', 'mixed  spaces']",
+      "assert extract_values('\"nested\"quotes\"are\"not\"extracted\"') == ['nested', 'quotes', 'are', 'not', 'extracted']",
+      "assert extract_values('\"empty\"\"', '\"\", \"\"') == ['', '', '']"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...FFF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert extract_values('\"  leading space  \"', '\"trailing space  \"', '\"mixed  spaces  \"') == ['leading space', 'trailing space', 'mixed  spaces']\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       TypeError: extract_values() takes 1 positional argument but 3 were given\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp98r8fv26\\test_solution.py:13: TypeError\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert extract_values('\"nested\"quotes\"are\"not\"extracted\"') == ['nested', 'quotes', 'are', 'not', 'extracted']\nE       AssertionError: assert ['nested', 'are', 'extracted'] == ['nested', 'q..., 'extracted']\nE         \nE         At index 1 diff: 'are' != 'quotes'\nE         Right contains 2 more items, first extra item: 'not'\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp98r8fv26\\test_solution.py:16: AssertionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert extract_values('\"empty\"\"', '\"\", \"\"') == ['', '', '']\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       TypeError: extract_values() takes 1 positional argument but 2 were given\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp98r8fv26\\test_solution.py:19: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp98r8fv26\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp98r8fv26\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp98r8fv26\\test_solution.py::test_case_5\n3 failed, 3 passed in 0.35s\n\n"
+  }
+}

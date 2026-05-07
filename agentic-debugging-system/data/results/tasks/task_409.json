@@ -1,0 +1,50 @@
+{
+  "task_id": 409,
+  "task_prompt": "Write a function to find the minimum product from the pairs of tuples within a given list.",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def min_product_tuple(list1):\n    return min(x * y for x, y in list1)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 22.21,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def min_product_tuple(list1):\n    result_min = min([abs(x + y) for x, y in list1] )\n    return result_min",
+      "tests_passed_before_patch": false,
+      "test_output": ".FF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert min_product_tuple([(10,20), (15,2), (5,10)] )==30\nE       assert 15 == 30\nE        +  where 15 = min_product_tuple([(10, 20), (15, 2), (5, 10)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkkl4k4ig\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert min_product_tuple([(11,44), (10,15), (20,5), (12, 9)] )==100\nE       assert 21 == 100\nE        +  where 21 = min_product_tuple([(11, 44), (10, 15), (20, 5), (12, 9)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkkl4k4ig\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkkl4k4ig\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkkl4k4ig\\test_solution.py::test_case_2\n2 failed, 1 passed in 0.39s\n\n",
+      "failure": "Let me analyze the failure and provide a correct solution.\n\n1. **What failed**:\nThe function is supposed to find the minimum product of pairs from tuples, but currently it's calculating the minimum absolute sum instead. The test cases expect the minimum product (x*y) of all pairs, not the minimum absolute sum (abs(x+y)).\n\n2. **Evidence**:\n- Test case 1 expects 30 (which is 5*6 if we consider (5,10) as 5*10=50, but actually 15*2=30 is the minimum product)\n- Test case 2 expects 100 (which is 20*5=100)\n- Current implementation returns min absolute sums (15 and 21 respectively)\n\n3. **Failure type**:\nThe function is calculating the wrong operation - it's using sum instead of product.\n\n4. **Suspected location**:\nThe line `result_min = min([abs(x + y) for x, y in list1])` should be changed to calculate products instead of sums.\n\nHere's the corrected function:\n\n```python\ndef min_product_tuple(list1):\n    result_min = min([x * y for x, y in list1])",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n1. **Failing behavior**:\n   The function returns the minimum absolute sum of tuple pairs (e.g., `abs(x + y)`) instead of the minimum product (e.g., `x * y`), which is what the test cases expect.\n\n2. **Evidence**:\n   - For input `[(5, 10), (15, 2), (3, 4)]`, the correct minimum product is `30` (from `15 * 2`), but the current implementation returns `15` (from `abs(5 + 10)`).\n   - For input `[(20, 5), (10, 10), (3, 20)]`, the correct minimum product is `100` (from `20 * 5`), but the current implementation returns `21` (from `abs(10 + 10)`).\n\n3. **Root cause**:\n   The function incorrectly uses `abs(x + y)` to compute the sum of tuple elements, while the requirement is to compute the product (`x * y`) of the tuple elements.\n\n4. **Why this explains the failure**:",
+      "patched_code": "def min_product_tuple(list1):\n    return min(x * y for x, y in list1)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.05
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def min_product_tuple(list1):\n    return min(x * y for x, y in list1)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.61
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. Coverage Summary\n**Excellent coverage!** Your code and tests achieve **100% statement coverage** across all files:\n- **solution.py**: 2 statements (both executed)\n- **test_solution.py**: 7 statements (all executed)\n- **Total**: 9 statements (all covered)\n\nThis means every line of code in `solution.py` is executed at least once during your tests.\n\n---\n\n### 2. Missing Cases (None Found)\nSince coverage is 100%, there are **no missing cases** in terms of statement execution. However, consider checking for:\n- **Branch coverage**: Are all `if/else`, loops, and function calls tested?\n- **Edge cases**: Are boundary conditions (e.g., empty inputs, max/min values) covered?\n- **Error paths**: Are exceptions or invalid inputs handled and tested?\n\n---\n\n### 3. Test Suggestions (If You Want to Go Further)\nEven with 100% statement coverage, you might want to:\n#### **A. Check Branch Coverage**\nRun a tool like `pytest-cov` with `--branch` to see if all branches (e.g., `if` conditions",
+    "generated_tests": [
+      "assert min_product_tuple([(0, 5), (1, 0), (2, -3)]) == -6",
+      "assert min_product_tuple([(1000000, 1), (1, 1000000)]) == 1000000",
+      "assert min_product_tuple([(float('inf'), 1), (1, float('inf'))]) == float('inf')"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.34s\n\n"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "task_id": 426,
+  "task_prompt": "Write a function to filter odd numbers.",
+  "bug_type": "operator_neq_to_eq",
+  "status": "repaired",
+  "final_code": "def filter_oddnumbers(nums):\n    odd_nums = list(filter(lambda x: x % 2 != 0, nums))\n    return odd_nums",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 139.24,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def filter_oddnumbers(nums):\n odd_nums = list(filter(lambda x: x%2 == 0, nums))\n return odd_nums",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert filter_oddnumbers([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])==[1,3,5,7,9]\nE       assert [2, 4, 6, 8, 10] == [1, 3, 5, 7, 9]\nE         \nE         At index 0 diff: 2 != 1\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp82mciotg\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert filter_oddnumbers([10,20,45,67,84,93])==[45,67,93]\nE       assert [10, 20, 84] == [45, 67, 93]\nE         \nE         At index 0 diff: 10 != 45\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp82mciotg\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert filter_oddnumbers([5,7,9,8,6,4,3])==[5,7,9,3]\nE       assert [8, 6, 4] == [5, 7, 9, 3]\nE         \nE         At index 0 diff: 8 != 5\nE         Right contains one more item: 3\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp82mciotg\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp82mciotg\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp82mciotg\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp82mciotg\\test_solution.py::test_case_2\n3 failed in 0.38s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `filter_oddnumbers()` is incorrectly filtering numbers. It's currently returning **even numbers** (`x%2 == 0`) instead of **odd numbers** (`x%2 != 0`).\n\n2. **Evidence**:\n   - Test case 0 expected `[1, 3, 5, 7, 9]` but got `[2, 4, 6, 8, 10]` (even numbers).\n   - Test case 1 expected `[45, 67, 93]` but got `[10, 20, 84]` (even numbers).\n   - The lambda condition `x%2 == 0` is filtering for even numbers, opposite of the requirement.\n\n3. **Failure type**:\n   - **Logical error**: The function's logic is inverted (filtering for even numbers when it should filter for odd numbers).\n\n4. **Suspected location**:\n   The issue is in the lambda function inside `filter()`:\n   ```python\n   lambda x: x%2 == 0  # Should be x%2 != 0\n   ```\n\n### Corrected Code:\n```python",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `filter_oddnumbers()` incorrectly returns **even numbers** (`[2, 4, 6, 8, 10]`) instead of **odd numbers** (`[1, 3, 5, 7, 9]`) for the input `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`.\n\n---\n\n### **2. Evidence**\n- **Test Case 0**:\n  Input: `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`\n  Expected Output: `[1, 3, 5, 7, 9]`\n  Actual Output: `[2, 4, 6, 8, 10]` (even numbers only).\n- **Test Case 1**:\n  Input: `[45, 10, 67, 20, 93, 84]`\n  Expected Output: `[45, 67, 93",
+      "patched_code": "def filter_oddnumbers(nums):\n    odd_nums = list(filter(lambda x: x % 2 != 0, nums))\n    return odd_nums",
+      "decision": "patch_and_retry",
+      "duration_seconds": 130.36
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def filter_oddnumbers(nums):\n    odd_nums = list(filter(lambda x: x % 2 != 0, nums))\n    return odd_nums",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.62
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### **1. Coverage Summary**\n- **Total Statements**: 10 (3 in `solution.py`, 7 in `test_solution.py`)\n- **Fully Covered**: \u2705 **100%** (0 statements missed)\n- **No gaps** in test execution\u2014every line in both the implementation and tests was executed.\n\n---\n\n### **2. Missing Cases (None Found)**\nSince **100% coverage** was achieved, there are **no missing cases** in either:\n- **Implementation (`solution.py`)** \u2013 All 3 statements were executed.\n- **Tests (`test_solution.py`)** \u2013 All 7 test statements were executed.\n\n---\n\n### **3. Test Suggestions (If Any)**\nSince coverage is perfect, here are **general best practices** to consider for future improvements (even if not strictly needed now):\n\n#### **A. Edge Cases (If Applicable)**\n- **Input Validation**: If `solution.py` processes user input, test:\n  - Empty strings (`\"\"`).\n  - `None` or invalid types.\n  - Extremely large/small values (if applicable).\n- **Boundary Conditions**: Test min/max expected values (e.g",
+    "generated_tests": [
+      "assert filter_oddnumbers([]) == []",
+      "assert filter_oddnumbers([-1, -2, -3, 0, 1, 2]) == [-1, -3, 1]",
+      "assert filter_oddnumbers([1.5, 2.3, 3.7, 4.1]) == []"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert filter_oddnumbers([1.5, 2.3, 3.7, 4.1]) == []\nE       assert [1.5, 2.3, 3.7, 4.1] == []\nE         \nE         Left contains 4 more items, first extra item: 1.5\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkecu9jb0\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkecu9jb0\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.38s\n\n"
+  }
+}

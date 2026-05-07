@@ -1,0 +1,50 @@
+{
+  "task_id": 294,
+  "task_prompt": "Write a function to find the maximum value in a given heterogeneous list.",
+  "bug_type": "builtin_max_to_min",
+  "status": "repaired",
+  "final_code": "def max_val(listval):\n    max_val = max(i for i in listval if isinstance(i, int))\n    return max_val",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 21.14,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_val(listval):\n     max_val = min(i for i in listval if isinstance(i, int)) \n     return(max_val)",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert max_val(['Python', 3, 2, 4, 5, 'version'])==5\nE       AssertionError: assert 2 == 5\nE        +  where 2 = max_val(['Python', 3, 2, 4, 5, 'version'])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9q7b3bei\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert max_val(['Python', 15, 20, 25])==25\nE       AssertionError: assert 15 == 25\nE        +  where 15 = max_val(['Python', 15, 20, 25])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9q7b3bei\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert max_val(['Python', 30, 20, 40, 50, 'version'])==50\nE       AssertionError: assert 20 == 50\nE        +  where 20 = max_val(['Python', 30, 20, 40, 50, 'version'])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9q7b3bei\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9q7b3bei\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9q7b3bei\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9q7b3bei\\test_solution.py::test_case_2\n3 failed in 0.38s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `max_val()` is not correctly finding the maximum integer value in a heterogeneous list. Instead of returning the maximum integer, it's returning the minimum integer value.\n\n2. **Evidence**:\n   - Test case 0: Expected 5 (max of [3, 2, 4, 5]) but got 2 (min of [3, 2, 4, 5])\n   - Test case 1: Expected 25 (max of [15, 20, 25]) but got 15 (min of [15, 20, 25])\n   - Test case 2: The test case appears to be incomplete (missing closing bracket), but the pattern suggests the same issue\n\n3. **Failure type**:\n   - **Logical error**: The function is using `min()` instead of `max()` to find the maximum value\n   - **Incorrect filtering**: While the filtering for integers is correct, the operation being performed is wrong\n\n4. **Suspected location**:\n   The error is in this line:\n   ```python\n   max_val = min(i for i in listval if isinstance",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n1. **Failing behavior**:\n   The function incorrectly returns the minimum integer value from the list instead of the maximum integer value.\n\n2. **Evidence**:\n   - Test case 1: Input `[3, 2, 4, 5]` \u2192 Returns `2` (minimum) instead of expected `5` (maximum)\n   - Test case 2: Input `[15, 20, 25]` \u2192 Returns `15` (minimum) instead of expected `25` (maximum)\n   - The function's logic uses `min()` when it should use `max()`\n\n3. **Root cause**:\n   The function uses `min()` instead of `max()` in the generator expression, which is a straightforward logical error. The filtering for integers (`isinstance(i, int)`) is correct, but the operation being performed is backwards.\n\n4. **Why this explains failure**:\n   The function's name `max_val()` suggests it should find the maximum value, but the implementation uses `min()` which finds the minimum. This directly explains why the function returns incorrect results.\n\n5. **Repair plan**:\n   Change `min()` to `max()` in the",
+      "patched_code": "def max_val(listval):\n    max_val = max(i for i in listval if isinstance(i, int))\n    return max_val",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.0
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_val(listval):\n    max_val = max(i for i in listval if isinstance(i, int))\n    return max_val",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.62
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### **1. Coverage Summary**\n- **Total Statements**: 10 (3 in `solution.py`, 7 in `test_solution.py`)\n- **Fully Covered**: \u2705 **100%** (0 statements missed)\n- **No gaps** in test execution\u2014every line in both the implementation and tests was executed.\n\n---\n\n### **2. Missing Cases (None Found)**\nSince **all statements are covered (0 missed)**, there are **no missing cases** to report. This means:\n- Every branch, loop, and conditional in `solution.py` was tested.\n- All test cases in `test_solution.py` ran successfully without gaps.\n\n---\n\n### **3. Test Suggestions (If Any)**\nSince coverage is **perfect**, here are **general best practices** to consider for future projects (even if not applicable here):\n\n#### **A. Edge Cases to Test (If Applicable)**\n- **Boundary Values**: Test inputs at the extremes (e.g., `min`, `max`, `empty`, `None`).\n- **Error Handling**: If the function raises exceptions, ensure tests cover them.\n- **Negative Tests**: Verify incorrect inputs (e.g., invalid types",
+    "generated_tests": [
+      "assert max_val([1, -1, -5, 0, 5]) == 5",
+      "assert max_val([1000000, 999999, 1000001]) == 1000001",
+      "assert max_val([None, 'a', {}, [], 1, 1.5, 2]) == 2"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.34s\n\n"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "task_id": 397,
+  "task_prompt": "Write a function to find the median of three numbers.",
+  "bug_type": "boundary_lt_to_lte",
+  "status": "repaired",
+  "final_code": "def median_numbers(a,b,c):\n if a > b:\n    if a <= c:\n        median = a\n    elif b > c:\n        median = b\n    else:\n        median = c\n else:\n    if a > c:\n        median = a\n    elif b < c:\n        median = b\n    else:\n        median = c\n return median",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 13.79,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def median_numbers(a,b,c):\n if a > b:\n    if a <= c:\n        median = a\n    elif b > c:\n        median = b\n    else:\n        median = c\n else:\n    if a > c:\n        median = a\n    elif b < c:\n        median = b\n    else:\n        median = c\n return median",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           13      5    62%   5-8, 11, 15\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 20      5    75%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Total Statements**: 20 (13 in `solution.py`, 7 in `test_solution.py`)\n- **Covered Statements**: 15 (75% coverage)\n- **Uncovered Statements**: 5 (38% of `solution.py`)\n\n### 2. **Missing Cases in `solution.py`**\nThe uncovered lines (5-8, 11, 15) suggest these are likely:\n- **Conditional branches** (e.g., `if/else` statements, loops, or function calls with conditions).\n- **Edge cases** (e.g., empty inputs, boundary values, or error conditions).\n- **Alternative code paths** (e.g., `return` statements in different branches).\n\n#### Likely Missing Test Scenarios:\n- **Lines 5-8**: Could be a function or loop with conditions (e.g., `if x > 0` or `for item in list`).\n- **Line 11**: Might be a critical `return` or `assert` statement (e.g., validation logic).\n- **Line 15**: Could be a fallback",
+    "generated_tests": [
+      "assert median_numbers(0, 0, 0) == 0.0",
+      "assert median_numbers(1000000, -1000000, 0) == 0.0",
+      "assert median_numbers(1.5, 2.5, 3.5) == 2.5"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.35s\n\n"
+  }
+}

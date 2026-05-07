@@ -1,0 +1,62 @@
+{
+  "task_id": 572,
+  "task_prompt": "Write a python function to remove duplicate numbers from a given number of lists.",
+  "bug_type": "operator_eq_to_neq",
+  "status": "repaired",
+  "final_code": "def two_unique_nums(nums):\n    from collections import defaultdict\n    count = defaultdict(int)\n    for num in nums:\n        count[num] += 1\n    return [i for i in nums if count[i] == 1]",
+  "attempts": 3,
+  "llm_calls": 8,
+  "duration": 78.23,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def two_unique_nums(nums):\n  return [i for i in nums if nums.count(i)!=1]",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert two_unique_nums([1,2,3,2,3,4,5]) == [1, 4, 5]\nE       assert [2, 3, 2, 3] == [1, 4, 5]\nE         \nE         At index 0 diff: 2 != 1\nE         Left contains one more item: 3\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa654f5cg\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert two_unique_nums([1,2,3,2,4,5]) == [1, 3, 4, 5]\nE       assert [2, 2] == [1, 3, 4, 5]\nE         \nE         At index 0 diff: 2 != 1\nE         Right contains 2 more items, first extra item: 4\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa654f5cg\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert two_unique_nums([1,2,3,4,5]) == [1, 2, 3, 4, 5]\nE       assert [] == [1, 2, 3, 4, 5]\nE         \nE         Right contains 5 more items, first extra item: 1\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa654f5cg\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa654f5cg\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa654f5cg\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa654f5cg\\test_solution.py::test_case_2\n3 failed in 0.39s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `two_unique_nums()` is supposed to return numbers that appear exactly **twice** in the input list (not once or more than twice), but the current implementation incorrectly returns numbers that appear **not exactly once** (i.e., duplicates). The test expects numbers that appear **exactly twice**, but the function returns numbers that appear **more than once** (including those that appear 3+ times).\n\n2. **Evidence**:\n   - **Test Case 0**:\n     Input: `[1,2,3,2,3,4,5]`\n     Expected Output: `[1, 4, 5]` (numbers appearing exactly twice: `1` appears once, `2` appears twice, `3` appears twice, `4` appears once, `5` appears once \u2192 Only `2` and `3` appear twice, but the expected output is `[1,4,5]`, which is incorrect. Wait, this suggests the test case itself might be wrong, or the function is supposed to return numbers that appear **exactly once**? Wait no, the test expects `[1,4,5]` which are numbers that appear",
+      "hypothesis": "Here's the corrected analysis and repair plan for the function:\n\n---\n\n### **1. Failing Behavior**\nThe function `two_unique_nums()` currently returns numbers that appear **not exactly once** (i.e., duplicates), but the **intended behavior** is to return numbers that appear **exactly twice** in the input list.\n\n**Current (incorrect) behavior:**\n- Returns numbers with `count(i) != 1` (i.e., duplicates, including those appearing 3+ times).\n- Example: For `[1,2,3,2,3,4,5]`, it returns `[2, 3]` (appearing twice) and **also** `[1,4,5]` (appearing once) if the logic were reversed.\n\n**Expected (correct) behavior:**\n- Returns numbers that appear **exactly twice** (e.g., `[2, 3]` in the example above).\n\n---\n\n### **2. Evidence**\n- **Test Case 0 (Input: `[1,2,3,2,3,4,5]`)**\n  - Current function output: `[2, 3]` (correct for \"appears twice\").\n  - **But the expected output in the original task was `[1,",
+      "patched_code": "def two_unique_nums(nums):\n    from collections import defaultdict\n    count = defaultdict(int)\n    for num in nums:\n        count[num] += 1\n    return [i for i in nums if count[i] == 2]",
+      "decision": "patch_and_retry",
+      "duration_seconds": 57.2
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def two_unique_nums(nums):\n    from collections import defaultdict\n    count = defaultdict(int)\n    for num in nums:\n        count[num] += 1\n    return [i for i in nums if count[i] == 2]",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert two_unique_nums([1,2,3,2,3,4,5]) == [1, 4, 5]\nE       assert [2, 3, 2, 3] == [1, 4, 5]\nE         \nE         At index 0 diff: 2 != 1\nE         Left contains one more item: 3\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpnbuxn69c\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert two_unique_nums([1,2,3,2,4,5]) == [1, 3, 4, 5]\nE       assert [2, 2] == [1, 3, 4, 5]\nE         \nE         At index 0 diff: 2 != 1\nE         Right contains 2 more items, first extra item: 4\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpnbuxn69c\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert two_unique_nums([1,2,3,4,5]) == [1, 2, 3, 4, 5]\nE       assert [] == [1, 2, 3, 4, 5]\nE         \nE         Right contains 5 more items, first extra item: 1\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpnbuxn69c\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpnbuxn69c\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpnbuxn69c\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpnbuxn69c\\test_solution.py::test_case_2\n3 failed in 0.35s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `two_unique_nums()` is not correctly identifying and returning numbers that appear exactly twice in the input list. Instead, it's returning numbers that appear **at least once** (since it's filtering for `count[i] == 2` but not preserving the original order or correctly handling uniqueness).\n\n2. **Evidence**:\n   - For input `[1,2,3,2,3,4,5]`, the expected output is `[1, 4, 5]` (numbers that appear exactly once), but the function returns `[2, 3, 2, 3]` (numbers that appear exactly twice).\n   - For input `[1,2,3,2,4,5]`, the expected output is `[1, 3, 4, 5]` (numbers that appear exactly once), but the function returns `[2, 2]` (numbers that appear exactly twice).\n\n   The function is actually returning numbers that appear **exactly twice** (`count[i] == 2`), but the test expects numbers that appear **exactly once** (`count[i] == 1`).\n\n3. **Failure type**:\n   - **Log",
+      "hypothesis": "Here's the structured failure analysis and repair plan for the given function:\n\n---\n\n### **1. Failing Behavior**\nThe function `two_unique_nums()` incorrectly returns numbers that appear **exactly twice** (`count[i] == 2`) instead of numbers that appear **exactly once** (`count[i] == 1`). This is the opposite of the intended behavior.\n\n---\n\n### **2. Evidence**\n- **Input:** `[1, 2, 3, 2, 3, 4, 5]`\n  - **Expected Output:** `[1, 4, 5]` (numbers appearing exactly once)\n  - **Actual Output:** `[2, 3, 2, 3]` (numbers appearing exactly twice)\n\n- **Input:** `[1, 2, 3, 2, 4, 5]`\n  - **Expected Output:** `[1, 3, 4, 5]` (numbers appearing exactly once)\n  - **Actual Output:** `[2, 2]` (numbers appearing exactly twice)\n\n---\n\n### **3. Root Cause**\nThe function uses `count[i] == 2` to filter numbers, but the requirement is to return numbers that appear **exactly once**",
+      "patched_code": "def two_unique_nums(nums):\n    from collections import defaultdict\n    count = defaultdict(int)\n    for num in nums:\n        count[num] += 1\n    return [i for i in nums if count[i] == 1]",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.92
+    },
+    {
+      "attempt": 3,
+      "planning": "Final validation after maximum repair attempts.",
+      "code_before_patch": "def two_unique_nums(nums):\n    from collections import defaultdict\n    count = defaultdict(int)\n    for num in nums:\n        count[num] += 1\n    return [i for i in nums if count[i] == 1]",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "final_validation",
+      "duration_seconds": 0.58
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. Coverage Summary\n**Excellent coverage (100%)** across all files:\n- **solution.py**: 6 statements, all executed (0 missed)\n- **test_solution.py**: 7 statements, all executed (0 missed)\n- **Total**: 13 statements, 100% coverage\n\nThis indicates your tests thoroughly exercise all code paths in your solution.\n\n---\n\n### 2. Missing Cases (None Found)\nSince coverage is 100%, there are **no missing cases** in the current test suite. All branches, loops, and statements are exercised.\n\n---\n\n### 3. Test Suggestions (If You Want to Improve Further)\nWhile your coverage is perfect, here are some **best practice suggestions** to consider for maintainability and robustness:\n\n#### **A. Edge Cases (Even Though Covered)**\nCheck if your tests include:\n- **Boundary values** (e.g., min/max inputs, empty inputs, `None` values)\n- **Invalid inputs** (e.g., negative numbers, non-numeric data if applicable)\n- **Large inputs** (if your function handles big data)\n- **Concurrent/race conditions** (if",
+    "generated_tests": [
+      "assert two_unique_nums([]) == []",
+      "assert two_unique_nums([1, 1, 1, 1]) == []",
+      "assert two_unique_nums([-1, 0, 1, -1, 0, 2, 1]) == [2]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.34s\n\n"
+  }
+}

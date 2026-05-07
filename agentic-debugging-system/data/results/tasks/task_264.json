@@ -1,0 +1,38 @@
+{
+  "task_id": 264,
+  "task_prompt": "Write a function to calculate a dog's age in dog's years.",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def dog_age(h_age):\n if h_age < 0:\n \texit()\n elif h_age <= 2:\n\t d_age = h_age + 10.5\n else:\n\t d_age = 21 + (h_age - 2)*4\n return d_age",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 8.34,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def dog_age(h_age):\n if h_age < 0:\n \texit()\n elif h_age <= 2:\n\t d_age = h_age + 10.5\n else:\n\t d_age = 21 + (h_age - 2)*4\n return d_age",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.65
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      2    71%   3, 5\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      2    86%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided coverage report indicates:\n- **Total statements tested:** 14 (7 in `solution.py`, 7 in `test_solution.py`).\n- **Total statements executed:** 12 (2 missed in `solution.py`).\n- **Overall coverage:** **86%** (71% for `solution.py`, 100% for `test_solution.py`).\n\n### **2. Missing Cases in `solution.py`**\nThe missing lines are **3 and 5**, meaning:\n- **Line 3:** Likely a critical logic path (e.g., edge case handling, conditional branch, or function call).\n- **Line 5:** Could be another branch (e.g., `if/else`, loop condition, or input validation).\n\n#### **Possible Reasons for Low Coverage:**\n- **Uncovered branches:** The code may have `if/else` statements, loops, or function calls where only one branch was tested.\n- **Edge cases:** Inputs like `None`, empty values, or extreme ranges may not be tested.\n- **Side effects:** The code might modify external state (e.g., files, databases) that isn\u2019t reset between tests.\n- **Randomness",
+    "generated_tests": [
+      "assert dog_age(0) == 10.5",
+      "assert dog_age(-1) == None",
+      "assert dog_age(2.5) == 21.0"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....FF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert dog_age(-1) == None\n               ^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmppol5kfmt\\test_solution.py:16: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmppol5kfmt\\solution.py:3: in dog_age\n    exit()\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = Use exit() or Ctrl-Z plus Return to exit, code = None\n\n>   ???\nE   SystemExit: None\n\n<frozen _sitebuiltins>:26: SystemExit\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert dog_age(2.5) == 21.0\nE       assert 23.0 == 21.0\nE        +  where 23.0 = dog_age(2.5)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmppol5kfmt\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmppol5kfmt\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmppol5kfmt\\test_solution.py::test_case_5\n2 failed, 4 passed in 0.37s\n\n"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "task_id": 599,
+  "task_prompt": "Write a function to find sum and average of first n natural numbers.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def sum_average(number):\n    total = 0\n    for value in range(1, number + 1):\n        total = total + value\n    average = total / number\n    return (total, average)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.9,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def sum_average(number):\n total = 0\n for value in range(1, number - 1):\n    total = total + value\n average = total / number\n return (total,average)",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert sum_average(10)==(55, 5.5)\nE       assert (36, 3.6) == (55, 5.5)\nE         \nE         At index 0 diff: 36 != 55\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmphg076j60\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert sum_average(15)==(120, 8.0)\nE       assert (91, 6.066666666666666) == (120, 8.0)\nE         \nE         At index 0 diff: 91 != 120\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmphg076j60\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert sum_average(20)==(210, 10.5)\nE       assert (171, 8.55) == (210, 10.5)\nE         \nE         At index 0 diff: 171 != 210\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmphg076j60\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmphg076j60\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmphg076j60\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmphg076j60\\test_solution.py::test_case_2\n3 failed in 0.40s\n\n",
+      "failure": "Here's the analysis of the failures:\n\n1. **What failed**:\n   The function `sum_average()` is not correctly calculating the sum and average of the first `n` natural numbers. The test cases expect specific outputs that the current implementation doesn't produce.\n\n2. **Evidence**:\n   - For input `10`, expected output is `(55, 5.5)` but got `(36, 3.6)`\n   - For input `15`, expected output is `(120, 8.0)` but got `(91, 6.066666666666666)`\n   - The function is missing the last number in the range (due to `range(1, number - 1)`) and incorrectly calculating the average by dividing by `number` instead of the count of numbers.\n\n3. **Failure type**:\n   - **Logical error**: The range is incorrect (should include `number` itself)\n   - **Mathematical error**: The average is divided by the wrong number (should be divided by the count of numbers, not the input `number`)\n\n4. **Suspected location**:\n   The issues are in these lines:\n   ```python",
+      "hypothesis": "Here's the detailed analysis and repair plan for the `sum_average` function:\n\n---\n\n### **1. Failing Behavior**\nThe function incorrectly computes the sum and average of the first `n` natural numbers. Specifically:\n- **Sum**: Underestimates the total by excluding the last number in the range.\n- **Average**: Divides by `number` (incorrect denominator) instead of the count of numbers summed.\n\n---\n\n### **2. Evidence**\n- **Test Case 1**: Input `10` \u2192 Expected `(55, 5.5)`, but got `(36, 3.6)`.\n  - **Sum**: `1+2+...+9 = 45` (correct), but the function returns `36` (likely due to `range(1, 9)`).\n  - **Average**: `45/10 = 4.5` (correct), but the function returns `36/10 = 3.6` (wrong sum).\n- **Test Case 2**: Input `15` \u2192 Expected `(120, 8.0)`, but got `(91, 6.066...)`.\n  - **Sum**: `1",
+      "patched_code": "def sum_average(number):\n    total = 0\n    for value in range(1, number + 1):\n        total = total + value\n    average = total / number\n    return (total, average)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.35
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def sum_average(number):\n    total = 0\n    for value in range(1, number + 1):\n        total = total + value\n    average = total / number\n    return (total, average)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.61
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Perfect Coverage (100%)**: Your codebase (13 statements across `solution.py` and `test_solution.py`) is fully covered by tests. This means:\n  - Every line of executable code in `solution.py` is tested.\n  - Every test case in `test_solution.py` is executed (no skipped or failed tests).\n  - No edge cases or branches (e.g., `if/else`, loops) are left untested (assuming the tests are comprehensive).\n\n---\n\n### 2. **Missing Cases (None)**\nSince the report shows **0 missed statements**, there are no obvious gaps in coverage. However, to ensure robustness, consider:\n- **Branch Coverage**: If your code contains conditional logic (e.g., `if/else`, loops), verify that all branches are tested. For example:\n  ```python\n  if x > 0:  # Test both x > 0 and x <= 0\n      return True\n  else:\n      return False\n  ```\n  If your tests only cover one branch, the other is \"missing\" even if the statement count is covered.\n\n- **Path",
+    "generated_tests": [
+      "assert sum_average(0) == (0, 0)",
+      "assert sum_average(-5) == (0, 0)",
+      "assert sum_average(1.5) == (0, 0)"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...F.F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert sum_average(0) == (0, 0)\n               ^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp713cfphr\\test_solution.py:13: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nnumber = 0\n\n    def sum_average(number):\n        total = 0\n        for value in range(1, number + 1):\n            total = total + value\n>       average = total / number\n                  ^^^^^^^^^^^^^^\nE       ZeroDivisionError: division by zero\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp713cfphr\\solution.py:5: ZeroDivisionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert sum_average(1.5) == (0, 0)\n               ^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp713cfphr\\test_solution.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nnumber = 1.5\n\n    def sum_average(number):\n        total = 0\n>       for value in range(1, number + 1):\n                     ^^^^^^^^^^^^^^^^^^^^\nE       TypeError: 'float' object cannot be interpreted as an integer\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp713cfphr\\solution.py:3: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp713cfphr\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp713cfphr\\test_solution.py::test_case_5\n2 failed, 4 passed in 0.38s\n\n"
+  }
+}

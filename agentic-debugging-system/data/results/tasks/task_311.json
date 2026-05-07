@@ -1,0 +1,38 @@
+{
+  "task_id": 311,
+  "task_prompt": "Write a python function to set the left most unset bit.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def set_left_most_unset_bit(n): \n    if not (n & (n - 1)): \n        return n \n    pos, temp, count = 0, n, 0 \n    while temp: \n        if not (temp & 1): \n            pos = count      \n        count += 1; temp>>=1\n    return (n | (1 << (pos))) ",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 28.01,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def set_left_most_unset_bit(n): \n    if not (n & (n - 1)): \n        return n \n    pos, temp, count = 0, n, 0 \n    while temp: \n        if not (temp & 1): \n            pos = count      \n        count += 1; temp>>=1\n    return (n | (1 << (pos))) ",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.62
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            9      1    89%   3\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 16      1    94%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nYour code has **94% statement coverage**, meaning:\n- **15/16 statements** are executed by tests.\n- **1 statement is missed** in `solution.py` (line 3, based on the `Missing` column).\n- **All 7 statements in `test_solution.py`** are fully covered (100%).\n\nThis is a **good start**, but **11% uncovered** suggests there may be edge cases or alternative code paths not tested.\n\n---\n\n### **2. Missing Cases (Likely in `solution.py`)**\nThe **1 missed statement** (line 3) could correspond to:\n- A **conditional branch** (e.g., `if`, `elif`, `for` loop) where only one path was tested.\n- A **function call** that wasn\u2019t invoked in tests.\n- A **default case** (e.g., `else` in an `if-else` block).\n\n#### **Possible Scenarios:**\n| **Code Pattern**               | **Why It\u2019s Uncovered**                          | **How to Fix**                          |\n|---------------------------------|------------------------------------------------|----------------------------------------|\n| `if x > 0:` (only tested `x >",
+    "generated_tests": [
+      "assert set_left_most_unset_bit(0) == 1",
+      "assert set_left_most_unset_bit(2**31 - 1) == 2**31",
+      "assert set_left_most_unset_bit(-1) == -1"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "Command '['python', '-m', 'pytest', 'C:\\\\Users\\\\gurra\\\\AppData\\\\Local\\\\Temp\\\\tmpydcrr2oa\\\\test_solution.py', '-q']' timed out after 20 seconds"
+  }
+}

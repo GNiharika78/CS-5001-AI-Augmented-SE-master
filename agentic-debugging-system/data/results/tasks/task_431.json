@@ -1,0 +1,50 @@
+{
+  "task_id": 431,
+  "task_prompt": "Write a function that takes two lists and returns true if they have at least one common element.",
+  "bug_type": "operator_eq_to_neq",
+  "status": "repaired",
+  "final_code": "def common_element(list1, list2):\n    for x in list1:\n        if x in list2:\n            return True\n    return None",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.82,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def common_element(list1, list2):\n     result = False\n     for x in list1:\n         for y in list2:\n             if x != y:\n                 result = True\n                 return result",
+      "tests_passed_before_patch": false,
+      "test_output": ".F.                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert common_element([1,2,3,4,5], [6,7,8,9])==None\nE       assert True == None\nE        +  where True = common_element([1, 2, 3, 4, 5], [6, 7, 8, 9])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpt55lioi7\\test_solution.py:7: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpt55lioi7\\test_solution.py::test_case_1\n1 failed, 2 passed in 0.37s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `common_element()` is expected to return `None` when there are no common elements between the two lists, but instead it returns `True` immediately when it finds the first pair of elements that are not equal (which is incorrect logic).\n\n2. **Evidence**:\n   - The test case `test_case_1` checks lists `[1,2,3,4,5]` and `[6,7,8,9]` which have no common elements.\n   - The function returns `True` (due to the `result = True` line when `x != y`), but the test expects `None`.\n   - The assertion fails because `True != None`.\n\n3. **Failure type**:\n   - **Logical Error**: The function's logic is fundamentally flawed. It sets `result = True` whenever it finds any unequal pair (which is always true unless all elements are equal), and returns immediately, rather than checking for common elements.\n   - **Incorrect Return Value**: The function doesn't return `None` when there are no common elements, and it doesn't properly check for common elements.\n\n4. **Suspected location**:\n   The problematic lines are:\n   ```",
+      "hypothesis": "Here's the detailed analysis and repair plan for the `common_element` function:\n\n---\n\n### **1. Failing Behavior**\nThe function incorrectly returns `True` for any input where at least one pair of elements is unequal (which is always true unless all elements are identical). This is because:\n- The condition `if x != y` is always true for most cases (e.g., `[1,2]` vs `[3,4]` will trigger `result = True` immediately).\n- The function does not properly check for **common elements** (overlapping values between lists).\n\n---\n\n### **2. Evidence**\n- **Test Case 1**: `list1 = [1,2,3,4,5]`, `list2 = [6,7,8,9]` (no common elements).\n  - The function returns `True` (due to `x != y` for any pair, e.g., `1 != 6`).\n  - Expected: `None` (no common elements).\n- **Test Case 2**: `list1 = [1,2,3]`, `list2 = [3,4,5]` (common element `3`).\n  - The function should return `True`, but the",
+      "patched_code": "def common_element(list1, list2):\n    for x in list1:\n        if x in list2:\n            return True\n    return None",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.6
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def common_element(list1, list2):\n    for x in list1:\n        if x in list2:\n            return True\n    return None",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            5      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 12      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nYour code and tests achieve **100% statement coverage**, meaning every line of executable code in `solution.py` and `test_solution.py` has been executed at least once during testing.\n\n- **`solution.py` (5 statements, 0 missed)** \u2192 Fully covered.\n- **`test_solution.py` (7 statements, 0 missed)** \u2192 Fully covered.\n- **Total (12 statements, 0 missed)** \u2192 **Perfect coverage**.\n\n---\n\n### **2. Missing Cases (If Any)**\nSince coverage is **100%**, there are **no missing cases** in terms of executed statements. However, consider checking for:\n- **Branch Coverage** (if/else, loops, etc.) \u2013 Even if statements are covered, branches might not be.\n- **Path Coverage** \u2013 All possible execution paths (e.g., happy path, edge cases).\n- **Input Validation** \u2013 Are all edge cases (empty input, invalid types, etc.) tested?\n\n**How to check branch coverage?**\nRun:\n```bash\ncoverage run -m pytest\ncoverage report -m\n```\nIf you see **branch coverage < 100%**, some conditions (",
+    "generated_tests": [
+      "assert common_element([], [1, 2, 3]) == None",
+      "assert common_element([None], [None]) == True",
+      "assert common_element([1, 2, 2, 3], [2, 2, 4]) == True"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.35s\n\n"
+  }
+}

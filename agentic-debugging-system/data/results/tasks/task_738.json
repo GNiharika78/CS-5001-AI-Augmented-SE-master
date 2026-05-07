@@ -1,0 +1,50 @@
+{
+  "task_id": 738,
+  "task_prompt": "Write a function to calculate the geometric sum of n-1. https://www.w3resource.com/python-exercises/data-structures-and-algorithms/python-recursion-exercise-9.php",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def geometric_sum(n):\n    if n < 0:\n        return 0\n    else:\n        return 1 / (2 ** n) + geometric_sum(n - 1) if n > 0 else 1",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.16,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def geometric_sum(n):\n  if n < 0:\n    return 0\n  else:\n    return 1 / (pow(2, n)) - geometric_sum(n - 1)",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert geometric_sum(7) == 1.9921875\nE       assert -0.6640625 == 1.9921875\nE        +  where -0.6640625 = geometric_sum(7)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4bt8yo_6\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert geometric_sum(4) == 1.9375\nE       assert 0.6875 == 1.9375\nE        +  where 0.6875 = geometric_sum(4)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4bt8yo_6\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert geometric_sum(8) == 1.99609375\nE       assert 0.66796875 == 1.99609375\nE        +  where 0.66796875 = geometric_sum(8)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4bt8yo_6\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4bt8yo_6\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4bt8yo_6\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4bt8yo_6\\test_solution.py::test_case_2\n3 failed in 0.37s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `geometric_sum(n)` is not calculating the geometric sum as expected. The test cases expect the function to return the sum of a geometric series where each term is half the previous term (1/2^n), but the current implementation is returning negative values and incorrect results.\n\n2. **Evidence**:\n   - For `geometric_sum(7)`, the expected output is `1.9921875` but the function returns `-0.6640625`.\n   - For `geometric_sum(4)`, the expected output is `1.9375` but the function returns `0.6875`.\n   - For `geometric_sum(8)`, the expected output is `1.99609375` but the function returns `0.66796875`.\n\n   The function is actually calculating `1/(2^n) - geometric_sum(n-1)` recursively, which is not the correct way to compute the geometric sum. The current implementation is subtracting the next term rather than adding it.\n\n3. **Failure type**:\n   The function is using incorrect recursion logic. It",
+      "hypothesis": "Here's the detailed analysis and repair plan for the `geometric_sum(n)` function:\n\n---\n\n### **1. Failing Behavior:**\nThe function returns incorrect results (negative or too small values) instead of the expected geometric sum of the series:\n**1 + 1/2 + 1/4 + ... + 1/(2^(n-1))**\n\n---\n\n### **2. Evidence:**\n- **Test Case 1:** `geometric_sum(7)` \u2192 Expected: `1.9921875` (sum of `1 + 1/2 + 1/4 + ... + 1/64`), but returns `-0.6640625`.\n- **Test Case 2:** `geometric_sum(4)` \u2192 Expected: `1.9375` (sum of `1 + 1/2 + 1/4 + 1/8`), but returns `0.6875`.\n- **Test Case 3:** `geometric_sum(8)` \u2192 Expected: `1.99609375`, but returns `0.66796875`.\n\nThe function is **subtracting** terms instead of",
+      "patched_code": "def geometric_sum(n):\n    if n < 0:\n        return 0\n    else:\n        return 1 / (2 ** n) + geometric_sum(n - 1) if n > 0 else 1",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.67
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def geometric_sum(n):\n    if n < 0:\n        return 0\n    else:\n        return 1 / (2 ** n) + geometric_sum(n - 1) if n > 0 else 1",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.59
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      1    75%   3\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      1    91%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. Coverage Summary\n- **Total statements**: 11 (4 in `solution.py`, 7 in `test_solution.py`)\n- **Total coverage**: 91% (10/11 statements covered)\n- **Key observation**: The test suite (`test_solution.py`) achieves **100% coverage** for its own statements, but only **75% coverage** of the production code (`solution.py`).\n\n---\n\n### 2. Missing Cases in `solution.py`\nThe report shows **1 missing statement** (out of 4) in `solution.py`. This likely means:\n- **One branch or edge case** in your logic is not tested.\n- **Possible scenarios**:\n  - A conditional (`if/else`) branch that was never executed.\n  - A loop iteration that wasn\u2019t covered.\n  - A function call with a specific input that wasn\u2019t tested.\n\n#### How to Identify the Missing Case:\n- **Check the code** in `solution.py` for:\n  - Unreachable branches (e.g., `if x == 5:` where `x` is always `3`).\n  - Edge cases (e.g., empty input",
+    "generated_tests": [
+      "assert geometric_sum(0) == 1",
+      "assert geometric_sum(-1) == 0",
+      "assert geometric_sum(100) == 1.9999999999999998"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert geometric_sum(100) == 1.9999999999999998\nE       assert 2.0 == 1.9999999999999998\nE        +  where 2.0 = geometric_sum(100)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpk0_j2p93\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpk0_j2p93\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.35s\n\n"
+  }
+}

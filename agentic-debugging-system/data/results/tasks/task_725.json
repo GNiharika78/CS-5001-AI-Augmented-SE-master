@@ -1,0 +1,38 @@
+{
+  "task_id": 725,
+  "task_prompt": "Write a function to extract values between quotation marks \" \" of the given string.",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import re\ndef extract_quotation(text1):\n  return (re.findall(r'\"(.+?)\"', text1))",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 9.06,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef extract_quotation(text1):\n  return (re.findall(r'\"(.+?)\"', text1))",
+      "tests_passed_before_patch": true,
+      "test_output": "....                                                                     [100%]\n4 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       9      0   100%\n------------------------------------------------\nTOTAL                 12      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. Coverage Summary\n**Perfect Coverage (100%)**: Your code and tests achieve **full statement coverage** (100% of all executable statements are executed). This means:\n- Every line in `solution.py` (3 statements) was executed.\n- Every line in `test_solution.py` (9 statements) was executed.\n\n### 2. Missing Cases (None)\nSince coverage is 100%, **no statements were missed** in either file. This suggests:\n- All branches (if-else, loops, etc.) were tested.\n- Edge cases (empty inputs, boundary values, etc.) were likely covered.\n- No dead code exists in `solution.py`.\n\n### 3. Test Suggestions (If You Want to Improve Further)\nWhile your tests are thorough, here are **optional refinements** to consider (even though they\u2019re not strictly necessary for 100% coverage):\n\n#### **A. Branch Coverage (If Applicable)**\n- If `solution.py` contains **conditional logic** (e.g., `if/else`, `for/while` loops), verify that **all branches** were tested.\n  - Example: If there",
+    "generated_tests": [
+      "assert extract_quotation('') == []",
+      "assert extract_quotation('No quotes here') == []",
+      "assert extract_quotation('\"Empty\" \"\" \"Nested \\\"quoted\\\" text\"') == ['Empty', '', 'Nested \"quoted\" text']"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "......F                                                                  [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_6 _________________________________\n\n    def test_case_6():\n>       assert extract_quotation('\"Empty\" \"\" \"Nested \\\"quoted\\\" text\"') == ['Empty', '', 'Nested \"quoted\" text']\nE       assert ['Empty', '\" ', 'quoted'] == ['Empty', '',...quoted\" text']\nE         \nE         At index 1 diff: '\" ' != ''\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkpgv90pa\\test_solution.py:22: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkpgv90pa\\test_solution.py::test_case_6\n1 failed, 6 passed in 0.36s\n\n"
+  }
+}

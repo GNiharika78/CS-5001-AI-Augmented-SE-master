@@ -1,0 +1,50 @@
+{
+  "task_id": 728,
+  "task_prompt": "Write a function takes as input two lists [a_1,...,a_n], [b_1,...,b_n] and returns [a_1+b_1,...,a_n+b_n].",
+  "bug_type": "operator_plus_to_minus",
+  "status": "failed",
+  "final_code": "def elementwise_add(lst1, lst2):\n    return [lst1[i] + lst2[i] for i in range(len(lst1))]",
+  "attempts": 3,
+  "llm_calls": 6,
+  "duration": 23.42,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def sum_list(lst1,lst2):\n  res_list = [lst1[i] - lst2[i] for i in range(len(lst1))] \n  return res_list",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert sum_list([10,20,30],[15,25,35])==[25,45,65]\nE       assert [-5, -5, -5] == [25, 45, 65]\nE         \nE         At index 0 diff: -5 != 25\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4uf2hfr2\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert sum_list([1,2,3],[5,6,7])==[6,8,10]\nE       assert [-4, -4, -4] == [6, 8, 10]\nE         \nE         At index 0 diff: -4 != 6\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4uf2hfr2\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert sum_list([15,20,30],[15,45,75])==[30,65,105]\nE       assert [0, -25, -45] == [30, 65, 105]\nE         \nE         At index 0 diff: 0 != 30\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4uf2hfr2\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4uf2hfr2\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4uf2hfr2\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4uf2hfr2\\test_solution.py::test_case_2\n3 failed in 0.38s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `sum_list()` is supposed to return the element-wise sum of two lists (`[a1+b1, a2+b2, ..., an+bn]`), but instead it's returning the element-wise **difference** (`[a1-lst2[0], a2-lst2[1], ..., an-lst2[n-1]]`).\n\n2. **Evidence**:\n   - Expected output for `sum_list([10,20,30],[15,25,35])` is `[25,45,65]` (sums: 10+15=25, 20+25=45, 30+35=65)\n   - Actual output is `[-5, -5, -5]` (differences: 10-15=-5, 20-25=-5, 30-35=-5)\n   - Same pattern appears in all test cases (difference instead of sum)\n\n3. **Failure type**:\n   - **Logical error**: The function performs subtraction instead of addition\n   - **",
+      "hypothesis": "Here\u2019s the structured failure analysis and repair plan for the given function:\n\n---\n\n### **1. Failing Behavior**\nThe function `sum_list(lst1, lst2)` incorrectly returns the **element-wise difference** (`a_i - b_i`) instead of the **element-wise sum** (`a_i + b_i`).\n\n### **2. Evidence**\n- **Test Case**: `sum_list([10, 20, 30], [15, 25, 35])`\n  - **Expected Output**: `[25, 45, 65]` (sums: `10+15=25`, `20+25=45`, `30+35=65`).\n  - **Actual Output**: `[-5, -5, -5]` (differences: `10-15=-5`, `20-25=-5`, `30-35=-5`).\n- **Pattern**: All test cases show the same issue (difference instead of sum).\n\n### **3. Root Cause**\nThe function uses **subtraction (`-`)** instead of **addition (`+`)** in the list comprehension:\n```",
+      "patched_code": "res_list = [lst1[i] + lst2[i] for i in range(len(lst1))]",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.34
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "res_list = [lst1[i] + lst2[i] for i in range(len(lst1))]",
+      "tests_passed_before_patch": false,
+      "test_output": "\n=================================== ERRORS ====================================\n______ ERROR collecting AppData/Local/Temp/tmpr0da2ypp/test_solution.py _______\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpr0da2ypp\\test_solution.py:1: in <module>\n    from solution import *\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpr0da2ypp\\solution.py:1: in <module>\n    res_list = [lst1[i] + lst2[i] for i in range(len(lst1))]\n                                                     ^^^^\nE   NameError: name 'lst1' is not defined\n=========================== short test summary info ===========================\nERROR ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpr0da2ypp\\test_solution.py - NameError...\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.40s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function failed to execute because it tried to use variables `lst1` and `lst2` that weren't defined in the scope where the code was run.\n\n2. **Evidence**:\n   - The error message shows `NameError: name 'lst1' is not defined`\n   - The code snippet `res_list = [lst1[i] + lst2[i] for i in range(len(lst1))]` is trying to access undefined variables\n   - The test framework expects a function that takes two lists as input parameters\n\n3. **Failure type**:\n   - **Definition Error**: The code is missing proper function definition and parameter passing\n   - **Scope Error**: The variables are referenced without being defined in the current scope\n\n4. **Suspected location**:\n   The error occurs in the module-level code (not inside a function) where the list comprehension is trying to access undefined variables. The code should be wrapped in a function that takes `lst1` and `lst2` as parameters.\n\n**Corrected Solution**:\n```python\ndef add_lists(lst1, lst2):\n    return [lst1[i] + lst2[i] for i in",
+      "hypothesis": "Here's the detailed analysis of the failure and the corrected solution:\n\n---\n\n### **1. Failing Behavior:**\nThe code fails to execute because it attempts to perform element-wise addition of two lists (`lst1` and `lst2`) **without defining a function** that accepts these lists as inputs. Instead, the list comprehension directly references undefined variables (`lst1` and `lst2`), leading to a `NameError`.\n\n---\n\n### **2. Evidence:**\n- **Error Message:** `NameError: name 'lst1' is not defined`\n- **Code Snippet:** The list comprehension `[lst1[i] + lst2[i] for i in range(len(lst1))]` is written at the module level (not inside a function), so `lst1` and `lst2` are not passed or defined.\n- **Expected Behavior:** The code should be part of a function that takes two lists as arguments and returns their element-wise sum.\n\n---\n\n### **3. Root Cause:**\nThe **scope error** occurs because:\n- The list comprehension is written outside any function, so `lst1` and `lst2` are not accessible.\n- The code lacks a proper function definition to encapsulate the logic and accept inputs.\n\n---\n\n### **4. Why",
+      "patched_code": "def elementwise_add(lst1, lst2):\n    return [lst1[i] + lst2[i] for i in range(len(lst1))]",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.46
+    },
+    {
+      "attempt": 3,
+      "planning": "Final validation after maximum repair attempts.",
+      "code_before_patch": "def elementwise_add(lst1, lst2):\n    return [lst1[i] + lst2[i] for i in range(len(lst1))]",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert sum_list([10,20,30],[15,25,35])==[25,45,65]\n               ^^^^^^^^\nE       NameError: name 'sum_list' is not defined\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp0i2q2zdu\\test_solution.py:4: NameError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert sum_list([1,2,3],[5,6,7])==[6,8,10]\n               ^^^^^^^^\nE       NameError: name 'sum_list' is not defined\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp0i2q2zdu\\test_solution.py:7: NameError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert sum_list([15,20,30],[15,45,75])==[30,65,105]\n               ^^^^^^^^\nE       NameError: name 'sum_list' is not defined\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp0i2q2zdu\\test_solution.py:10: NameError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp0i2q2zdu\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp0i2q2zdu\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp0i2q2zdu\\test_solution.py::test_case_2\n3 failed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "final_validation",
+      "duration_seconds": 0.62
+    }
+  ],
+  "post": null
+}

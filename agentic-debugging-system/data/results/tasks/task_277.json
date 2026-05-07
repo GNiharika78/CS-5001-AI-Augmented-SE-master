@@ -1,0 +1,50 @@
+{
+  "task_id": 277,
+  "task_prompt": "Write a function that takes in a dictionary and integer n and filters the dictionary to only include entries with values greater than or equal to n.",
+  "bug_type": "boundary_gte_to_gt",
+  "status": "repaired",
+  "final_code": "def dict_filter(d, n):\n    return {key: value for key, value in d.items() if value >= n}",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.93,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def dict_filter(dict,n):\n result = {key:value for (key, value) in dict.items() if value >n}\n return result",
+      "tests_passed_before_patch": false,
+      "test_output": ".FF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert dict_filter({'Cierra Vega': 175, 'Alden Cantrell': 180, 'Kierra Gentry': 165, 'Pierre Cox': 190},180)=={ 'Alden Cantrell': 180, 'Pierre Cox': 190}\nE       AssertionError: assert {'Pierre Cox': 190} == {'Alden Cantr...rre Cox': 190}\nE         \nE         Omitting 1 identical items, use -vv to show\nE         Right contains 1 more item:\nE         {'Alden Cantrell': 180}\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpcha6gxjp\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert dict_filter({'Cierra Vega': 175, 'Alden Cantrell': 180, 'Kierra Gentry': 165, 'Pierre Cox': 190},190)=={ 'Pierre Cox': 190}\nE       AssertionError: assert {} == {'Pierre Cox': 190}\nE         \nE         Right contains 1 more item:\nE         {'Pierre Cox': 190}\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpcha6gxjp\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpcha6gxjp\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpcha6gxjp\\test_solution.py::test_case_2\n2 failed, 1 passed in 0.37s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function is not correctly filtering dictionary entries where values are **greater than or equal to** `n` (the current implementation only checks for values **greater than** `n`). The test expects entries with values `>= 180` and `>= 190` to be included, but the function excludes entries with values equal to `n`.\n\n2. **Evidence**:\n   - In `test_case_1`, the expected output includes `'Alden Cantrell': 180` (value = 180, which equals `n=180`), but the function's output only includes `'Pierre Cox': 190` (value = 190 > 180).\n   - In `test_case_2`, the expected output includes `'Pierre Cox': 190` (value = 190, which equals `n=190`), but the function's output is empty (since the test case seems to have a typo in the expected output, but the logic is still incorrect).\n\n3. **Failure type**:\n   - **Logical error**: The condition `value > n` is too strict",
+      "hypothesis": "Here's the structured failure analysis and repair plan for the given function:\n\n---\n\n### **1. Failing Behavior**\nThe function `dict_filter` incorrectly excludes dictionary entries where the value is **equal to** `n` (e.g., `value == n`). Instead, it only includes entries where `value > n`, causing it to miss valid entries that meet the \"greater than or equal to\" requirement.\n\n---\n\n### **2. Evidence**\n- **Test Case 1**:\n  - Input: `{'Alden Cantrell': 180, 'Pierre Cox': 190}`, `n = 180`\n  - Expected Output: `{'Alden Cantrell': 180, 'Pierre Cox': 190}`\n  - Actual Output: `{'Pierre Cox': 190}` (fails to include `180` because `180 > 180` is `False`).\n- **Test Case 2**:\n  - Input: `{'Pierre Cox': 190}`, `n = 190`\n  - Expected Output: `{'Pierre Cox': 190}`\n  - Actual Output: `{}` (fails to include `",
+      "patched_code": "def dict_filter(d, n):\n    return {key: value for key, value in d.items() if value >= n}",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.5
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def dict_filter(d, n):\n    return {key: value for key, value in d.items() if value >= n}",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. Coverage Summary\n**Excellent coverage!** Your code and tests achieve **100% statement coverage** across:\n- **solution.py**: 2 statements (both executed)\n- **test_solution.py**: 7 statements (all executed)\n- **Total**: 9 statements (0 missed)\n\nThis means every line of executable code in `solution.py` was tested at least once.\n\n---\n\n### 2. Missing Cases (None Found)\nSince **no statements are missed**, there are no uncovered code paths. However, to ensure robustness, consider:\n- **Edge cases**: Are all boundary conditions tested? (e.g., empty inputs, extreme values)\n- **Branch coverage**: While statements are covered, are all logical branches (e.g., `if/else`) tested?\n- **Error handling**: Are exceptions or invalid inputs properly tested?\n\n---\n\n### 3. Test Suggestions (Optional Improvements)\nEven with 100% coverage, you could enhance test quality by:\n#### **A. Add Branch Coverage Tests**\nIf `solution.py` contains conditional logic (e.g., `if/else`), verify both branches:\n```python\n# Example: If your function has",
+    "generated_tests": [
+      "assert dict_filter({}, 100) == {}",
+      "assert dict_filter({'A': -5, 'B': 0, 'C': 5}, -6) == {'A': -5, 'B': 0, 'C': 5}",
+      "assert dict_filter({'X': float('inf'), 'Y': float('-inf'), 'Z': 0}, 0) == {'X': float('inf'), 'Z': 0}"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.34s\n\n"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "task_id": 605,
+  "task_prompt": "Write a function to check if the given integer is a prime number.",
+  "bug_type": "operator_eq_to_neq",
+  "status": "repaired",
+  "final_code": "def prime_num(num):\n    if num < 2:\n        return False\n    for i in range(2, int(num**0.5) + 1):\n        if num % i == 0:\n            return False\n    return True",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 21.31,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def prime_num(num):\n  if num >=1:\n   for i in range(2, num//2):\n     if (num % i) != 0:\n                return False\n     else:\n                return True\n  else:\n          return False",
+      "tests_passed_before_patch": false,
+      "test_output": "FF.                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert prime_num(13)==True\nE       assert False == True\nE        +  where False = prime_num(13)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpktro8pql\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert prime_num(7)==True\nE       assert False == True\nE        +  where False = prime_num(7)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpktro8pql\\test_solution.py:7: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpktro8pql\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpktro8pql\\test_solution.py::test_case_1\n2 failed, 1 passed in 0.38s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `prime_num()` incorrectly returns `False` for prime numbers (like 13 and 7) instead of `True`. It also fails to correctly identify non-prime numbers (the test case that passed was likely for a non-prime number like 4 or 1).\n\n2. **Evidence**:\n   - For `prime_num(13)`, the function returns `False` when it should return `True`\n   - For `prime_num(7)`, the function returns `False` when it should return `True`\n   - The logic in the loop is inverted - it returns `True` when it finds a divisor (which should be `False`) and returns `False` when it doesn't find a divisor (which should be `True`)\n\n3. **Failure type**:\n   - Logical error in the prime checking condition\n   - The function's return values are inverted for the prime check\n\n4. **Suspected location**:\n   The main issue is in the `if (num % i) != 0:` condition and its corresponding returns. The logic should be:\n   - If any divisor is found (num % i == 0), return False",
+      "hypothesis": "Here's the structured analysis and repair plan for the `prime_num()` function:\n\n---\n\n### **1. Failing Behavior:**\n- The function incorrectly returns `False` for prime numbers (e.g., `13`, `7`) and incorrectly returns `True` for some non-prime numbers (e.g., `4` or `1`).\n- The logic is inverted: it returns `True` when a divisor is **not** found (which is wrong) and `False` when a divisor is found (which is correct but prematurely exits the loop).\n\n---\n\n### **2. Evidence:**\n- **Prime inputs (should return `True`):**\n  - `prime_num(13)` \u2192 Returns `False` (incorrect).\n  - `prime_num(7)` \u2192 Returns `False` (incorrect).\n- **Non-prime inputs (should return `False`):**\n  - `prime_num(4)` \u2192 Returns `True` (incorrect, likely due to early exit).\n  - `prime_num(1)` \u2192 Returns `False` (correct, but edge case).\n- **Loop logic:**\n  - The loop checks divisors from `2` to `num//2`. If `num % i != 0",
+      "patched_code": "def prime_num(num):\n    if num < 2:\n        return False\n    for i in range(2, int(num**0.5) + 1):\n        if num % i == 0:\n            return False\n    return True",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.37
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def prime_num(num):\n    if num < 2:\n        return False\n    for i in range(2, int(num**0.5) + 1):\n        if num % i == 0:\n            return False\n    return True",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.62
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      1    86%   6\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      1    93%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n---\n\n### **1. Coverage Summary**\n- **Total Statements Tested**: 13/14 (93% coverage)\n- **Missing Statements**: 1 (in `solution.py`)\n- **Test File (`test_solution.py`)**: Fully covers its own statements (100%).\n- **Solution File (`solution.py`)**: 6/7 statements covered (86%).\n\n**Key Insight**:\nThe test suite is well-written but misses **one critical statement** in `solution.py`. This could be due to:\n- A branch not being exercised (e.g., an `if` condition with only one path tested).\n- A loop or edge case not being triggered.\n- A function call with partial parameter coverage.\n\n---\n\n### **2. Missing Cases (Likely Scenarios)**\nSince the report doesn\u2019t show the exact missing line, here are **common culprits** for 86% coverage in a 7-statement file:\n\n#### **A. Uncovered Branch (Most Likely)**\n- Example: A function with an `if-else` where only the `if` branch is tested.\n  ```python\n  def process_data(data):\n      if",
+    "generated_tests": [
+      "assert prime_num(1) == False",
+      "assert prime_num(0) == False",
+      "assert prime_num(999983) == True"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.35s\n\n"
+  }
+}

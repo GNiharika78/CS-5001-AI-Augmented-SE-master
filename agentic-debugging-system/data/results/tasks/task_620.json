@@ -1,0 +1,38 @@
+{
+  "task_id": 620,
+  "task_prompt": "Write a function to find the size of the largest subset of a list of numbers so that every pair is divisible.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def largest_subset(a):\n\tn = len(a)\n\tdp = [0 for i in range(n)]\n\tdp[n - 1] = 1; \n\tfor i in range(n - 2, -1, -1):\n\t\tmxm = 0;\n\t\tfor j in range(i - 1, n):\n\t\t\tif a[j] % a[i] == 0 or a[i] % a[j] == 0:\n\t\t\t\tmxm = max(mxm, dp[j])\n\t\tdp[i] = 1 + mxm\n\treturn max(dp)",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 12.35,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def largest_subset(a):\n\tn = len(a)\n\tdp = [0 for i in range(n)]\n\tdp[n - 1] = 1; \n\tfor i in range(n - 2, -1, -1):\n\t\tmxm = 0;\n\t\tfor j in range(i - 1, n):\n\t\t\tif a[j] % a[i] == 0 or a[i] % a[j] == 0:\n\t\t\t\tmxm = max(mxm, dp[j])\n\t\tdp[i] = 1 + mxm\n\treturn max(dp)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           11      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 18      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Total Statements**: 18 (11 in `solution.py` + 7 in `test_solution.py`)\n- **Fully Covered**: 100% (0 statements missed)\n- **Perfect Coverage**: Your tests achieve **full statement coverage**, meaning every line of executable code in both the implementation and tests has been executed at least once.\n\n---\n\n### 2. **Missing Cases (None Found)**\nSince the report shows **0 missed statements**, there are no gaps in coverage. However, if you want to ensure robustness, consider:\n- **Edge Cases**: Are all boundary conditions (e.g., empty inputs, max/min values) tested?\n- **Error Paths**: Are exceptions or invalid inputs handled and tested?\n- **Branch Coverage**: While not shown here, check if all `if/else` branches are tested (e.g., `if` and `else` paths).\n\n---\n\n### 3. **Test Suggestions**\nEven with 100% coverage, here\u2019s how to improve test quality:\n\n#### **A. Check for Branch Coverage**\nIf your code has conditional logic (e.g., `if/",
+    "generated_tests": [
+      "assert largest_subset([2, 4, 8, 16, 32]) == 5",
+      "assert largest_subset([0, 0, 0, 0]) == 1",
+      "assert largest_subset([1]) == 1"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....F.                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert largest_subset([0, 0, 0, 0]) == 1\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmppvgn4i58\\test_solution.py:16: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\na = [0, 0, 0, 0]\n\n    def largest_subset(a):\n    \tn = len(a)\n    \tdp = [0 for i in range(n)]\n    \tdp[n - 1] = 1;\n    \tfor i in range(n - 2, -1, -1):\n    \t\tmxm = 0;\n    \t\tfor j in range(i - 1, n):\n>   \t\t\tif a[j] % a[i] == 0 or a[i] % a[j] == 0:\n          ^^^^^^^^^^^\nE      ZeroDivisionError: integer modulo by zero\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmppvgn4i58\\solution.py:8: ZeroDivisionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmppvgn4i58\\test_solution.py::test_case_4\n1 failed, 5 passed in 0.35s\n\n"
+  }
+}

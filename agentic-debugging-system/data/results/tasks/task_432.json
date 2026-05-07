@@ -1,0 +1,50 @@
+{
+  "task_id": 432,
+  "task_prompt": "Write a function to find the median length of a trapezium.",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def median_trapezium(base1, base2, height):\n    return (base1 + base2) / 2",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.67,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def median_trapezium(base1,base2,height):\n median = 0.5 + (base1+ base2)\n return median",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert median_trapezium(15,25,35)==20\nE       assert 40.5 == 20\nE        +  where 40.5 = median_trapezium(15, 25, 35)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmphqvlq8tn\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert median_trapezium(10,20,30)==15\nE       assert 30.5 == 15\nE        +  where 30.5 = median_trapezium(10, 20, 30)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmphqvlq8tn\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert median_trapezium(6,9,4)==7.5\nE       assert 15.5 == 7.5\nE        +  where 15.5 = median_trapezium(6, 9, 4)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmphqvlq8tn\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmphqvlq8tn\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmphqvlq8tn\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmphqvlq8tn\\test_solution.py::test_case_2\n3 failed in 0.39s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `median_trapezium()` is not correctly calculating the median (midsegment) length of a trapezium. The current implementation incorrectly adds the bases and adds 0.5, which doesn't match the expected mathematical formula.\n\n2. **Evidence**:\n   - The test expects the median to be calculated as `(base1 + base2) / 2` (average of the two bases)\n   - Current output: `0.5 + (base1 + base2)` (which is incorrect)\n   - Expected outputs:\n     - For (15,25,35): (15+25)/2 = 20\n     - For (10,20,30): (10+20)/2 = 15\n     - For (6,9,4): (6+9)/2 = 7.5\n   - Actual outputs:\n     - 0.5 + (15+25) = 40.5\n     - 0.5 + (10+20) = 30.5\n     - 0.5 + (6+",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing `median_trapezium` function:\n\n---\n\n### **1. Failing Behavior**\nThe function incorrectly computes the median (midsegment) length of a trapezium by returning `0.5 + (base1 + base2)` instead of the correct formula `(base1 + base2) / 2`. This results in values that are **off by a factor of 2** (or more) and include an arbitrary `+0.5` term.\n\n---\n\n### **2. Evidence**\n- **Expected Formula**: The median (midsegment) of a trapezium is the **average of the two bases**, i.e., `(base1 + base2) / 2`.\n  - Example 1: `(15 + 25) / 2 = 20` (correct)\n  - Example 2: `(10 + 20) / 2 = 15` (correct)\n  - Example 3: `(6 + 9) / 2 = 7.5` (correct)\n- **Actual Output**: The function returns `0.5 + (base1 + base2)`, which is **not mathematically valid** for this calculation.",
+      "patched_code": "def median_trapezium(base1, base2, height):\n    return (base1 + base2) / 2",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.61
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def median_trapezium(base1, base2, height):\n    return (base1 + base2) / 2",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. Coverage Summary\n**Excellent coverage!** Your code and tests achieve **100% statement coverage** across all files:\n- **solution.py**: 2 statements (both executed)\n- **test_solution.py**: 7 statements (all executed)\n- **Total**: 9 statements (all covered)\n\nThis means every line of code in `solution.py` is executed at least once during your tests.\n\n---\n\n### 2. Missing Cases (None Found)\nSince coverage is 100%, there are **no missing cases** in terms of statement execution. However, consider checking for:\n- **Branch coverage**: Are all `if/else`, loops, and function branches tested?\n- **Edge cases**: Are boundary conditions (e.g., empty inputs, max/min values) covered?\n- **Error paths**: Are exceptions or invalid inputs handled and tested?\n\n---\n\n### 3. Test Suggestions (If You Want to Improve Further)\nEven with 100% coverage, here are ways to enhance robustness:\n\n#### A. **Branch Coverage Check**\nIf `solution.py` contains logic like:\n```python\nif x > 0:  # Branch 1",
+    "generated_tests": [
+      "assert median_trapezium(0, 0, 1) == 0",
+      "assert median_trapezium(1e10, 1e10, 1e10) == 1e10",
+      "assert median_trapezium(-5, 15, 10) == 5.0"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.34s\n\n"
+  }
+}

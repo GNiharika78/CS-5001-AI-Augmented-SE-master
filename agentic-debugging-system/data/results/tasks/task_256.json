@@ -1,0 +1,50 @@
+{
+  "task_id": 256,
+  "task_prompt": "Write a python function that takes in a non-negative number and returns the number of prime numbers less than the given non-negative number.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def count_Primes_nums(n):\n    ctr = 0\n    for num in range(2, n):\n        is_prime = True\n        for i in range(2, int(num ** 0.5) + 1):\n            if num % i == 0:\n                is_prime = False\n                break\n        if is_prime:\n            ctr += 1\n    return ctr",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 22.07,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def count_Primes_nums(n):\n    ctr = 0\n    for num in range(n):\n        if num <= 1:\n            continue\n        for i in range(2,num):\n            if (num % i) == 0:\n                break\n        else:\n            ctr -= 1\n    return ctr",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert count_Primes_nums(5) == 2\nE       assert -2 == 2\nE        +  where -2 = count_Primes_nums(5)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpe3n8yh0c\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert count_Primes_nums(10) == 4\nE       assert -4 == 4\nE        +  where -4 = count_Primes_nums(10)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpe3n8yh0c\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert count_Primes_nums(100) == 25\nE       assert -25 == 25\nE        +  where -25 = count_Primes_nums(100)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpe3n8yh0c\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpe3n8yh0c\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpe3n8yh0c\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpe3n8yh0c\\test_solution.py::test_case_2\n3 failed in 0.39s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `count_Primes_nums(n)` is returning negative numbers instead of the correct count of primes less than `n`. For example, it returns `-2` for input `5` when it should return `2`, `-4` for input `10` when it should return `4`, and `-25` for input `100` when it should return `25`.\n\n2. **Evidence**:\n   - The test cases show the function is returning negative values (`-2`, `-4`, `-25`) instead of positive counts.\n   - The logic in the function incorrectly decrements `ctr` (`ctr -= 1`) when it should increment it for primes.\n   - The initial value of `ctr` is `0`, and the function never properly initializes or updates it correctly.\n\n3. **Failure type**:\n   - **Logical Error**: The core logic of counting primes is flawed. The function incorrectly decrements the counter instead of incrementing it, and the initial value of `ctr` is not properly managed.\n   - **Off-by-One Error**: The loop `for num in range(n)` includes numbers",
+      "hypothesis": "Here\u2019s the structured analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `count_Primes_nums(n)` returns **negative numbers** (e.g., `-2` for `n=5`, `-4` for `n=10`, `-25` for `n=100`) instead of the correct count of primes less than `n`. The expected outputs are `2`, `4`, and `25`, respectively.\n\n---\n\n### **2. Evidence**\n- **Incorrect counter logic**: The function uses `ctr -= 1` inside the `else` block (which executes when no divisors are found, i.e., for primes), but primes should **increment** the counter, not decrement it.\n- **Initialization issue**: The counter `ctr` starts at `0` and is never properly initialized to account for primes. The decrement operation (`ctr -= 1`) is applied even when `ctr` is `0`, leading to negative values.\n- **Test case failures**:\n  - For `n=5`, primes are `2, 3` \u2192 expected `2`, but the function returns `-2`.\n  - For `n=10",
+      "patched_code": "def count_Primes_nums(n):\n    ctr = 0\n    for num in range(2, n):\n        is_prime = True\n        for i in range(2, int(num ** 0.5) + 1):\n            if num % i == 0:\n                is_prime = False\n                break\n        if is_prime:\n            ctr += 1\n    return ctr",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.6
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def count_Primes_nums(n):\n    ctr = 0\n    for num in range(2, n):\n        is_prime = True\n        for i in range(2, int(num ** 0.5) + 1):\n            if num % i == 0:\n                is_prime = False\n                break\n        if is_prime:\n            ctr += 1\n    return ctr",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.62
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           11      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 18      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Total Statements**: 18 (11 in `solution.py` + 7 in `test_solution.py`)\n- **Fully Covered**: 100% (0 statements missed)\n- **Perfect Coverage**: Your tests achieve **full statement coverage**, meaning every line of executable code in both the implementation and tests has been executed at least once.\n\n---\n\n### 2. **Missing Cases (None Found)**\nSince the report shows **0 missed statements**, there are no gaps in coverage. However, if you want to ensure robustness, consider:\n- **Edge Cases**: Are all boundary conditions (e.g., empty inputs, max/min values) tested?\n- **Error Paths**: Are exceptions or invalid inputs handled and tested?\n- **Branch Coverage**: While not shown here, check if all `if/else` branches are tested (e.g., `if` and `else` paths).\n\n---\n\n### 3. **Test Suggestions**\nEven with 100% coverage, here\u2019s how to improve test quality:\n\n#### **A. Check for Branch Coverage**\nIf your code has conditional logic (e.g., `if/",
+    "generated_tests": [
+      "assert count_Primes_nums(0) == 0",
+      "assert count_Primes_nums(2) == 0",
+      "assert count_Primes_nums(1000000) == 78498"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 2.30s\n\n"
+  }
+}

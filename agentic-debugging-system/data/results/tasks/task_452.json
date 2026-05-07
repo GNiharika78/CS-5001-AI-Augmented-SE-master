@@ -1,0 +1,38 @@
+{
+  "task_id": 452,
+  "task_prompt": "Write a function that gives loss amount on a sale if the given amount has loss else return 0.",
+  "bug_type": "boundary_gt_to_gte",
+  "status": "repaired",
+  "final_code": "def loss_amount(actual_cost,sale_amount): \n  if(sale_amount >= actual_cost):\n    amount = sale_amount - actual_cost\n    return amount\n  else:\n    return 0",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 9.8,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def loss_amount(actual_cost,sale_amount): \n  if(sale_amount >= actual_cost):\n    amount = sale_amount - actual_cost\n    return amount\n  else:\n    return 0",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            5      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 12      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Total Statements**: 12 (5 in `solution.py`, 7 in `test_solution.py`)\n- **Fully Covered**: 100% (0 statements missed)\n- **Perfect Coverage**: Your tests achieve **full statement coverage**, meaning every line of code in both the implementation and tests has been executed at least once.\n\n---\n\n### 2. **Missing Cases (None)**\nSince the report shows **0 missed statements**, there are no uncovered cases in either file. This suggests:\n- All branches, loops, and edge cases in `solution.py` are tested.\n- The test suite (`test_solution.py`) exercises all possible paths.\n\n---\n\n### 3. **Test Suggestions**\nWhile your coverage is perfect, here are **proactive suggestions** to ensure robustness (even though they\u2019re not strictly needed for coverage):\n\n#### **For `solution.py` (Implementation):**\n- **Check for Branch Coverage**: If your code contains `if/else` or `for/while` loops, verify that both branches are tested (e.g., happy path + error cases).\n  - Example: If a function validates input, test",
+    "generated_tests": [
+      "assert loss_amount(0, 0) == 0",
+      "assert loss_amount(1000, 1000.0000000001) == 0",
+      "assert loss_amount(999999999999999999, 1000000000000000000) == 1"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....F.                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert loss_amount(1000, 1000.0000000001) == 0\nE       assert 1.000444171950221e-10 == 0\nE        +  where 1.000444171950221e-10 = loss_amount(1000, 1000.0000000001)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmps5k96lfp\\test_solution.py:16: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmps5k96lfp\\test_solution.py::test_case_4\n1 failed, 5 passed in 0.34s\n\n"
+  }
+}

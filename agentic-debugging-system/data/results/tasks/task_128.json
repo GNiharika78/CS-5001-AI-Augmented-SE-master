@@ -1,0 +1,38 @@
+{
+  "task_id": 128,
+  "task_prompt": "Write a function to find words that are longer than n characters from a given list of words.",
+  "bug_type": "boundary_gt_to_gte",
+  "status": "repaired",
+  "final_code": "def long_words(n, str):\n    word_len = []\n    txt = str.split(\" \")\n    for x in txt:\n        if len(x) >= n:\n            word_len.append(x)\n    return word_len\t",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 9.28,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def long_words(n, str):\n    word_len = []\n    txt = str.split(\" \")\n    for x in txt:\n        if len(x) >= n:\n            word_len.append(x)\n    return word_len\t",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.61
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Perfect Coverage (100%)**: Both your production code (`solution.py`) and test file (`test_solution.py`) have 100% statement coverage. This means:\n  - Every line of executable code in `solution.py` was executed at least once during testing.\n  - Every line in `test_solution.py` was also executed (though this is less meaningful\u2014it just confirms the tests ran).\n\n### 2. **Missing Cases (None)**\n- Since **Miss = 0** for both files, there are **no missing cases** in terms of statement coverage. However, 100% statement coverage doesn\u2019t guarantee:\n  - **Branch coverage** (e.g., if/else paths, loops, or exceptions).\n  - **Path coverage** (all possible execution paths).\n  - **Edge cases** (e.g., boundary values, invalid inputs).\n\n#### **Potential Blind Spots (Even with 100% Coverage)**\n- **Branches**: If your code has `if/else`, `for/while`, or `try/except`, ensure all branches are tested. For example:\n  ```",
+    "generated_tests": [
+      "assert long_words(0, \"a b c\") == [\"a\", \"b\", \"c\"]",
+      "assert long_words(10, \"single word\") == []",
+      "assert long_words(1, \"   \") == []"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.33s\n\n"
+  }
+}

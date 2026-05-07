@@ -1,0 +1,50 @@
+{
+  "task_id": 222,
+  "task_prompt": "Write a function to check if all the elements in tuple have same data type or not.",
+  "bug_type": "boolean_true_to_false",
+  "status": "repaired",
+  "final_code": "def check_type(test_tuple):\n    if not test_tuple:\n        return True\n    first_type = type(test_tuple[0])\n    for ele in test_tuple:\n        if not isinstance(ele, first_type):\n            return False\n    return True",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 19.82,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def check_type(test_tuple):\n  res = False\n  for ele in test_tuple:\n    if not isinstance(ele, type(test_tuple[0])):\n      res = False\n      break\n  return (res) ",
+      "tests_passed_before_patch": false,
+      "test_output": "F.F                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert check_type((5, 6, 7, 3, 5, 6) ) == True\nE       assert False == True\nE        +  where False = check_type((5, 6, 7, 3, 5, 6))\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmprozop3ov\\test_solution.py:4: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert check_type((3, 2, 1, 4, 5) ) == True\nE       assert False == True\nE        +  where False = check_type((3, 2, 1, 4, 5))\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmprozop3ov\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmprozop3ov\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmprozop3ov\\test_solution.py::test_case_2\n2 failed, 1 passed in 0.38s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `check_type()` is returning `False` for tuples containing only integers (like `(5, 6, 7, 3, 5, 6)` and `(3, 2, 1, 4, 5)`), when it should return `True` since all elements are of the same type (all integers).\n\n2. **Evidence**:\n   - Test case 0: `(5, 6, 7, 3, 5, 6)` \u2192 Expected `True`, got `False`\n   - Test case 2: `(3, 2, 1, 4, 5)` \u2192 Expected `True`, got `False`\n   - The function is incorrectly setting `res = False` in the loop and never updating it to `True`\n\n3. **Failure type**:\n   - Logical error in the function implementation\n   - The function incorrectly initializes `res = False` and never sets it to `True` for valid cases\n   - The `isinstance()` check is correct, but the logic flow is wrong\n\n4. **Suspected location**:\n   The issue is in these lines:\n   ```",
+      "hypothesis": "Here's the detailed analysis and repair plan for the `check_type` function:\n\n---\n\n### **1. Failing Behavior:**\nThe function always returns `False` for tuples with homogeneous types (e.g., `(5, 6, 7)` or `(3, 2, 1)`), even though all elements are of the same type (all integers). This happens because:\n- The function initializes `res = False` and **never sets it to `True`** for valid cases.\n- The `break` statement exits the loop early, but `res` remains `False` unless explicitly updated.\n\n---\n\n### **2. Evidence:**\n- **Test case 0:** `(5, 6, 7, 3, 5, 6)` \u2192 Expected `True`, got `False`.\n  - All elements are `int`, but the function returns `False` because `res` is never set to `True`.\n- **Test case 2:** `(3, 2, 1, 4, 5)` \u2192 Expected `True`, got `False`.\n  - Same issue as above.\n- The function incorrectly assumes `res` should be `False` by default and only updates it if a mismatch is found, but",
+      "patched_code": "def check_type(test_tuple):\n    if not test_tuple:\n        return True\n    first_type = type(test_tuple[0])\n    for ele in test_tuple:\n        if not isinstance(ele, first_type):\n            return False\n    return True",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.22
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def check_type(test_tuple):\n    if not test_tuple:\n        return True\n    first_type = type(test_tuple[0])\n    for ele in test_tuple:\n        if not isinstance(ele, first_type):\n            return False\n    return True",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.59
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            8      1    88%   3\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 15      1    93%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. Coverage Summary\n- **Total statements**: 15 (8 in `solution.py`, 7 in `test_solution.py`)\n- **Total coverage**: 93% (14/15 statements covered)\n- **Missing statements**: 1 (in `solution.py`)\n- **Test quality**: Good (100% coverage in tests, but 12% uncovered in production code)\n\n### 2. Missing Cases (in `solution.py`)\nThe 1 uncovered statement (line 3) suggests:\n- **Possible scenarios**:\n  - Edge case not tested (e.g., empty input, boundary values)\n  - Conditional branch not exercised (e.g., `if`/`else` with only one path tested)\n  - Function with multiple return paths where only one was hit\n\n**Common patterns for 88% coverage**:\n- A function with 3 statements where only 2 were tested (e.g., `if`/`else` with one branch missing)\n- A loop with a condition that wasn't triggered in tests\n- A ternary operator with one branch missing\n\n### 3. Test Suggestions\nTo improve coverage to 100%,",
+    "generated_tests": [
+      "assert check_type(()) == True",
+      "assert check_type((None, None, None)) == True",
+      "assert check_type((1, 2.0, 3)) == False"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.33s\n\n"
+  }
+}

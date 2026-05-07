@@ -1,0 +1,50 @@
+{
+  "task_id": 424,
+  "task_prompt": "Write a function to extract only the rear index element of each string in the given tuple.",
+  "bug_type": "len_to_len_minus_1",
+  "status": "repaired",
+  "final_code": "def extract_rear(test_tuple):\n  res = list(sub[-1] for sub in test_tuple)\n  return res",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.72,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def extract_rear(test_tuple):\n  res = list(sub[len(sub) - 1 - 1] for sub in test_tuple)\n  return (res) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert extract_rear(('Mers', 'for', 'Vers') ) == ['s', 'r', 's']\nE       AssertionError: assert ['r', 'o', 'r'] == ['s', 'r', 's']\nE         \nE         At index 0 diff: 'r' != 's'\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmphmjuwb5p\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert extract_rear(('Avenge', 'for', 'People') ) == ['e', 'r', 'e']\nE       AssertionError: assert ['g', 'o', 'l'] == ['e', 'r', 'e']\nE         \nE         At index 0 diff: 'g' != 'e'\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmphmjuwb5p\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert extract_rear(('Gotta', 'get', 'go') ) == ['a', 't', 'o']\nE       AssertionError: assert ['t', 'e', 'g'] == ['a', 't', 'o']\nE         \nE         At index 0 diff: 't' != 'a'\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmphmjuwb5p\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmphmjuwb5p\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmphmjuwb5p\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmphmjuwb5p\\test_solution.py::test_case_2\n3 failed in 0.38s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `extract_rear()` is not correctly extracting the **rear index element** (last character) of each string in the tuple. Instead, it's extracting the **second-to-last character** (due to `len(sub) - 1 - 1`).\n\n2. **Evidence**:\n   - For input `('Mers', 'for', 'Vers')`, the expected output is `['s', 'r', 's']` (last characters), but the function returns `['r', 'o', 'r']` (second-to-last characters).\n   - Similarly, for `('Avenge', 'for', 'People')`, the expected output is `['e', 'r', 'e']`, but the function returns `['g', 'o', 'l']`.\n\n3. **Failure type**:\n   - **Off-by-one error**: The function incorrectly subtracts `1` twice (`len(sub) - 1 - 1`), causing it to skip the last character.\n\n4. **Suspected location**:\n   The issue is in the list comprehension:\n   ```python\n   res = list(sub[len(sub) - 1 -",
+      "hypothesis": "Here's the structured failure analysis and repair plan for the given function:\n\n---\n\n### **1. Failing Behavior**\nThe function `extract_rear()` incorrectly extracts the **second-to-last character** of each string in the input tuple instead of the **last character**. For example:\n- Input: `('Mers', 'for', 'Vers')`\n  - Expected output: `['s', 'r', 's']` (last characters)\n  - Actual output: `['r', 'o', 'r']` (second-to-last characters)\n\n---\n\n### **2. Evidence**\n- **Test Case 1**:\n  - Input: `('Mers', 'for', 'Vers')`\n  - Expected: `['s', 'r', 's']`\n  - Actual: `['r', 'o', 'r']` (incorrect)\n- **Test Case 2**:\n  - Input: `('Avenge', 'for', 'People')`\n  - Expected: `['e', 'r', 'e']`\n  - Actual: `['g', 'o', 'l']` (incorrect)\n\nThe output consistently shows the **second-to-last character** due to the incorrect indexing logic.",
+      "patched_code": "def extract_rear(test_tuple):\n  res = list(sub[-1] for sub in test_tuple)\n  return res",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.95
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def extract_rear(test_tuple):\n  res = list(sub[-1] for sub in test_tuple)\n  return res",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.62
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Total Statements**: 10 (7 in tests + 3 in production code)\n- **Perfect Coverage**: 100% (0 statements missed)\n- **Production Code**: 3 statements (100% covered)\n- **Test Code**: 7 statements (100% covered)\n\n**Key Insight**: Your codebase achieves **full statement coverage**, meaning every line of executable code in both the solution and tests has been executed at least once during testing.\n\n---\n\n### 2. **Missing Cases (None)**\nSince the report shows **0 missed statements**, there are no gaps in coverage. However, if you want to ensure robustness, consider:\n- **Edge Cases**: Test boundary conditions (e.g., empty inputs, max/min values, invalid types).\n- **Branch Coverage**: While not shown here, ensure all `if/else`, loops, and function calls are tested (e.g., `coverage run --branch`).\n- **Path Coverage**: Verify all logical paths (e.g., happy path + error paths).\n\n---\n\n### 3. **Test Suggestions**\nEven with 100% coverage, here",
+    "generated_tests": [
+      "assert extract_rear(('A', 'B', 'C')) == ['A', 'B', 'C']",
+      "assert extract_rear(('Python', 'is', 'funny', '')) == ['n', 's', 'y', '']",
+      "assert extract_rear(('Single',)) == ['e']"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....F.                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert extract_rear(('Python', 'is', 'funny', '')) == ['n', 's', 'y', '']\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp56w32gfk\\test_solution.py:16: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp56w32gfk\\solution.py:2: in extract_rear\n    res = list(sub[-1] for sub in test_tuple)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n.0 = <tuple_iterator object at 0x0000020369A05D20>\n\n>   res = list(sub[-1] for sub in test_tuple)\n               ^^^^^^^\nE   IndexError: string index out of range\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp56w32gfk\\solution.py:2: IndexError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp56w32gfk\\test_solution.py::test_case_4\n1 failed, 5 passed in 0.36s\n\n"
+  }
+}

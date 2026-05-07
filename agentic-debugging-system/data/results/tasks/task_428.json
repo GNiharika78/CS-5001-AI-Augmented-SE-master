@@ -1,0 +1,50 @@
+{
+  "task_id": 428,
+  "task_prompt": "Write a function to sort the given array by using shell sort.",
+  "bug_type": "boundary_gte_to_gt",
+  "status": "repaired",
+  "final_code": "def shell_sort(my_list):\n    gap = len(my_list) // 2\n    while gap > 0:\n        for i in range(gap, len(my_list)):\n            current_item = my_list[i]\n            j = i\n            while j >= gap and my_list[j - gap] > current_item:\n                my_list[j] = my_list[j - gap]\n                j -= gap\n            my_list[j] = current_item\n        gap //= 2\n    return my_list",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 21.64,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def shell_sort(my_list):\n    gap = len(my_list) // 2\n    while gap > 0:\n        for i in range(gap, len(my_list)):\n            current_item = my_list[i]\n            j = i\n            while j > gap and my_list[j - gap] > current_item:\n                my_list[j] = my_list[j - gap]\n                j -= gap\n            my_list[j] = current_item\n        gap //= 2\n\n    return my_list",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert shell_sort([12, 23, 4, 5, 3, 2, 12, 81, 56, 95]) == [2, 3, 4, 5, 12, 12, 23, 56, 81, 95]\nE       assert [12, 2, 3, 4, 5, 12, ...] == [2, 3, 4, 5, 12, 12, ...]\nE         \nE         At index 0 diff: 12 != 2\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp29a_pl6g\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert shell_sort([24, 22, 39, 34, 87, 73, 68]) == [22, 24, 34, 39, 68, 73, 87]\nE       assert [24, 22, 34, 39, 68, 73, ...] == [22, 24, 34, 39, 68, 73, ...]\nE         \nE         At index 0 diff: 24 != 22\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp29a_pl6g\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert shell_sort([32, 30, 16, 96, 82, 83, 74]) == [16, 30, 32, 74, 82, 83, 96]\nE       assert [32, 16, 30, 74, 82, 83, ...] == [16, 30, 32, 74, 82, 83, ...]\nE         \nE         At index 0 diff: 32 != 16\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp29a_pl6g\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp29a_pl6g\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp29a_pl6g\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp29a_pl6g\\test_solution.py::test_case_2\n3 failed in 0.37s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The shell sort implementation is not correctly sorting the input arrays. The output arrays are not fully sorted in ascending order, with the first few elements being out of place.\n\n2. **Evidence**:\n   - For test case 0, the expected output starts with `[2, 3, 4, 5, ...]` but the actual output starts with `[12, 2, 3, 4, ...]`\n   - For test case 1, the expected output starts with `[22, 24, ...]` but the actual output starts with `[24, 22, ...]`\n   - The sorting appears to be partially working but not completing the full sort\n\n3. **Failure type**:\n   This is a **logical error** in the shell sort implementation. The algorithm is not properly handling the comparison and shifting of elements during the sorting process.\n\n4. **Suspected location**:\n   The issue likely lies in the inner while loop condition and the shifting logic. Specifically:\n   - The condition `while j > gap and my_list[j - gap] > current_item` might not be correctly handling all cases\n   - The shifting of elements",
+      "hypothesis": "Here's the detailed analysis and repair plan for the failing Shell Sort implementation:\n\n---\n\n### 1. **Failing Behavior**:\nThe function partially sorts the array but fails to fully sort it in ascending order. The first few elements are often out of place, indicating that the algorithm is not correctly handling the comparison and shifting logic during the gap phases.\n\n---\n\n### 2. **Evidence**:\n- **Test Case 0**: Expected `[2, 3, 4, 5, ...]` but got `[12, 2, 3, 4, ...]` (incorrect first element).\n- **Test Case 1**: Expected `[22, 24, ...]` but got `[24, 22, ...]` (incorrect order of first two elements).\n- The algorithm seems to work for some elements but fails to propagate the correct order through all gaps.\n\n---\n\n### 3. **Root Cause**:\nThe issue lies in the **inner `while` loop condition and shifting logic**. Specifically:\n- The condition `while j > gap and my_list[j - gap] > current_item` is **too restrictive**. It skips comparisons when `j - gap` is out of bounds (e.g., when `j = gap",
+      "patched_code": "def shell_sort(my_list):\n    gap = len(my_list) // 2\n    while gap > 0:\n        for i in range(gap, len(my_list)):\n            current_item = my_list[i]\n            j = i\n            while j >= gap and my_list[j - gap] > current_item:\n                my_list[j] = my_list[j - gap]\n                j -= gap\n            my_list[j] = current_item\n        gap //= 2\n    return my_list",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.58
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def shell_sort(my_list):\n    gap = len(my_list) // 2\n    while gap > 0:\n        for i in range(gap, len(my_list)):\n            current_item = my_list[i]\n            j = i\n            while j >= gap and my_list[j - gap] > current_item:\n                my_list[j] = my_list[j - gap]\n                j -= gap\n            my_list[j] = current_item\n        gap //= 2\n    return my_list",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.61
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           12      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 19      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nYour code and tests achieve **100% statement coverage** for both `solution.py` (12 statements, all executed) and `test_solution.py` (7 statements, all executed). This means:\n- Every line in `solution.py` was executed at least once during testing.\n- All test cases in `test_solution.py` ran successfully without missing any statements.\n\n---\n\n### **2. Missing Cases (None Found)**\nSince coverage is **100%**, there are **no missing cases** in terms of unexecuted statements. However, to ensure robustness, consider checking for:\n- **Branch coverage** (if-elif-else, loops, function calls) \u2013 even if statements are covered, branches might not be.\n- **Edge cases** (e.g., empty inputs, boundary values, invalid data).\n- **Error handling** (e.g., exceptions, invalid inputs).\n\n#### **How to Check Branch Coverage?**\nRun a tool like `pytest-cov` with `--branch`:\n```bash\npytest --cov=solution.py --cov-branch\n```\nIf branches are missing, the report will show which conditions were not fully tested.\n\n---\n\n### **3. Test Suggestions**\nWhile",
+    "generated_tests": [
+      "assert shell_sort([]) == []",
+      "assert shell_sort([5]) == [5]",
+      "assert shell_sort([1, 1, 1, 1, 1]) == [1, 1, 1, 1, 1]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.34s\n\n"
+  }
+}

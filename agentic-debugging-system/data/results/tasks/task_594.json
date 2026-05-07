@@ -1,0 +1,50 @@
+{
+  "task_id": 594,
+  "task_prompt": "Write a function to find the difference of the first even and first odd number of a given list.",
+  "bug_type": "operator_eq_to_neq",
+  "status": "repaired",
+  "final_code": "def diff_even_odd(list1):\n    first_even = next((el for el in list1 if el % 2 == 0), None)\n    first_odd = next((el for el in list1 if el % 2 != 0), None)\n    return first_even - first_odd if first_even is not None and first_odd is not None else 0",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.96,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def diff_even_odd(list1):\n    first_even = next((el for el in list1 if el%2!=0),-1)\n    first_odd = next((el for el in list1 if el%2!=0),-1)\n    return (first_even-first_odd)",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert diff_even_odd([1,3,5,7,4,1,6,8])==3\nE       assert 0 == 3\nE        +  where 0 = diff_even_odd([1, 3, 5, 7, 4, 1, ...])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm8dt7xew\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert diff_even_odd([1,2,3,4,5,6,7,8,9,10])==1\nE       assert 0 == 1\nE        +  where 0 = diff_even_odd([1, 2, 3, 4, 5, 6, ...])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm8dt7xew\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert diff_even_odd([1,5,7,9,10])==9\nE       assert 0 == 9\nE        +  where 0 = diff_even_odd([1, 5, 7, 9, 10])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm8dt7xew\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm8dt7xew\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm8dt7xew\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm8dt7xew\\test_solution.py::test_case_2\n3 failed in 0.40s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `diff_even_odd()` is not correctly finding the difference between the first even and first odd numbers in the list. Instead, it's returning 0 in all test cases, which means it's not properly identifying either the first even or first odd number.\n\n2. **Evidence**:\n   - The test cases expect:\n     - `[1,3,5,7,4,1,6,8]` \u2192 first odd is 1, first even is 4 \u2192 difference should be 3\n     - `[1,2,3,4,5,6,7,8,9,10]` \u2192 first odd is 1, first even is 2 \u2192 difference should be 1\n     - `[1,5,7,9,10]` \u2192 first odd is 1, first even is 10 \u2192 difference should be 9\n   - The function returns 0 in all cases, indicating it's not correctly finding either number.\n\n3. **Failure type**:\n   - **Logical Error**: The function has incorrect logic for finding the first even and first odd numbers.\n   - **Specific Issue**: The generator expressions are",
+      "hypothesis": "Here's the detailed analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `diff_even_odd()` always returns `0` for all test cases, indicating it is not correctly identifying the first even or first odd number in the list. Instead of computing the difference between them, it likely returns `0` due to incorrect logic in the generator expressions.\n\n---\n\n### **2. Evidence**\n- **Test Case 1**: `[1,3,5,7,4,1,6,8]`\n  - Expected: `first_odd = 1`, `first_even = 4` \u2192 `diff = 3`\n  - Actual: `0` (incorrect)\n- **Test Case 2**: `[1,2,3,4,5,6,7,8,9,10]`\n  - Expected: `first_odd = 1`, `first_even = 2` \u2192 `diff = 1`\n  - Actual: `0` (incorrect)\n- **Test Case 3**: `[1,5,7,9,10]`\n  - Expected: `first_odd = 1`, `first_even =",
+      "patched_code": "def diff_even_odd(list1):\n    first_even = next((el for el in list1 if el % 2 == 0), None)\n    first_odd = next((el for el in list1 if el % 2 != 0), None)\n    return first_even - first_odd if first_even is not None and first_odd is not None else 0",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.27
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def diff_even_odd(list1):\n    first_even = next((el for el in list1 if el % 2 == 0), None)\n    first_odd = next((el for el in list1 if el % 2 != 0), None)\n    return first_even - first_odd if first_even is not None and first_odd is not None else 0",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.61
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Perfect Coverage (100%)**: Your codebase (11 statements total) is fully covered by tests, meaning every line of executable code in both `solution.py` and `test_solution.py` has been executed at least once during testing.\n- **No Gaps**: There are no untested branches, loops, or conditional paths in your code.\n\n---\n\n### 2. **Missing Cases (None)**\nSince the report shows **0 missed statements**, there are no \"missing cases\" to highlight. All possible execution paths (e.g., `if/else`, loops, function calls) are covered.\n\n---\n\n### 3. **Test Suggestions**\nWhile your tests are complete, here are **proactive suggestions** to further improve robustness (even though they\u2019re not strictly needed for 100% coverage):\n\n#### **A. Edge-Case Testing**\n- **Input Validation**: If `solution.py` processes user input (e.g., strings, numbers), test:\n  - Empty inputs (`\"\"`, `None`).\n  - Extremely large/small values (e.g., `float('inf')`, `-1e100",
+    "generated_tests": [
+      "assert diff_even_odd([2, 4, 6]) == 0",
+      "assert diff_even_odd([1, 3, 5]) == 0",
+      "assert diff_even_odd([0, 1, 2, 3, 4, 5]) == 2"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert diff_even_odd([0, 1, 2, 3, 4, 5]) == 2\nE       assert -1 == 2\nE        +  where -1 = diff_even_odd([0, 1, 2, 3, 4, 5])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpvsv76wp_\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpvsv76wp_\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.37s\n\n"
+  }
+}

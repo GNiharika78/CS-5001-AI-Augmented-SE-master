@@ -1,0 +1,50 @@
+{
+  "task_id": 463,
+  "task_prompt": "Write a function to find the maximum product subarray of the given array.",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def max_subarray_product(arr):\n    if not arr:\n        return 0\n\n    max_ending_here = min_ending_here = max_so_far = arr[0]\n    for num in arr[1:]:\n        candidates = (num, max_ending_here * num, min_ending_here * num)\n        max_ending_here = max(candidates)\n        min_ending_here = min(candidates)\n        max_so_far = max(max_so_far, max_ending_here)\n\n    return max_so_far",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 21.17,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_subarray_product(arr):\n\tn = len(arr)\n\tmax_ending_here = 1\n\tmin_ending_here = 1\n\tmax_so_far = 0\n\tflag = 0\n\tfor i in range(0, n):\n\t\tif arr[i] > 0:\n\t\t\tmax_ending_here = max_ending_here + arr[i]\n\t\t\tmin_ending_here = min (min_ending_here * arr[i], 1)\n\t\t\tflag = 1\n\t\telif arr[i] == 0:\n\t\t\tmax_ending_here = 1\n\t\t\tmin_ending_here = 1\n\t\telse:\n\t\t\ttemp = max_ending_here\n\t\t\tmax_ending_here = max (min_ending_here * arr[i], 1)\n\t\t\tmin_ending_here = temp * arr[i]\n\t\tif (max_so_far < max_ending_here):\n\t\t\tmax_so_far = max_ending_here\n\tif flag == 0 and max_so_far == 0:\n\t\treturn 0\n\treturn max_so_far",
+      "tests_passed_before_patch": false,
+      "test_output": "FF.                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert max_subarray_product([1, -2, -3, 0, 7, -8, -2]) == 112\nE       assert 128 == 112\nE        +  where 128 = max_subarray_product([1, -2, -3, 0, 7, -8, ...])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpstc26aoh\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert max_subarray_product([6, -3, -10, 0, 2]) == 180\nE       assert 210 == 180\nE        +  where 210 = max_subarray_product([6, -3, -10, 0, 2])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpstc26aoh\\test_solution.py:7: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpstc26aoh\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpstc26aoh\\test_solution.py::test_case_1\n2 failed, 1 passed in 0.37s\n\n",
+      "failure": "Let me analyze the failures and provide a corrected solution for finding the maximum product subarray.\n\n### 1. What Failed:\nThe function is not correctly calculating the maximum product subarray. The test cases show:\n- For `[1, -2, -3, 0, 7, -8, -2]`, expected 112 but got 128\n- For `[6, -3, -10, 0, 2]`, expected 180 but got 210\n\n### 2. Evidence:\nThe current implementation has several issues:\n- Doesn't properly handle negative numbers and their products\n- The `max_so_far` initialization to 0 is problematic (should be -infinity)\n- The logic for handling zeros and negative numbers is incorrect\n- The `flag` variable approach is flawed\n\n### 3. Failure Type:\nLogical errors in the product calculation and state management during iteration.\n\n### 4. Suspected Location:\nThe main issues are in:\n- Initialization of `max_so_far` (should be -infinity)\n- Handling of negative numbers and their products\n- Reset logic when encountering zeros\n\n### Corrected Solution:\n\n```python\ndef max",
+      "hypothesis": "Here's a comprehensive analysis and corrected solution for the maximum product subarray problem:\n\n### 1. Failing Behavior:\nThe original function fails to correctly compute the maximum product subarray because:\n- It doesn't properly track both maximum and minimum products (since multiplying two negatives can give a positive)\n- The initialization of `max_so_far` to 0 causes issues with all-negative arrays\n- The zero handling logic is incorrect\n- The negative number handling doesn't properly account for product reversals\n\n### 2. Evidence:\nTest cases show incorrect results:\n- `[1, -2, -3, 0, 7, -8, -2]` \u2192 Expected 112 (7\u00d7-8\u00d7-2), got 128\n- `[6, -3, -10, 0, 2]` \u2192 Expected 180 (6\u00d7-3\u00d7-10), got 210\n- `[-2, 0, -1]` \u2192 Should return 0, but original might return -2\n\n### 3. Root Cause:\nThe algorithm needs to simultaneously track:\n- Current maximum product (`max_ending_here`)\n- Current minimum product (`min_ending_here`)",
+      "patched_code": "def max_subarray_product(arr):\n    if not arr:\n        return 0\n\n    max_ending_here = min_ending_here = max_so_far = arr[0]\n    for num in arr[1:]:\n        candidates = (num, max_ending_here * num, min_ending_here * num)\n        max_ending_here = max(candidates)\n        min_ending_here = min(candidates)\n        max_so_far = max(max_so_far, max_ending_here)\n\n    return max_so_far",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.37
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_subarray_product(arr):\n    if not arr:\n        return 0\n\n    max_ending_here = min_ending_here = max_so_far = arr[0]\n    for num in arr[1:]:\n        candidates = (num, max_ending_here * num, min_ending_here * num)\n        max_ending_here = max(candidates)\n        min_ending_here = min(candidates)\n        max_so_far = max(max_so_far, max_ending_here)\n\n    return max_so_far",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.58
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           10      1    90%   3\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 17      1    94%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n---\n\n### **1. Coverage Summary**\n- **Total Statements**: 17 (across `solution.py` and `test_solution.py`).\n- **Total Covered**: 16 (94%).\n- **Total Missed**: 1 (in `solution.py`).\n- **Key Insight**:\n  - `test_solution.py` has **100% coverage**, meaning all its test cases execute successfully.\n  - `solution.py` has **90% coverage**, with **1 statement missing** (out of 10).\n\n---\n\n### **2. Missing Cases (in `solution.py`)**\nThe missing statement (line 3 in the coverage report) likely corresponds to:\n- A **branch** (e.g., `if/else` condition) that was never executed in tests.\n- A **loop** that didn\u2019t iterate (e.g., `for`/`while` with no test data triggering it).\n- A **function call** that wasn\u2019t invoked in tests.\n\n#### **How to Identify the Exact Missing Line**:\nRun coverage with `-g` (shows line numbers) or use:\n```bash\ncoverage run -m pytest",
+    "generated_tests": [
+      "assert max_subarray_product([-1, -1, -1, -1]) == 1",
+      "assert max_subarray_product([0, 0, 0, 0]) == 0",
+      "assert max_subarray_product([1, 0, -1, 2, -3, 4]) == 4"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert max_subarray_product([1, 0, -1, 2, -3, 4]) == 4\nE       assert 24 == 4\nE        +  where 24 = max_subarray_product([1, 0, -1, 2, -3, 4])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpzpfm8t0b\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpzpfm8t0b\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.34s\n\n"
+  }
+}

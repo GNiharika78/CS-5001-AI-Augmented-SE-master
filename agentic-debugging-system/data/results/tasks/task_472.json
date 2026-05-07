@@ -1,0 +1,50 @@
+{
+  "task_id": 472,
+  "task_prompt": "Write a python function to check whether the given list contains consecutive numbers or not.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def check_Consecutive(l):\n    return sorted(l) == list(range(min(l), max(l) + 1))",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.92,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def check_Consecutive(l): \n    return sorted(l) == list(range(min(l),max(l)-1)) ",
+      "tests_passed_before_patch": false,
+      "test_output": "F..                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert check_Consecutive([1,2,3,4,5]) == True\nE       assert False == True\nE        +  where False = check_Consecutive([1, 2, 3, 4, 5])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4okw_yeg\\test_solution.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4okw_yeg\\test_solution.py::test_case_0\n1 failed, 2 passed in 0.35s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `check_Consecutive([1,2,3,4,5])` returned `False` when it should have returned `True`. The test case expects the function to correctly identify that `[1,2,3,4,5]` contains consecutive numbers.\n\n2. **Evidence**:\n   - Input: `[1,2,3,4,5]`\n   - Expected output: `True`\n   - Actual output: `False`\n   - The assertion error shows `False == True` (the function returned `False` when it should return `True`)\n\n3. **Failure type**:\n   - **Logical Error**: The function's logic is incorrect for detecting consecutive numbers. The current implementation fails because:\n     - `range(min(l), max(l)-1)` generates numbers from `min(l)` to `max(l)-1` (exclusive), which is one less than needed for the upper bound\n     - For `[1,2,3,4,5]`, it generates `range(1,4)` \u2192 `[1,2,3]` (missing 4 and 5)\n     - The comparison `sorted(l) ==",
+      "hypothesis": "Here's the detailed analysis and repair plan for the `check_Consecutive` function:\n\n---\n\n### **1. Failing behavior:**\nThe function incorrectly returns `False` for `[1,2,3,4,5]` when it should return `True`. The function fails to recognize that the list contains consecutive numbers because the logic for generating the expected range is flawed.\n\n---\n\n### **2. Evidence:**\n- **Input:** `[1,2,3,4,5]`\n- **Expected output:** `True` (since the list contains consecutive numbers)\n- **Actual output:** `False`\n- **Root cause:** The `range(min(l), max(l)-1)` generates `[1, 2, 3]` (for `min=1`, `max=5`), but the sorted list is `[1, 2, 3, 4, 5]`. The comparison fails because the generated range is incomplete.\n\n---\n\n### **3. Root cause:**\nThe issue lies in the `range(min(l), max(l)-1)` logic:\n- The upper bound (`max(l)-1`) excludes the maximum value in the list, causing the range to be too short.\n- For `[1,2,3,4,5]",
+      "patched_code": "def check_Consecutive(l):\n    return sorted(l) == list(range(min(l), max(l) + 1))",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.35
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def check_Consecutive(l):\n    return sorted(l) == list(range(min(l), max(l) + 1))",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.57
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. Coverage Summary\n**Excellent coverage!** Your code and tests achieve **100% statement coverage** across all files:\n- **solution.py**: 2 statements (both executed)\n- **test_solution.py**: 7 statements (all executed)\n- **Total**: 9 statements (all covered)\n\nThis means every line of code in `solution.py` is executed at least once during your tests.\n\n---\n\n### 2. Missing Cases (None Found)\nSince coverage is 100%, there are **no missing cases** in terms of statement execution. However, consider checking for:\n- **Branch coverage**: Are all `if/else`, loops, and function branches tested? (Your tool may not show this if it's not enabled.)\n- **Edge cases**: Are boundary conditions (e.g., empty inputs, max/min values) tested?\n- **Error paths**: Are exceptions or invalid inputs handled and tested?\n\n---\n\n### 3. Test Suggestions (If You Want to Improve Further)\nEven with 100% coverage, you might want to:\n#### A. **Check Branch Coverage**\nIf your tool supports it, enable branch coverage to ensure:\n-",
+    "generated_tests": [
+      "assert check_Consecutive([]) == False",
+      "assert check_Consecutive([5]) == True",
+      "assert check_Consecutive([-3, -2, -1, 0, 1, 2]) == True"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...F..                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert check_Consecutive([]) == False\n               ^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjbs0zmi7\\test_solution.py:13: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nl = []\n\n    def check_Consecutive(l):\n>       return sorted(l) == list(range(min(l), max(l) + 1))\n                                       ^^^^^^\nE       ValueError: min() iterable argument is empty\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjbs0zmi7\\solution.py:2: ValueError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjbs0zmi7\\test_solution.py::test_case_3\n1 failed, 5 passed in 0.35s\n\n"
+  }
+}

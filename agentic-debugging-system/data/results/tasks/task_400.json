@@ -1,0 +1,50 @@
+{
+  "task_id": 400,
+  "task_prompt": "Write a function to extract the number of unique tuples in the given list.",
+  "bug_type": "len_to_len_minus_1",
+  "status": "repaired",
+  "final_code": "def extract_freq(test_list):\n  res = len(list(set(tuple(sorted(sub)) for sub in test_list)))\n  return res",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.75,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def extract_freq(test_list):\n  res = len(list(set(tuple(sorted(sub) - 1) for sub in test_list)))\n  return (res)",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert extract_freq([(3, 4), (1, 2), (4, 3), (5, 6)] ) == 3\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3nij5vdk\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3nij5vdk\\solution.py:2: in extract_freq\n    res = len(list(set(tuple(sorted(sub) - 1) for sub in test_list)))\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n.0 = <list_iterator object at 0x0000024C89BCD150>\n\n>   res = len(list(set(tuple(sorted(sub) - 1) for sub in test_list)))\n                             ^^^^^^^^^^^^^^^\nE   TypeError: unsupported operand type(s) for -: 'list' and 'int'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3nij5vdk\\solution.py:2: TypeError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert extract_freq([(4, 15), (2, 3), (5, 4), (6, 7)] ) == 4\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3nij5vdk\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3nij5vdk\\solution.py:2: in extract_freq\n    res = len(list(set(tuple(sorted(sub) - 1) for sub in test_list)))\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n.0 = <list_iterator object at 0x0000024C89BCD9C0>\n\n>   res = len(list(set(tuple(sorted(sub) - 1) for sub in test_list)))\n                             ^^^^^^^^^^^^^^^\nE   TypeError: unsupported operand type(s) for -: 'list' and 'int'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3nij5vdk\\solution.py:2: TypeError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert extract_freq([(5, 16), (2, 3), (6, 5), (6, 9)] ) == 4\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3nij5vdk\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3nij5vdk\\solution.py:2: in extract_freq\n    res = len(list(set(tuple(sorted(sub) - 1) for sub in test_list)))\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n.0 = <list_iterator object at 0x0000024C89BCDB10>\n\n>   res = len(list(set(tuple(sorted(sub) - 1) for sub in test_list)))\n                             ^^^^^^^^^^^^^^^\nE   TypeError: unsupported operand type(s) for -: 'list' and 'int'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3nij5vdk\\solution.py:2: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3nij5vdk\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3nij5vdk\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3nij5vdk\\test_solution.py::test_case_2\n3 failed in 0.38s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `extract_freq` is supposed to count the number of unique tuples in the input list, where tuples are considered unique if their sorted elements are identical (ignoring order). However, the current implementation fails because it incorrectly tries to subtract 1 from each tuple element (`sub - 1`), which is not valid for tuples (tuples don't support element-wise operations like this).\n\n2. **Evidence**:\n   - The test case expects `extract_freq([(3, 4), (1, 2), (4, 3), (5, 6)])` to return `3` (since the unique sorted tuples are `(1, 2)`, `(3, 4)`, and `(5, 6)`).\n   - The error occurs at `tuple(sorted(sub) - 1)`, where Python tries to subtract 1 from the entire tuple (which is invalid) or from each element (which isn't how tuple operations work).\n   - The traceback shows the error is in the generator expression where `sub - 1` is attempted.\n\n3. **Failure type**:\n   - Syntax/TypeError: The operation `sub - 1`",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n---\n\n### 1. **Failing Behavior**:\nThe function `extract_freq` raises a **TypeError** because it attempts to perform element-wise subtraction (`sub - 1`) on tuples, which is invalid in Python. Tuples are immutable and do not support arithmetic operations like lists or NumPy arrays.\n\n---\n\n### 2. **Evidence**:\n- **Test Case**: `extract_freq([(3, 4), (1, 2), (4, 3), (5, 6)])` should return `3` (unique sorted tuples: `(1, 2)`, `(3, 4)`, `(5, 6)`).\n- **Error Location**: The line `tuple(sorted(sub) - 1)` fails because:\n  - `sub` is a tuple (e.g., `(3, 4)`).\n  - Python does not allow `tuple - 1` (no tuple subtraction).\n  - Even if interpreted as element-wise, `sorted(sub) - 1` would require iterating over the sorted list and subtracting 1 from each element, which is not how the code is written.\n\n---\n\n### 3. **Root Cause**:\nThe code",
+      "patched_code": "def extract_freq(test_list):\n  res = len(list(set(tuple(sorted(sub)) for sub in test_list)))\n  return res",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.95
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def extract_freq(test_list):\n  res = len(list(set(tuple(sorted(sub)) for sub in test_list)))\n  return res",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.63
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Total Statements**: 10 (7 in tests + 3 in production code)\n- **Perfect Coverage**: 100% (0 statements missed)\n- **Production Code**: 3 statements (100% covered)\n- **Test Code**: 7 statements (100% covered)\n\n**Key Insight**: Your codebase achieves **full statement coverage**, meaning every line of executable code in both the solution and tests has been executed at least once during testing.\n\n---\n\n### 2. **Missing Cases (None)**\nSince the report shows **0 missed statements**, there are no uncovered branches, loops, or edge cases. This suggests:\n- All paths in your logic (e.g., `if/else`, loops, function calls) were tested.\n- No conditional branches (e.g., `if x > 5`) were left untested.\n- No input/output combinations were omitted.\n\n**Verification Tip**: Double-check for:\n   - **Branch Coverage**: Run `coverage report -m` to confirm 100% branch coverage (e.g., `if`/`else` paths).\n   - **Complex Logic**:",
+    "generated_tests": [
+      "assert extract_freq([(1, 1), (1, 1), (1, 1)]) == 1",
+      "assert extract_freq([(1, 2, 3), (3, 2, 1), (1, 3, 2)]) == 1",
+      "assert extract_freq([]) == 0"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.34s\n\n"
+  }
+}

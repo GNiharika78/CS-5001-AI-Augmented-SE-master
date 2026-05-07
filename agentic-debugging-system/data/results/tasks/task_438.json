@@ -1,0 +1,38 @@
+{
+  "task_id": 438,
+  "task_prompt": "Write a function to count bidirectional tuple pairs.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def count_bidirectional(test_list):\n  res = 0\n  for idx in range(0, len(test_list)):\n    for iidx in range(idx - 1, len(test_list)):\n      if test_list[iidx][0] == test_list[idx][1] and test_list[idx][1] == test_list[iidx][0]:\n        res += 1\n  return res",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 9.56,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def count_bidirectional(test_list):\n  res = 0\n  for idx in range(0, len(test_list)):\n    for iidx in range(idx - 1, len(test_list)):\n      if test_list[iidx][0] == test_list[idx][1] and test_list[idx][1] == test_list[iidx][0]:\n        res += 1\n  return res",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.59
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Perfect Coverage (100%)**: Both your production code (`solution.py`) and test file (`test_solution.py`) have 100% statement coverage. This means:\n  - Every line of code in `solution.py` (7 statements) was executed at least once during testing.\n  - Every line in `test_solution.py` (7 statements) was also executed fully.\n\n### 2. **Missing Cases (None)**\n- Since **no statements are missed**, there are no \"missing cases\" in terms of uncovered code. This suggests:\n  - Your tests exercise all possible execution paths in `solution.py`.\n  - Edge cases (if any) are likely covered implicitly or explicitly.\n\n### 3. **Test Suggestions**\nWhile your coverage is perfect, here are some **best practice considerations** to ensure robustness:\n\n#### **A. Check for Branch Coverage (if applicable)**\n- If your code contains **conditional branches** (e.g., `if/else`, loops, or function calls with multiple paths), verify that:\n  - All branches are tested (e.g., `True` and `False` paths in `if`",
+    "generated_tests": [
+      "assert count_bidirectional([(1, 1), (1, 1), (1, 1)]) == 3",
+      "assert count_bidirectional([(1, 2), (3, 4)]) == 0",
+      "assert count_bidirectional([]) == 0"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...F..                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert count_bidirectional([(1, 1), (1, 1), (1, 1)]) == 3\nE       assert 9 == 3\nE        +  where 9 = count_bidirectional([(1, 1), (1, 1), (1, 1)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp6sffqirc\\test_solution.py:13: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp6sffqirc\\test_solution.py::test_case_3\n1 failed, 5 passed in 0.35s\n\n"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "task_id": 454,
+  "task_prompt": "Write a function that matches a word containing 'z'.",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import re\ndef text_match_wordz(text):\n        patterns = '\\w+z.\\w*'\n        if re.search(patterns,  text):\n                return True\n        else:\n                return False",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 9.26,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef text_match_wordz(text):\n        patterns = '\\w+z.\\w*'\n        if re.search(patterns,  text):\n                return True\n        else:\n                return False",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n============================== warnings summary ===============================\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmplfym6km7\\solution.py:3\n  C:\\Users\\gurra\\AppData\\Local\\Temp\\tmplfym6km7\\solution.py:3: SyntaxWarning: invalid escape sequence '\\w'\n    patterns = '\\w+z.\\w*'\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n3 passed, 1 warning in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n<unknown>:3: SyntaxWarning: invalid escape sequence '\\w'\nC:\\Users\\gurra\\AppData\\Local\\Temp\\tmpg02kd7mu\\solution.py:3: SyntaxWarning: invalid escape sequence '\\w'\n  patterns = '\\w+z.\\w*'\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report and the warning:\n\n---\n\n### **1. Coverage Summary**\n- **Total Statements**: 13 (6 in `solution.py`, 7 in `test_solution.py`).\n- **Coverage**: **100%** (no statements missed).\n  - This means all branches, functions, and lines in both files were executed during testing.\n  - The warning (`SyntaxWarning: invalid escape sequence '\\w'`) does **not** affect coverage\u2014it\u2019s a syntax issue unrelated to test execution.\n\n---\n\n### **2. Missing Cases (None)**\n- Since coverage is 100%, **no test cases are missing**. All paths (including edge cases) are covered.\n- However, the **`SyntaxWarning`** in `solution.py` (line 3) is a critical issue:\n  ```python\n  patterns = '\\w+z.\\w*'  # Invalid escape sequence: '\\w' is not a valid escape in Python strings.\n  ```\n  - **Problem**: `\\w` is a regex metacharacter (matches word characters), but in **raw strings** (e.g., `r'\\w+z.\\w*'`), it\u2019s valid. Without `r`, Python treats",
+    "generated_tests": [
+      "assert text_match_wordz(\"zebra.\") == True",
+      "assert text_match_wordz(\"\") == False",
+      "assert text_match_wordz(\"z!z.\") == False"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...F..                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert text_match_wordz(\"zebra.\") == True\nE       AssertionError: assert False == True\nE        +  where False = text_match_wordz('zebra.')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5661hkqo\\test_solution.py:13: AssertionError\n============================== warnings summary ===============================\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5661hkqo\\solution.py:3\n  C:\\Users\\gurra\\AppData\\Local\\Temp\\tmp5661hkqo\\solution.py:3: SyntaxWarning: invalid escape sequence '\\w'\n    patterns = '\\w+z.\\w*'\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5661hkqo\\test_solution.py::test_case_3\n1 failed, 5 passed, 1 warning in 0.35s\n\n"
+  }
+}

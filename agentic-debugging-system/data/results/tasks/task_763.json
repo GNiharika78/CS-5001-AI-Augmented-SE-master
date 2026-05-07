@@ -1,0 +1,38 @@
+{
+  "task_id": 763,
+  "task_prompt": "Write a python function to find the minimum difference between any two elements in a given array. https://www.geeksforgeeks.org/find-minimum-difference-pair/",
+  "bug_type": "operator_pow_to_mul",
+  "status": "repaired",
+  "final_code": "def find_min_diff(arr,n): \n    arr = sorted(arr) \n    diff = 10*20 \n    for i in range(n-1): \n        if arr[i+1] - arr[i] < diff: \n            diff = arr[i+1] - arr[i]  \n    return diff ",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 8.93,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def find_min_diff(arr,n): \n    arr = sorted(arr) \n    diff = 10*20 \n    for i in range(n-1): \n        if arr[i+1] - arr[i] < diff: \n            diff = arr[i+1] - arr[i]  \n    return diff ",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nYour code and tests achieve **100% statement coverage** for both `solution.py` and `test_solution.py`. This means:\n- Every executable line in `solution.py` was executed at least once during testing.\n- Every test case in `test_solution.py` was run successfully.\n\n### **2. Missing Cases (If Any)**\nSince **no statements were missed**, there are **no uncovered cases** in your code. However, if you want to ensure **branch coverage** (e.g., `if-else` conditions, loops, or exceptions), you should check:\n- Are all possible branches (e.g., `if`/`else`, `try`/`except`) tested?\n- Are edge cases (e.g., empty inputs, boundary values) covered?\n\n#### **How to Check Branch Coverage?**\nRun:\n```bash\ncoverage run -m pytest\ncoverage report -m\n```\nIf you see **100% branch coverage**, your tests are thorough. If not, some conditions may lack test cases.\n\n---\n\n### **3. Test Suggestions (If Needed)**\nSince **100% statement coverage** is already achieved, here are **general best practices** to improve",
+    "generated_tests": [
+      "assert find_min_diff((10, 10, 10, 10), 4) == 0",
+      "assert find_min_diff((-5, -3, -1, 0, 2), 5) == 1",
+      "assert find_min_diff((1000000000, 1000000001, 1000000002), 3) == 1"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.33s\n\n"
+  }
+}

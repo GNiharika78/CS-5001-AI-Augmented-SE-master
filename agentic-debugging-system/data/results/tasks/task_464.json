@@ -1,0 +1,50 @@
+{
+  "task_id": 464,
+  "task_prompt": "Write a function to check if all values are same in a dictionary.",
+  "bug_type": "operator_eq_to_neq",
+  "status": "repaired",
+  "final_code": "def check_value(d, n):\n    return all(x == n for x in d.values())",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 19.58,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def check_value(dict, n):\n    result = all(x != n for x in dict.values()) \n    return result",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert check_value({'Cierra Vega': 12, 'Alden Cantrell': 12, 'Kierra Gentry': 12, 'Pierre Cox': 12},10)==False\nE       AssertionError: assert True == False\nE        +  where True = check_value({'Alden Cantrell': 12, 'Cierra Vega': 12, 'Kierra Gentry': 12, 'Pierre Cox': 12}, 10)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpav96z2cz\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert check_value({'Cierra Vega': 12, 'Alden Cantrell': 12, 'Kierra Gentry': 12, 'Pierre Cox': 12},12)==True\nE       AssertionError: assert False == True\nE        +  where False = check_value({'Alden Cantrell': 12, 'Cierra Vega': 12, 'Kierra Gentry': 12, 'Pierre Cox': 12}, 12)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpav96z2cz\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert check_value({'Cierra Vega': 12, 'Alden Cantrell': 12, 'Kierra Gentry': 12, 'Pierre Cox': 12},5)==False\nE       AssertionError: assert True == False\nE        +  where True = check_value({'Alden Cantrell': 12, 'Cierra Vega': 12, 'Kierra Gentry': 12, 'Pierre Cox': 12}, 5)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpav96z2cz\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpav96z2cz\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpav96z2cz\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpav96z2cz\\test_solution.py::test_case_2\n3 failed in 0.37s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `check_value()` is not correctly checking if **all** values in the dictionary are the same. Instead, it checks if **none** of the values are equal to `n` (the parameter), which is the opposite of what's intended.\n\n2. **Evidence**:\n   - **Test Case 0**: The dictionary has all values `12`, and the function is called with `n=10`. The function returns `True` (because none of the values are `10`), but the test expects `False` (because the function should return `True` only if **all** values are the same as `n`).\n   - **Test Case 1**: The dictionary has all values `12`, and the function is called with `n=12`. The function returns `False` (because the logic `all(x != n)` is `False` when `x == n` for all `x`), but the test expects `True` (because all values are equal to `n`).\n\n3. **Failure type**:\n   - **Logical Error**: The function's logic is inverted. It checks if **no** values are equal to",
+      "hypothesis": "Here\u2019s the structured analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `check_value(dict, n)` incorrectly returns `True` when **none** of the dictionary values match `n` (instead of checking if **all** values are the same as `n`). This is the opposite of the intended logic.\n\n---\n\n### **2. Evidence**\n- **Test Case 0**:\n  Input: `dict = {1: 12, 2: 12, 3: 12}`, `n = 10`\n  Expected: `False` (since not all values are `10`).\n  Actual: `True` (because `all(x != 10)` is `True` for all values).\n  **Explanation**: The function returns `True` when no values match `n`, which is wrong.\n\n- **Test Case 1**:\n  Input: `dict = {1: 12, 2: 12, 3: 12}`, `n = 12`\n  Expected: `True` (since all values are `12`).\n  Actual: `False` (because `all(x != 12",
+      "patched_code": "def check_value(d, n):\n    return all(x == n for x in d.values())",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.08
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def check_value(d, n):\n    return all(x == n for x in d.values())",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.58
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. Coverage Summary\n**Excellent coverage!** Your code and tests achieve **100% statement coverage** across all files:\n- **solution.py**: 2 statements (both executed)\n- **test_solution.py**: 7 statements (all executed)\n- **Total**: 9 statements (all covered)\n\nThis means every line of code in `solution.py` is executed at least once during your tests.\n\n---\n\n### 2. Missing Cases (None Found)\nSince coverage is 100%, there are **no missing cases** in terms of statement execution. However, consider checking for:\n- **Branch coverage**: Are all `if/else`, loops, and function branches tested?\n- **Edge cases**: Are boundary conditions (e.g., empty inputs, max/min values) covered?\n- **Error paths**: Are exceptions or invalid inputs handled?\n\n---\n\n### 3. Test Suggestions (If You Want to Improve Further)\nEven with 100% coverage, here are ways to enhance robustness:\n\n#### A. **Check Branch Coverage**\nIf your code has conditional logic (e.g., `if/else`, `for` loops), ensure both branches are tested.",
+    "generated_tests": [
+      "assert check_value({}, 10) == True",
+      "assert check_value({'a': None, 'b': None, 'c': None}, None) == True",
+      "assert check_value({'x': 1, 'y': 2, 'z': 1}, 1) == False"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.33s\n\n"
+  }
+}

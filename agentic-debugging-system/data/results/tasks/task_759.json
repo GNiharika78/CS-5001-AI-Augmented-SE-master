@@ -1,0 +1,50 @@
+{
+  "task_id": 759,
+  "task_prompt": "Write a function to check whether a given string is a decimal number with a precision of 2.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def is_decimal(num):\n    import re\n    dnumre = re.compile(r\"\"\"^[+-]?\\d+(\\.\\d{2})?$\"\"\")\n    return bool(dnumre.fullmatch(num))",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 21.15,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def is_decimal(num):\n    import re\n    dnumre = re.compile(r\"\"\"^[0-9]-(\\.[0-9]{1,2})?$\"\"\")\n    result = dnumre.search(num)\n    return bool(result)",
+      "tests_passed_before_patch": false,
+      "test_output": "F..F.                                                                    [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert is_decimal('123.11')==True\nE       AssertionError: assert False == True\nE        +  where False = is_decimal('123.11')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv81uuwie\\test_solution.py:4: AssertionError\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert is_decimal('1.11')==True\nE       AssertionError: assert False == True\nE        +  where False = is_decimal('1.11')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv81uuwie\\test_solution.py:13: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv81uuwie\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv81uuwie\\test_solution.py::test_case_3\n2 failed, 3 passed in 0.36s\n\n",
+      "failure": "Here's the analysis of the failures:\n\n1. **What failed**:\n   The function `is_decimal()` is not correctly identifying valid decimal numbers with precision of 2. It's failing to match strings like \"123.11\" and \"1.11\" that should be considered valid.\n\n2. **Evidence**:\n   - Test case 0: `'123.11'` returns `False` but should return `True`\n   - Test case 3: `'1.11'` returns `False` but should return `True`\n   - The regex pattern `^[0-9]-(\\.[0-9]{1,2})?$` has several issues:\n     * It requires a hyphen (`-`) after the digits (which isn't in the test cases)\n     * The pattern is anchored incorrectly (should be `^` at start and `$` at end)\n     * The decimal part is optional but the pattern structure is wrong\n\n3. **Failure type**:\n   The regex pattern is too restrictive and doesn't match the expected format of decimal numbers with 2 decimal places.\n\n4. **Suspected location**:\n   The regex pattern in the function needs to be corrected. The current pattern `^[0",
+      "hypothesis": "Here's the detailed analysis and repair plan for the `is_decimal()` function:\n\n---\n\n### **1. Failing Behavior:**\nThe function incorrectly returns `False` for valid decimal numbers with exactly 2 decimal places (e.g., `\"123.11\"`, `\"1.11\"`), while also failing to handle edge cases like:\n- Numbers without a decimal part (e.g., `\"123\"` should return `False` since the task specifies precision of 2).\n- Negative numbers (e.g., `\"-123.11\"` should return `True` if allowed).\n- Leading/trailing whitespace (e.g., `\" 123.11 \"` should return `False` unless trimmed).\n\n---\n\n### **2. Evidence:**\n- **Test case 0:** `'123.11'` \u2192 `False` (should be `True`).\n- **Test case 3:** `'1.11'` \u2192 `False` (should be `True`).\n- **Current regex:** `^[0-9]-(\\.[0-9]{1,2})?$` is malformed:\n  - Incorrectly includes a hyphen (`-`) after digits (likely a typo).",
+      "patched_code": "def is_decimal(num):\n    import re\n    dnumre = re.compile(r\"\"\"^[+-]?\\d+(\\.\\d{2})?$\"\"\")\n    return bool(dnumre.fullmatch(num))",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.39
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def is_decimal(num):\n    import re\n    dnumre = re.compile(r\"\"\"^[+-]?\\d+(\\.\\d{2})?$\"\"\")\n    return bool(dnumre.fullmatch(num))",
+      "tests_passed_before_patch": true,
+      "test_output": ".....                                                                    [100%]\n5 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.58
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py      11      0   100%\n------------------------------------------------\nTOTAL                 15      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Total Statements**: 15 (4 in `solution.py`, 11 in `test_solution.py`)\n- **Fully Covered**: 100% (0 statements missed)\n- **Key Insight**: Your tests achieve **perfect coverage**\u2014every line in both the implementation and tests has been executed at least once.\n\n---\n\n### 2. **Missing Cases (None)**\nSince the report shows **0 missed statements**, there are no gaps in coverage. However, if you want to proactively check for potential edge cases, consider:\n- **Boundary Values**: Test inputs at the extremes of valid ranges (e.g., `min`, `max`, `empty`).\n- **Invalid Inputs**: Ensure tests handle edge cases like `None`, malformed data, or unexpected types.\n- **Side Effects**: If the code modifies external state (e.g., files, databases), verify those changes in tests.\n\n---\n\n### 3. **Test Suggestions**\nWhile your tests are complete, here are ways to improve robustness:\n\n#### **A. Test Diversity**\n- **Parameterized Tests**: If your function handles multiple scenarios (e.g.,",
+    "generated_tests": [
+      "assert is_decimal('0.00') == True",
+      "assert is_decimal('+123.45') == True",
+      "assert is_decimal('') == False"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "........                                                                 [100%]\n8 passed in 0.33s\n\n"
+  }
+}

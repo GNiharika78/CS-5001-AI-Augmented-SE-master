@@ -1,0 +1,50 @@
+{
+  "task_id": 752,
+  "task_prompt": "Write a function to find the nth jacobsthal number. https://www.geeksforgeeks.org/jacobsthal-and-jacobsthal-lucas-numbers/ 0, 1, 1, 3, 5, 11, 21, 43, 85, 171, 341, 683, 1365, 2731, ...",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def jacobsthal_num(n):\n    if n == 0:\n        return 0\n    dp = [0] * (n + 1)\n    dp[1] = 1\n    for i in range(2, n + 1):\n        dp[i] = dp[i - 1] + 2 * dp[i - 2]\n    return dp[n]",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.47,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def jacobsthal_num(n): \n\tdp = [0] + (n + 1) \n\tdp[0] = 0\n\tdp[1] = 1\n\tfor i in range(2, n+1): \n\t\tdp[i] = dp[i - 1] + 2 * dp[i - 2] \n\treturn dp[n]",
+      "tests_passed_before_patch": false,
+      "test_output": "FFFF                                                                     [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert jacobsthal_num(5) == 11\n               ^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5hkufvta\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nn = 5\n\n    def jacobsthal_num(n):\n>   \tdp = [0] + (n + 1)\n         ^^^^^^^^^^^^^\nE    TypeError: can only concatenate list (not \"int\") to list\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5hkufvta\\solution.py:2: TypeError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert jacobsthal_num(2) == 1\n               ^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5hkufvta\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nn = 2\n\n    def jacobsthal_num(n):\n>   \tdp = [0] + (n + 1)\n         ^^^^^^^^^^^^^\nE    TypeError: can only concatenate list (not \"int\") to list\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5hkufvta\\solution.py:2: TypeError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert jacobsthal_num(4) == 5\n               ^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5hkufvta\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nn = 4\n\n    def jacobsthal_num(n):\n>   \tdp = [0] + (n + 1)\n         ^^^^^^^^^^^^^\nE    TypeError: can only concatenate list (not \"int\") to list\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5hkufvta\\solution.py:2: TypeError\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert jacobsthal_num(13) == 2731\n               ^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5hkufvta\\test_solution.py:13: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nn = 13\n\n    def jacobsthal_num(n):\n>   \tdp = [0] + (n + 1)\n         ^^^^^^^^^^^^^\nE    TypeError: can only concatenate list (not \"int\") to list\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5hkufvta\\solution.py:2: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5hkufvta\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5hkufvta\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5hkufvta\\test_solution.py::test_case_2\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5hkufvta\\test_solution.py::test_case_3\n4 failed in 0.37s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `jacobsthal_num(n)` is not returning the correct Jacobsthal numbers for the given test cases. Specifically, it fails to compute the 5th Jacobsthal number (should be 11) and the 2nd Jacobsthal number (should be 1).\n\n2. **Evidence**:\n   - The error message shows `TypeError: can only concatenate list (not \"int\") to list` in the line `dp = [0] + (n + 1)`, which indicates the code is trying to concatenate a list with an integer.\n   - The test cases expect `jacobsthal_num(5) == 11` and `jacobsthal_num(2) == 1`, but the function is not producing these results.\n\n3. **Failure type**:\n   - **Syntax/TypeError**: The primary error is a type mismatch in the list initialization.\n   - **Logical Error**: The function's logic for computing Jacobsthal numbers is incorrect due to the initialization issue.\n\n4. **Suspected location**:\n   The error occurs in the line `dp = [0] + (n + 1",
+      "hypothesis": "Here's the detailed analysis and repair plan for the failing `jacobsthal_num` function:\n\n---\n\n### **1. Failing Behavior:**\nThe function fails to compute the correct Jacobsthal numbers for inputs like `n=2` (should return `1`) and `n=5` (should return `11`). Instead, it raises a `TypeError` due to incorrect list initialization.\n\n---\n\n### **2. Evidence:**\n- **Error Message:**\n  `TypeError: can only concatenate list (not \"int\") to list` occurs at `dp = [0] + (n + 1)` because `(n + 1)` is an integer, not a list.\n- **Incorrect Outputs:**\n  - `jacobsthal_num(2)` returns `1` (correct by coincidence, but the logic is flawed).\n  - `jacobsthal_num(5)` returns an incorrect value (likely due to wrong initialization).\n- **Test Cases:**\n  The function should return `[0, 1, 1, 3, 5, 11, ...]` for `n=0,1,2,3,4,5,...`, but the current implementation fails to do so.\n\n---\n\n### **",
+      "patched_code": "def jacobsthal_num(n):\n    if n == 0:\n        return 0\n    dp = [0] * (n + 1)\n    dp[1] = 1\n    for i in range(2, n + 1):\n        dp[i] = dp[i - 1] + 2 * dp[i - 2]\n    return dp[n]",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.85
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def jacobsthal_num(n):\n    if n == 0:\n        return 0\n    dp = [0] * (n + 1)\n    dp[1] = 1\n    for i in range(2, n + 1):\n        dp[i] = dp[i - 1] + 2 * dp[i - 2]\n    return dp[n]",
+      "tests_passed_before_patch": true,
+      "test_output": "....                                                                     [100%]\n4 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.61
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            8      1    88%   3\ntest_solution.py       9      0   100%\n------------------------------------------------\nTOTAL                 17      1    94%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n---\n\n### **1. Coverage Summary**\n- **Total Statements**: 17 (across `solution.py` and `test_solution.py`).\n- **Covered Statements**: 16 (94%).\n- **Uncovered Statements**: 1 (in `solution.py`).\n- **Test File Coverage**: `test_solution.py` achieves **100%** statement coverage (all 9 statements tested).\n- **Solution File Coverage**: `solution.py` has **88%** coverage (1/8 statements missed).\n\n---\n\n### **2. Missing Cases (in `solution.py`)**\nThe **3 missing statements** (out of 8) suggest that some branches or edge cases in `solution.py` are not exercised. Common reasons:\n- **Conditional branches**: If-else, loops, or function calls with multiple paths.\n- **Error handling**: Try-catch blocks or input validation.\n- **Boundary conditions**: Min/max values, empty inputs, or special cases.\n\n#### **How to Identify the Missing Lines**\nSince the exact lines aren't listed, here\u2019s how to debug:\n1. **Check `solution.py`**:\n   - Look for",
+    "generated_tests": [
+      "assert jacobsthal_num(10) == 341",
+      "assert jacobsthal_num(-1) == 0",
+      "assert jacobsthal_num(15) == 2731"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....FF                                                                  [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert jacobsthal_num(-1) == 0\n               ^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa1mvc0v1\\test_solution.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nn = -1\n\n    def jacobsthal_num(n):\n        if n == 0:\n            return 0\n        dp = [0] * (n + 1)\n>       dp[1] = 1\n        ^^^^^\nE       IndexError: list assignment index out of range\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa1mvc0v1\\solution.py:5: IndexError\n_________________________________ test_case_6 _________________________________\n\n    def test_case_6():\n>       assert jacobsthal_num(15) == 2731\nE       assert 10923 == 2731\nE        +  where 10923 = jacobsthal_num(15)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa1mvc0v1\\test_solution.py:22: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa1mvc0v1\\test_solution.py::test_case_5\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa1mvc0v1\\test_solution.py::test_case_6\n2 failed, 5 passed in 0.36s\n\n"
+  }
+}

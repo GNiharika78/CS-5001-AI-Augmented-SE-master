@@ -1,0 +1,38 @@
+{
+  "task_id": 404,
+  "task_prompt": "Write a python function to find the minimum of two numbers.",
+  "bug_type": "boundary_lte_to_lt",
+  "status": "repaired",
+  "final_code": "def minimum(a,b):   \n    if a < b: \n        return a \n    else: \n        return b ",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 8.59,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def minimum(a,b):   \n    if a < b: \n        return a \n    else: \n        return b ",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.61
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Perfect Coverage (100%)**: Your codebase (11 statements total) has **full statement coverage** in both the production (`solution.py`) and test (`test_solution.py`) files. This means:\n  - Every line of code in `solution.py` is executed by at least one test case.\n  - Every line in `test_solution.py` is also executed (likely due to assertions or test setup/teardown).\n\n### 2. **Missing Cases**\n- **None**: Since `Miss = 0` for all files, there are **no uncovered statements** in your code. This is excellent\u2014your tests are thorough in terms of statement coverage.\n\n### 3. **Test Suggestions**\nWhile your coverage is perfect, here are some **refinements** to consider for **better quality** (even if not strictly needed for coverage):\n\n#### **A. Branch Coverage Check**\n- **Current**: Your coverage tool (likely `coverage.py`) only measures **statement coverage** (lines executed).\n- **Suggestion**: Verify **branch coverage** (e.g., `if/else`, loops, function calls)",
+    "generated_tests": [
+      "assert minimum(3.14, 2.71) == 2.71",
+      "assert minimum(float('inf'), 100) == 100",
+      "assert minimum(None, 5) == 5"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert minimum(None, 5) == 5\n               ^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpeo4r1xzs\\test_solution.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\na = None, b = 5\n\n    def minimum(a,b):\n>       if a < b:\n          ^^^^^\nE       TypeError: '<' not supported between instances of 'NoneType' and 'int'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpeo4r1xzs\\solution.py:2: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpeo4r1xzs\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.36s\n\n"
+  }
+}

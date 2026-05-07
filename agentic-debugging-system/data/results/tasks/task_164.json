@@ -1,0 +1,38 @@
+{
+  "task_id": 164,
+  "task_prompt": "Write a function to determine if the sum of the divisors of two integers are the same.",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import math \ndef div_sum(n): \n  total = 1\n  i = 2\n\n  while i + i <= n:\n    if (n % i == 0):\n      total = (total + i + math.floor(n / i))\n    i += 1\n\n  return total\n\ndef are_equivalent(num1, num2): \n    return div_sum(num1) == div_sum(num2); ",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 8.62,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math \ndef div_sum(n): \n  total = 1\n  i = 2\n\n  while i + i <= n:\n    if (n % i == 0):\n      total = (total + i + math.floor(n / i))\n    i += 1\n\n  return total\n\ndef are_equivalent(num1, num2): \n    return div_sum(num1) == div_sum(num2); ",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.61
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           11      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 18      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Total Statements**: 18 (11 in `solution.py` + 7 in `test_solution.py`)\n- **Fully Covered**: 100% (0 statements missed)\n- **Perfect Coverage**: Your tests achieve **full statement coverage**, meaning every line of executable code in both the implementation and tests has been executed at least once.\n\n---\n\n### 2. **Missing Cases (None Found)**\nSince the report shows **0 missed statements**, there are no gaps in coverage. However, if you want to ensure robustness, consider:\n- **Edge Cases**: Are all boundary conditions (e.g., empty inputs, max/min values) tested?\n- **Error Paths**: Are exceptions or invalid inputs handled and tested?\n- **Branch Coverage**: While not shown here, check if all `if/else` branches are tested (e.g., `if` and `else` paths).\n\n---\n\n### 3. **Test Suggestions**\nEven with 100% coverage, here\u2019s how to improve test quality:\n\n#### **A. Check for Branch Coverage**\nIf your code has conditional logic (e.g., `if/",
+    "generated_tests": [
+      "assert are_equivalent(1, 1) == True",
+      "assert are_equivalent(0, 0) == True",
+      "assert are_equivalent(1000000, 1000000) == True"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.39s\n\n"
+  }
+}

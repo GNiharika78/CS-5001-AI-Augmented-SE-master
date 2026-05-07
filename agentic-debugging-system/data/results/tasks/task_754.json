@@ -1,0 +1,50 @@
+{
+  "task_id": 754,
+  "task_prompt": "We say that an element is common for lists l1, l2, l3 if it appears in all three lists under the same index. Write a function to find common elements from three lists. The function should return a list.",
+  "bug_type": "operator_eq_to_neq",
+  "status": "repaired",
+  "final_code": "def extract_index_list(l1, l2, l3):\n    result = []\n    for m, n, o in zip(l1, l2, l3):\n        if m == n == o:\n            result.append(m)\n    return result",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.86,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def extract_index_list(l1, l2, l3):\n    result = []\n    for m, n, o in zip(l1, l2, l3):\n        if (m != n == o):\n            result.append(m)\n    return result",
+      "tests_passed_before_patch": false,
+      "test_output": "FFFF                                                                     [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert extract_index_list([1, 1, 3, 4, 5, 6, 7],[0, 1, 2, 3, 4, 5, 7],[0, 1, 2, 3, 4, 5, 7])==[1, 7]\nE       assert [1, 3, 4, 5, 6] == [1, 7]\nE         \nE         At index 1 diff: 3 != 7\nE         Left contains 3 more items, first extra item: 4\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpr1qgjqm6\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert extract_index_list([1, 1, 3, 4, 5, 6, 7],[0, 1, 2, 3, 4, 6, 5],[0, 1, 2, 3, 4, 6, 7])==[1, 6]\nE       assert [1, 3, 4, 5] == [1, 6]\nE         \nE         At index 1 diff: 3 != 6\nE         Left contains 2 more items, first extra item: 4\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpr1qgjqm6\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert extract_index_list([1, 1, 3, 4, 6, 5, 6],[0, 1, 2, 3, 4, 5, 7],[0, 1, 2, 3, 4, 5, 7])==[1, 5]\nE       assert [1, 3, 4, 6, 6] == [1, 5]\nE         \nE         At index 1 diff: 3 != 5\nE         Left contains 3 more items, first extra item: 4\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpr1qgjqm6\\test_solution.py:10: AssertionError\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert extract_index_list([1, 2, 3, 4, 6, 6, 6],[0, 1, 2, 3, 4, 5, 7],[0, 1, 2, 3, 4, 5, 7])==[]\nE       assert [1, 2, 3, 4, 6, 6, ...] == []\nE         \nE         Left contains 7 more items, first extra item: 1\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpr1qgjqm6\\test_solution.py:13: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpr1qgjqm6\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpr1qgjqm6\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpr1qgjqm6\\test_solution.py::test_case_2\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpr1qgjqm6\\test_solution.py::test_case_3\n4 failed in 0.37s\n\n",
+      "failure": "Let's analyze the failure step by step:\n\n1. **What failed**:\n   The function `extract_index_list` is not correctly identifying elements that appear at the same index in all three lists. The test expects elements where all three lists have the same value at the same index, but the current implementation has a logical error in its condition.\n\n2. **Evidence**:\n   - Test case 0 expects `[1, 7]` but gets `[1, 3, 4, 5, 6]`\n   - Test case 1 expects `[1, 6]` but gets `[1, 3, 4, 5]`\n   - The current condition `(m != n == o)` is incorrect for finding common elements\n\n3. **Failure type**:\n   The function is incorrectly filtering elements. The condition `m != n == o` is a logical error that:\n   - First checks if `m != n` (which is the opposite of what we want)\n   - Then checks if `n == o` (which is correct)\n   - The `and`/`or` logic is completely wrong for this purpose\n\n4. **Suspected location**:\n   The problematic line is: `if (m != n == o):`",
+      "hypothesis": "Here's the detailed analysis and repair plan for the failing function:\n\n1. **Failing behavior**:\n   The function incorrectly returns elements where `m != n` but `n == o` (which is the opposite of what we want). It's including elements that are *not* common across all three lists at the same index.\n\n2. **Evidence**:\n   - For test case 0 with inputs `l1=[1,2,3,4,5,6]`, `l2=[1,3,4,5,6,7]`, `l3=[1,3,4,5,6,7]`, the expected output is `[1,7]` (only indices 0 and 5 match all three lists), but the function returns `[1,3,4,5,6]` (all indices where `n == o` but `m != n`).\n   - The condition `m != n == o` is parsed as `(m != n) and (n == o)` in Python, which is backwards from what we need.\n\n3. **Root cause**:\n   The condition should check if all three elements are equal (`m == n == o`), but the current implementation checks if `m` is",
+      "patched_code": "def extract_index_list(l1, l2, l3):\n    result = []\n    for m, n, o in zip(l1, l2, l3):\n        if m == n == o:\n            result.append(m)\n    return result",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.02
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def extract_index_list(l1, l2, l3):\n    result = []\n    for m, n, o in zip(l1, l2, l3):\n        if m == n == o:\n            result.append(m)\n    return result",
+      "tests_passed_before_patch": true,
+      "test_output": "....                                                                     [100%]\n4 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       9      0   100%\n------------------------------------------------\nTOTAL                 15      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nYour code and tests achieve **100% statement coverage** for both `solution.py` (6 statements) and `test_solution.py` (9 statements). This means:\n- Every line of executable code in `solution.py` was executed at least once during testing.\n- All test cases in `test_solution.py` were executed successfully.\n\n### **2. Missing Cases (If Any)**\nSince **no statements were missed**, there are **no uncovered code paths** in `solution.py`. However, if you want to ensure **branch coverage** (e.g., `if/else` conditions, loops, or exceptions), you should verify:\n- Are all branches (e.g., `if`/`else`, `try`/`except`) tested?\n- Are edge cases (e.g., empty inputs, invalid data) covered?\n\nIf your code has **no branches**, then 100% statement coverage is sufficient.\n\n---\n\n### **3. Test Suggestions (If Needed)**\nSince coverage is already perfect, here are **general best practices** to consider for future improvements:\n\n#### **A. Check for Branch Coverage (If Applicable)**\nIf `solution.py` contains:\n- **Conditional logic**",
+    "generated_tests": [
+      "assert extract_index_list([], [], []) == []",
+      "assert extract_index_list([1, 2, 3], [1, 2, 3], [1, 2, 3]) == [1, 2, 3]",
+      "assert extract_index_list([None, None, None], [None, None, None], [None, None, None]) == [None, None, None]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": ".......                                                                  [100%]\n7 passed in 0.33s\n\n"
+  }
+}

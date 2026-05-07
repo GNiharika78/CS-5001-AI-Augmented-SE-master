@@ -1,0 +1,50 @@
+{
+  "task_id": 442,
+  "task_prompt": "Write a function to find the ration of positive numbers in an array of integers.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def positive_count(nums):\n    n = len(nums)\n    n1 = 0\n    for x in nums:\n        if x > 0:\n            n1 += 1\n    return round(n1/n, 2)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 21.14,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "from array import array\ndef positive_count(nums):\n    n = len(nums)\n    n1 = 0\n    for x in nums:\n        if x > 0:\n            n1 -= 1\n        else:\n          None\n    return round(n1/n,2)",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert positive_count([0, 1, 2, -1, -5, 6, 0, -3, -2, 3, 4, 6, 8])==0.54\nE       assert -0.54 == 0.54\nE        +  where -0.54 = positive_count([0, 1, 2, -1, -5, 6, ...])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa3w7mhl7\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert positive_count([2, 1, 2, -1, -5, 6, 4, -3, -2, 3, 4, 6, 8])==0.69\nE       assert -0.69 == 0.69\nE        +  where -0.69 = positive_count([2, 1, 2, -1, -5, 6, ...])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa3w7mhl7\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert positive_count([2, 4, -6, -9, 11, -12, 14, -5, 17])==0.56\nE       assert -0.56 == 0.56\nE        +  where -0.56 = positive_count([2, 4, -6, -9, 11, -12, ...])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa3w7mhl7\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa3w7mhl7\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa3w7mhl7\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa3w7mhl7\\test_solution.py::test_case_2\n3 failed in 0.36s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `positive_count()` is returning negative values when it should return positive ratios of positive numbers in the array. The test cases expect positive ratios (like 0.54, 0.69), but the function is returning negative values (-0.54, -0.69).\n\n2. **Evidence**:\n   - The function uses `n1 -= 1` when `x > 0`, which means it's decrementing the count instead of incrementing it.\n   - The test cases show the expected positive ratios, but the function returns their negatives.\n   - The `None` statement for non-positive numbers is unnecessary and doesn't affect the count.\n\n3. **Failure type**:\n   - **Logical Error**: The core issue is that the function is decrementing the count (`n1 -= 1`) when it should be incrementing it (`n1 += 1`) for positive numbers.\n   - **Incorrect Initialization**: While `n1` is initialized to 0, the logic for counting positive numbers is backwards.\n\n4. **Suspected location**:\n   The problematic line is:\n   ```python\n   if x > 0:",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `positive_count()` returns **negative ratios** (e.g., `-0.54`, `-0.69`) instead of the expected **positive ratios** (e.g., `0.54`, `0.69`). This happens because the count of positive numbers (`n1`) is **decremented** (`n1 -= 1`) when it should be **incremented** (`n1 += 1`).\n\n---\n\n### **2. Evidence**\n- **Test Case Expectation**: The function should return `0.54` for an array like `[1, 2, 3, -4, 5]` (3 positives out of 5 elements \u2192 `3/5 = 0.6`, but the test expects `0.54`; this suggests the test case might have a different input, but the core issue is the negative result).\n- **Actual Output**: The function returns `-0.6` (or similar negative value) due to `n1` being decremented.\n- **Logical Flaw**: The condition `if x > 0: n1 -= 1",
+      "patched_code": "def positive_count(nums):\n    n = len(nums)\n    n1 = 0\n    for x in nums:\n        if x > 0:\n            n1 += 1\n    return round(n1/n, 2)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.38
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def positive_count(nums):\n    n = len(nums)\n    n1 = 0\n    for x in nums:\n        if x > 0:\n            n1 += 1\n    return round(n1/n, 2)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.61
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Perfect Coverage (100%)**: Both your production code (`solution.py`) and test file (`test_solution.py`) have 100% statement coverage. This means:\n  - Every line of code in `solution.py` (7 statements) was executed at least once during testing.\n  - Every line in `test_solution.py` (7 statements) was also executed fully.\n\n### 2. **Missing Cases (None)**\n- Since coverage is 100%, there are **no missing cases** in terms of executed statements. However, consider deeper analysis:\n  - **Branch Coverage**: The report doesn\u2019t show branch coverage (e.g., `if/else` conditions, loops). If your code has logic branches, some might be untested even if statements are covered. Example:\n    ```python\n    if x > 0:  # Covered if x=1, but what if x=-1?\n        return True\n    else:\n        return False\n    ```\n    - If your tests only use `x=1`, the `else` branch is untested despite 100% statement coverage",
+    "generated_tests": [
+      "assert positive_count([1, 1, 1, 1, 1]) == 1.0",
+      "assert positive_count([]) == 0.0",
+      "assert positive_count([-1, -2, -3, -4, -5]) == 0.0"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....F.                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert positive_count([]) == 0.0\n               ^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmppcqk0ti0\\test_solution.py:16: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nnums = []\n\n    def positive_count(nums):\n        n = len(nums)\n        n1 = 0\n        for x in nums:\n            if x > 0:\n                n1 += 1\n>       return round(n1/n, 2)\n                     ^^^^\nE       ZeroDivisionError: division by zero\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmppcqk0ti0\\solution.py:7: ZeroDivisionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmppcqk0ti0\\test_solution.py::test_case_4\n1 failed, 5 passed in 0.36s\n\n"
+  }
+}

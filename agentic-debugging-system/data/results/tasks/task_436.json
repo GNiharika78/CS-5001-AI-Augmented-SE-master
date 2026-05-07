@@ -1,0 +1,38 @@
+{
+  "task_id": 436,
+  "task_prompt": "Write a python function to return the negative numbers in a list.",
+  "bug_type": "boundary_lt_to_lte",
+  "status": "repaired",
+  "final_code": "def neg_nos(list1):\n  out = []\n  for num in list1: \n    if num <= 0: \n      out.append(num)\n  return out ",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 8.74,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def neg_nos(list1):\n  out = []\n  for num in list1: \n    if num <= 0: \n      out.append(num)\n  return out ",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Perfect Coverage (100%)**: Your codebase (13 statements across `solution.py` and `test_solution.py`) is fully covered by tests. This means:\n  - Every line of executable code in `solution.py` is tested.\n  - Every test case in `test_solution.py` is executed (no skipped or failed tests).\n  - No edge cases or branches (e.g., `if/else`, loops) are left untested (assuming the tests are comprehensive).\n\n---\n\n### 2. **Missing Cases (None)**\nSince the report shows **0 missed statements**, there are no obvious gaps in coverage. However, to ensure robustness, consider:\n- **Branch Coverage**: If your code contains conditional logic (e.g., `if/else`, loops), verify that all branches are tested. For example:\n  ```python\n  if x > 0:  # Test both x > 0 and x <= 0\n      return True\n  else:\n      return False\n  ```\n  If your tests only cover one branch, the other is \"missing\" even if the statement count is 100%.",
+    "generated_tests": [
+      "assert neg_nos([]) == []",
+      "assert neg_nos([0, 1, -0]) == [0]",
+      "assert neg_nos([float('inf'), -float('inf'), 0.5]) == [0]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....FF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert neg_nos([0, 1, -0]) == [0]\nE       assert [0, 0] == [0]\nE         \nE         Left contains one more item: 0\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpeh2pqnk3\\test_solution.py:16: AssertionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert neg_nos([float('inf'), -float('inf'), 0.5]) == [0]\nE       assert [-inf] == [0]\nE         \nE         At index 0 diff: -inf != 0\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpeh2pqnk3\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpeh2pqnk3\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpeh2pqnk3\\test_solution.py::test_case_5\n2 failed, 4 passed in 0.35s\n\n"
+  }
+}

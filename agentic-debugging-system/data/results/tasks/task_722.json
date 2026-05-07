@@ -1,0 +1,38 @@
+{
+  "task_id": 722,
+  "task_prompt": "The input is given as - a dictionary with a student name as a key and a tuple of float (student_height, student_weight) as a value, - minimal height, - minimal weight. Write a function to filter students that have height and weight above the minimum.",
+  "bug_type": "boundary_gte_to_gt",
+  "status": "repaired",
+  "final_code": "def filter_data(students,h,w):\n    result = {k: s for k, s in students.items() if s[0] >h and s[1] >=w}\n    return result    ",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 9.06,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def filter_data(students,h,w):\n    result = {k: s for k, s in students.items() if s[0] >h and s[1] >=w}\n    return result    ",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.58
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. **Coverage Summary**\n- **Total Statements**: 10 (7 in tests + 3 in production code)\n- **Perfect Coverage**: 100% (0 statements missed)\n- **Production Code**: 3 statements (100% covered)\n- **Test Code**: 7 statements (100% covered)\n\n**Key Insight**: Your codebase achieves **full statement coverage**, meaning every line of executable code in both the solution and tests has been executed at least once during testing.\n\n---\n\n### 2. **Missing Cases (None)**\nSince the report shows **0 missed statements**, there are no uncovered branches, loops, or edge cases. This suggests:\n- All paths in your logic (e.g., `if/else`, loops, function calls) were tested.\n- No conditional branches (e.g., `if x > 5`) were left untested.\n- No input/output combinations were omitted.\n\n**Verification Tip**: Double-check for:\n   - **Branch Coverage**: Run `coverage report -m` to confirm 100% branch coverage (e.g., `if`/`else` paths).\n   - **Complex Logic**:",
+    "generated_tests": [
+      "assert filter_data({'Alice': (5.5, 50.0), 'Bob': (5.9, 65.0), 'Charlie': (6.1, 75.0)}, 5.8, 60.0) == {'Charlie': (6.1, 75.0)}",
+      "assert filter_data({}, 5.0, 50.0) == {}",
+      "assert filter_data({'Dave': (5.0, 50.0), 'Eve': (5.0, 50.0)}, 5.0, 50.0) == {}"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...F..                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert filter_data({'Alice': (5.5, 50.0), 'Bob': (5.9, 65.0), 'Charlie': (6.1, 75.0)}, 5.8, 60.0) == {'Charlie': (6.1, 75.0)}\nE       AssertionError: assert {'Bob': (5.9,...: (6.1, 75.0)} == {'Charlie': (6.1, 75.0)}\nE         \nE         Omitting 1 identical items, use -vv to show\nE         Left contains 1 more item:\nE         {'Bob': (5.9, 65.0)}\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3tfof49f\\test_solution.py:13: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3tfof49f\\test_solution.py::test_case_3\n1 failed, 5 passed in 0.36s\n\n"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "task_id": 567,
+  "task_prompt": "Write a function to check whether a specified list is sorted or not.",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def issort_list(list1):\n    return all(list1[i] <= list1[i+1] for i in range(len(list1)-1))",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.31,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def issort_list(list1):\n    result = all(list1[i] <= list1[i-1] for i in range(len(list1)-1))\n    return result",
+      "tests_passed_before_patch": false,
+      "test_output": "F..                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert issort_list([1,2,4,6,8,10,12,14,16,17])==True\nE       assert False == True\nE        +  where False = issort_list([1, 2, 4, 6, 8, 10, ...])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjxol1gw4\\test_solution.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjxol1gw4\\test_solution.py::test_case_0\n1 failed, 2 passed in 0.35s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `issort_list()` is incorrectly returning `False` for a sorted list `[1,2,4,6,8,10,12,14,16,17]` when it should return `True`. The function is checking for a descending order (each element \u2264 previous) instead of ascending order.\n\n2. **Evidence**:\n   - The test case expects `issort_list([1,2,4,6,8,10,12,14,16,17])` to return `True` (since the list is sorted in ascending order)\n   - The function returns `False` because it's checking `list1[i] <= list1[i-1]` (descending order condition)\n   - The assertion fails: `assert False == True`\n\n3. **Failure type**:\n   - **Logical Error**: The function has the wrong comparison logic for checking ascending order\n   - **Incorrect Condition**: The condition `list1[i] <= list1[i-1]` checks for descending order instead of ascending\n\n4. **Suspected location**:\n   The issue is in the generator expression inside the `all",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n1. **Failing behavior**:\n   The function incorrectly returns `False` for ascending-sorted lists (like `[1,2,4,6,8,10,12,14,16,17]`) when it should return `True`.\n\n2. **Evidence**:\n   - The test case `[1,2,4,6,8,10,12,14,16,17]` is clearly sorted in ascending order\n   - The current implementation checks `list1[i] <= list1[i-1]` (descending order condition)\n   - This causes the function to fail for all ascending-sorted lists\n\n3. **Root cause**:\n   The logical error is in the comparison operator. The function uses `<=` which checks for non-increasing order (descending or equal), when it should check for non-decreasing order (ascending or equal) using `<=`.\n\n4. **Why this explains failure**:\n   The current condition `list1[i] <= list1[i-1]` is the opposite of what we want for ascending order. For ascending order, we need `list1[i] <= list1[i+",
+      "patched_code": "def issort_list(list1):\n    return all(list1[i] <= list1[i+1] for i in range(len(list1)-1))",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.46
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def issort_list(list1):\n    return all(list1[i] <= list1[i+1] for i in range(len(list1)-1))",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.57
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "Here's a detailed analysis of your coverage report:\n\n### 1. Coverage Summary\n**Excellent coverage!** Your code and tests achieve **100% statement coverage** across all files:\n- **solution.py**: 2 statements (both executed)\n- **test_solution.py**: 7 statements (all executed)\n- **Total**: 9 statements (all covered)\n\nThis means every line of code in `solution.py` is executed at least once during your tests.\n\n---\n\n### 2. Missing Cases (None Found)\nSince coverage is 100%, there are **no missing cases** in terms of statement execution. However, consider checking for:\n- **Branch coverage**: Are all `if/else`, loops, and function branches tested?\n- **Edge cases**: Are boundary conditions (e.g., empty inputs, max/min values) covered?\n- **Error paths**: Are exceptions or invalid inputs handled?\n\n---\n\n### 3. Test Suggestions (If You Want to Improve Further)\nEven with 100% coverage, here are ways to enhance robustness:\n\n#### A. **Check Branch Coverage**\nIf `solution.py` contains conditional logic (e.g., `if/else`, `for/while`), ensure both branches are",
+    "generated_tests": [
+      "assert issort_list([]) == True",
+      "assert issort_list([5]) == True",
+      "assert issort_list([None, None, None]) == True"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert issort_list([None, None, None]) == True\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptzq__n65\\test_solution.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptzq__n65\\solution.py:2: in issort_list\n    return all(list1[i] <= list1[i+1] for i in range(len(list1)-1))\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n.0 = <range_iterator object at 0x0000017DA7164B50>\n\n>   return all(list1[i] <= list1[i+1] for i in range(len(list1)-1))\n               ^^^^^^^^^^^^^^^^^^^^^^\nE   TypeError: '<=' not supported between instances of 'NoneType' and 'NoneType'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptzq__n65\\solution.py:2: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptzq__n65\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.35s\n\n"
+  }
+}
