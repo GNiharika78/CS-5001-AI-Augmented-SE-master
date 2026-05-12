@@ -1,0 +1,51 @@
+{
+  "task_id": 299,
+  "task_prompt": "Write a function to calculate the maximum aggregate from the list of tuples.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "from collections import defaultdict\ndef max_aggregate(stdata):\n    temp = defaultdict(int)\n    for name, marks in stdata:\n        temp[name] += marks\n    return max(temp.items(), key=lambda x: x[1])",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 41.25,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "from collections import defaultdict\ndef max_aggregate(stdata):\n    temp = defaultdict(int)\n    for name, marks in stdata:\n        temp[name] -= marks\n    return max(temp.items(), key=lambda x: x[1])",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert max_aggregate([('Juan Whelan',90),('Sabah Colley',88),('Peter Nichols',7),('Juan Whelan',122),('Sabah Colley',84)])==('Juan Whelan', 212)\nE       AssertionError: assert ('Peter Nichols', -7) == ('Juan Whelan', 212)\nE         \nE         At index 0 diff: 'Peter Nichols' != 'Juan Whelan'\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpogiht11b\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert max_aggregate([('Juan Whelan',50),('Sabah Colley',48),('Peter Nichols',37),('Juan Whelan',22),('Sabah Colley',14)])==('Juan Whelan', 72)\nE       AssertionError: assert ('Peter Nichols', -37) == ('Juan Whelan', 72)\nE         \nE         At index 0 diff: 'Peter Nichols' != 'Juan Whelan'\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpogiht11b\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert max_aggregate([('Juan Whelan',10),('Sabah Colley',20),('Peter Nichols',30),('Juan Whelan',40),('Sabah Colley',50)])==('Sabah Colley', 70)\nE       AssertionError: assert ('Peter Nichols', -30) == ('Sabah Colley', 70)\nE         \nE         At index 0 diff: 'Peter Nichols' != 'Sabah Colley'\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpogiht11b\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpogiht11b\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpogiht11b\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpogiht11b\\test_solution.py::test_case_2\n3 failed in 0.33s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   The function `max_aggregate` is not correctly calculating the maximum aggregate marks for each student. Instead of summing the marks, it is subtracting them, leading to incorrect results.\n\n2. **Evidence**:\n   - In `test_case_0`, the expected output is `('Juan Whelan', 212)` (90 + 122 = 212), but the function returns `('Peter Nichols', -7)` (incorrectly subtracting 7).\n   - In `test_case_1`, the expected output is `('Juan Whelan', 72)` (50 + 22 = 72), but the function returns `('Peter Nichols', -37)` (incorrectly subtracting 37).\n\n3. **Failure type**:\n   - **Logical Error**: The function incorrectly subtracts marks (`temp[name] -= marks`) instead of adding them (`temp[name] += marks`).\n\n4. **Suspected location**:\n   - The error is in the line `temp[name] -= marks` in the `max_aggregate` function. This should be `temp[name] += marks` to correctly aggregate the marks.\n\n### Corre",
+      "hypothesis": "Here's the structured response based on the failure analysis:\n\n1. **Failing behavior**:\n   The function incorrectly calculates the maximum aggregate by subtracting marks instead of summing them, leading to negative values and wrong results.\n\n2. **Evidence**:\n   - Test case 0: Expected `('Juan Whelan', 212)` (90 + 122), but got `('Peter Nichols', -7)` (incorrect subtraction).\n   - Test case 1: Expected `('Juan Whelan', 72)` (50 + 22), but got `('Peter Nichols', -37)` (incorrect subtraction).\n\n3. **Root cause**:\n   The line `temp[name] -= marks` in the function subtracts marks from the aggregate instead of adding them (`temp[name] += marks`).\n\n4. **Why this explains failure**:\n   The subtraction operation (`-=`) inverts the intended aggregation logic, causing the function to return the student with the most negative (least) aggregate instead of the highest positive sum.\n\n5. **Repair plan**:\n   Replace `temp[name] -= marks` with `temp[name] += marks` to correctly sum the marks for each student.\n\n6. **Confidence**:",
+      "patched_code": "from collections import defaultdict\ndef max_aggregate(stdata):\n    temp = defaultdict(int)\n    for name, marks in stdata:\n        temp[name] += marks\n    return max(temp.items(), key=lambda x: x[1])",
+      "decision": "patch_and_retry",
+      "duration_seconds": 25.71
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "from collections import defaultdict\ndef max_aggregate(stdata):\n    temp = defaultdict(int)\n    for name, marks in stdata:\n        temp[name] += marks\n    return max(temp.items(), key=lambda x: x[1])",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.30s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.57
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (13/13 statements covered)\n- **File Coverage**:\n  - `solution.py`: 100% (6/6 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n- **No missing lines** in either file.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested (or may be weakly tested):\n1. **Empty input list**: `stdata = []` (should raise `ValueError` due to `max()` on empty sequence).\n2. **Single-element list**: `stdata = [(\"Alice\", 90)]` (trivial case).\n3. **Negative marks**: `stdata = [(\"Alice\", -10), (\"Bob\", 20)]` (valid but edge case).\n4. **Zero marks**: `stdata = [(\"Alice\", 0), (\"Bob\", 0)]` (all zeros).\n5. **Large input**: Performance test with a very large list (e.g.,",
+    "generated_tests": [
+      "assert max_aggregate([('Alice', 100), ('Bob', 200), ('Alice', 50)]) == ('Bob', 200)",
+      "assert max_aggregate([('X', 1), ('Y', 2), ('Z', 3)]) == ('Z', 3)",
+      "assert max_aggregate([('A', 10), ('B', 10), ('A', 10)]) == ('A', 20)"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.31s\n\n"
+  }
+}

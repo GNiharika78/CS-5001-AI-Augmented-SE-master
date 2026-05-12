@@ -1,0 +1,51 @@
+{
+  "task_id": 623,
+  "task_prompt": "Write a function to compute the n-th power of each number in a list.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_pow_to_mul",
+  "status": "repaired",
+  "final_code": "def nth_nums(nums, n):\n    nth_nums = list(map(lambda x: x ** n, nums))\n    return nth_nums",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 73.77,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def nth_nums(nums,n):\n nth_nums = list(map(lambda x: x * n, nums))\n return nth_nums",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert nth_nums([1, 2, 3, 4, 5, 6, 7, 8, 9, 10],2)==[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]\nE       assert [2, 4, 6, 8, 10, 12, ...] == [1, 4, 9, 16, 25, 36, ...]\nE         \nE         At index 0 diff: 2 != 1\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpfrm7j9go\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert nth_nums([10,20,30],3)==([1000, 8000, 27000])\nE       assert [30, 60, 90] == [1000, 8000, 27000]\nE         \nE         At index 0 diff: 30 != 1000\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpfrm7j9go\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert nth_nums([12,15],5)==([248832, 759375])\nE       assert [60, 75] == [248832, 759375]\nE         \nE         At index 0 diff: 60 != 248832\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpfrm7j9go\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpfrm7j9go\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpfrm7j9go\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpfrm7j9go\\test_solution.py::test_case_2\n3 failed in 0.37s\n\n",
+      "failure": "1. **What failed**: The function `nth_nums` is not correctly computing the n-th power of each number in the list. Instead, it is multiplying each number by `n` (scalar multiplication) rather than raising each number to the power of `n`.\n\n2. **Evidence**:\n   - Test case 0: Expected `[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]` (squares of the input list), but got `[2, 4, 6, 8, 10, 12, 14, 16, 18, 20]` (each number multiplied by 2).\n   - Test case 1: Expected `[1000, 8000, 27000]` (cubes of the input list), but got `[30, 60, 90]` (each number multiplied by 3).\n\n3. **Failure type**: **Logical Error** - The function implements the wrong operation (multiplication instead of exponentiation).\n\n4. **Suspected location**: The lambda function",
+      "hypothesis": "Here's the structured analysis of the failure:\n\n1. **Failing behavior**:\n   The function `nth_nums` incorrectly performs scalar multiplication (`x * n`) instead of exponentiation (`x ** n`), leading to wrong results for all test cases.\n\n2. **Evidence**:\n   - Test case 0: Input `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`, `n=2`\n     Expected: `[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]` (squares)\n     Got: `[2, 4, 6, 8, 10, 12, 14, 16, 18, 20]` (each \u00d72)\n   - Test case 1: Input `[10, 20, 30]`, `n=3`\n     Expected: `[1000, 8000, 27000]` (cubes)\n     Got: `[30, 60,",
+      "patched_code": "def nth_nums(nums, n):\n    nth_nums = list(map(lambda x: x ** n, nums))\n    return nth_nums",
+      "decision": "patch_and_retry",
+      "duration_seconds": 34.03
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def nth_nums(nums, n):\n    nth_nums = list(map(lambda x: x ** n, nums))\n    return nth_nums",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.62
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (10/10 statements covered)\n  - `solution.py`: 100% (3/3 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n- The code and tests are fully covered, meaning all lines of code were executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not have been thoroughly tested (or may not be explicitly visible in the report):\n- **Empty list**: `nums = []`\n- **Negative `n`**: `n = -1` (e.g., `2 ** -1 = 0.5`)\n- **Zero in `nums`**: `nums = [0, 1, 2]`\n- **Negative numbers in `nums`**: `nums = [-1, -2]`\n- **Large `n` or large numbers in `nums`**: Potential overflow or performance issues (e.g., `n = 1000` or `nums = [1000000]`",
+    "generated_tests": [
+      "assert nth_nums([], 5) == []",
+      "assert nth_nums([-2, -1, 0, 1, 2], 3) == [-8, -1, 0, 1, 8]",
+      "assert nth_nums([1.5, 2.5], 2) == [2.25, 6.25]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.34s\n\n"
+  }
+}

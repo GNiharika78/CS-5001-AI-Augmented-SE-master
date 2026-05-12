@@ -1,0 +1,51 @@
+{
+  "task_id": 301,
+  "task_prompt": "Write a function to find the depth of a dictionary.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def dict_depth(d):\n    if isinstance(d, dict):\n        return 1 + (max(map(dict_depth, d.values())) if d else 0)\n    return 0",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 34.09,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def dict_depth(d):\n    if isinstance(d, dict):\n        return 1 - (max(map(dict_depth, d.values())) if d else 0)\n    return 0",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert dict_depth({'a':1, 'b': {'c': {'d': {}}}})==4\nE       AssertionError: assert 0 == 4\nE        +  where 0 = dict_depth({'a': 1, 'b': {'c': {'d': {}}}})\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpw8bvxdxy\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert dict_depth({'a':1, 'b': {'c':'python'}})==2\nE       AssertionError: assert 0 == 2\nE        +  where 0 = dict_depth({'a': 1, 'b': {'c': 'python'}})\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpw8bvxdxy\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}})==3\nE       AssertionError: assert 1 == 3\nE        +  where 1 = dict_depth({1: 'Sun', 2: {3: {4: 'Mon'}}})\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpw8bvxdxy\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpw8bvxdxy\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpw8bvxdxy\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpw8bvxdxy\\test_solution.py::test_case_2\n3 failed in 0.36s\n\n",
+      "failure": "### Analysis of the Failed Function\n\n1. **What failed**:\n   The function `dict_depth(d)` is supposed to calculate the maximum depth of a nested dictionary, but it returns incorrect values for all test cases. For example:\n   - For `{'a':1, 'b': {'c': {'d': {}}}}`, it returns `0` instead of `4`.\n   - For `{'a':1, 'b': {'c':'python'}}`, it returns `0` instead of `2`.\n\n2. **Evidence**:\n   - The function returns `0` for all test cases, which is clearly wrong since the dictionaries have nested structures.\n   - The logic in the function seems to subtract the maximum depth of nested dictionaries from `1`, which is incorrect. The correct approach should be to add `1` to the maximum depth of nested dictionaries.\n\n3. **Failure type**:\n   - **Logical Error**: The function's logic for calculating depth is flawed. It subtracts the maximum depth of nested dictionaries from `1` instead of adding `1` to it.\n\n4. **Suspected location**:\n   - The issue is in the line:\n     ```python\n     return 1 - (max(map(dict_depth, d.values()))",
+      "hypothesis": "### 1. Failing Behavior\nThe function `dict_depth(d)` incorrectly returns `0` for all test cases, even when the input dictionary has nested structures. For example:\n- For `{'a':1, 'b': {'c': {'d': {}}}}`, it returns `0` instead of `4`.\n- For `{'a':1, 'b': {'c':'python'}}`, it returns `0` instead of `2`.\n\n### 2. Evidence\n- The function's logic subtracts the maximum depth of nested dictionaries from `1` (`1 - max(...)`), which is incorrect. The correct approach should be to add `1` to the maximum depth of nested dictionaries (`1 + max(...)`).\n- The function returns `0` for all test cases, which is clearly wrong since the dictionaries have nested structures.\n\n### 3. Root Cause\nThe root cause is a **logical error** in the function's depth calculation. The line:\n```python\nreturn 1 - (max(map(dict_depth, d.values())) if d else 0)\n```\nincorrectly subtracts the maximum depth of nested dictionaries from `1`. This causes the function to return `0` for all cases because:\n- For",
+      "patched_code": "def dict_depth(d):\n    if isinstance(d, dict):\n        return 1 + (max(map(dict_depth, d.values())) if d else 0)\n    return 0",
+      "decision": "patch_and_retry",
+      "duration_seconds": 19.19
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def dict_depth(d):\n    if isinstance(d, dict):\n        return 1 + (max(map(dict_depth, d.values())) if d else 0)\n    return 0",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 1.31
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (11/11 statements covered)\n- **solution.py**: 100% (4/4 statements covered)\n- **test_solution.py**: 100% (7/7 statements covered)\n\nThe coverage report indicates that all lines of code in both the solution and test files are executed during testing. This is a strong indicator that the test suite is comprehensive for the current implementation.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, there are potential edge cases or scenarios that might not be explicitly tested or could be weakly tested. These include:\n- **Empty dictionary**: `dict_depth({})` (likely tested, but worth confirming)\n- **Non-dictionary inputs**: `dict_depth(None)`, `dict_depth(42)`, `dict_depth(\"string\")`, `dict_depth([1, 2, 3])` (likely tested, but worth confirming)\n- **Nested dictionaries with varying depths**:\n  - Single-level: `{\"a\": 1}`\n  - Multi-level: `{\"a\": {\"b\": {\"c\": {}}}}`\n  -",
+    "generated_tests": [
+      "assert dict_depth({}) == 0",
+      "assert dict_depth({'a': {'b': {'c': {'d': {'e': {}}}}}}) == 5",
+      "assert dict_depth({'x': [1, 2, {'y': {'z': {}}}]}) == 3"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...FFF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert dict_depth({}) == 0\nE       assert 1 == 0\nE        +  where 1 = dict_depth({})\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp24y3ep4w\\test_solution.py:13: AssertionError\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert dict_depth({'a': {'b': {'c': {'d': {'e': {}}}}}}) == 5\nE       AssertionError: assert 6 == 5\nE        +  where 6 = dict_depth({'a': {'b': {'c': {'d': {'e': {}}}}}})\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp24y3ep4w\\test_solution.py:16: AssertionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert dict_depth({'x': [1, 2, {'y': {'z': {}}}]}) == 3\nE       AssertionError: assert 1 == 3\nE        +  where 1 = dict_depth({'x': [1, 2, {'y': {'z': {}}}]})\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp24y3ep4w\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp24y3ep4w\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp24y3ep4w\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp24y3ep4w\\test_solution.py::test_case_5\n3 failed, 3 passed in 0.36s\n\n"
+  }
+}

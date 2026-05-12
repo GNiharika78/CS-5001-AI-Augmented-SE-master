@@ -1,0 +1,51 @@
+{
+  "task_id": 594,
+  "task_prompt": "Write a function to find the difference of the first even and first odd number of a given list.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_eq_to_neq",
+  "status": "repaired",
+  "final_code": "def diff_even_odd(list1):\n    first_even = next((el for el in list1 if el%2==0),-1)\n    first_odd = next((el for el in list1 if el%2!=0),-1)\n    return (first_even-first_odd)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 50.01,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def diff_even_odd(list1):\n    first_even = next((el for el in list1 if el%2!=0),-1)\n    first_odd = next((el for el in list1 if el%2!=0),-1)\n    return (first_even-first_odd)",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert diff_even_odd([1,3,5,7,4,1,6,8])==3\nE       assert 0 == 3\nE        +  where 0 = diff_even_odd([1, 3, 5, 7, 4, 1, ...])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpe0puex6u\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert diff_even_odd([1,2,3,4,5,6,7,8,9,10])==1\nE       assert 0 == 1\nE        +  where 0 = diff_even_odd([1, 2, 3, 4, 5, 6, ...])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpe0puex6u\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert diff_even_odd([1,5,7,9,10])==9\nE       assert 0 == 9\nE        +  where 0 = diff_even_odd([1, 5, 7, 9, 10])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpe0puex6u\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpe0puex6u\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpe0puex6u\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpe0puex6u\\test_solution.py::test_case_2\n3 failed in 0.34s\n\n",
+      "failure": "Let's analyze the failure:\n\n1. **What failed**:\n   - The function `diff_even_odd()` is not correctly finding the difference between the first even and first odd numbers in the list.\n   - All test cases fail because the function returns 0 when it should return different values (3, 1, and 9 respectively).\n\n2. **Evidence**:\n   - In test_case_0: Expected 3 (first even=4, first odd=1 \u2192 4-1=3), got 0\n   - In test_case_1: Expected 1 (first even=2, first odd=1 \u2192 2-1=1), got 0\n   - In test_case_2: Expected 9 (first even=10, first odd=1 \u2192 10-1=9), got 0\n\n3. **Failure type**:\n   - Logical error in the function implementation\n   - The function is incorrectly finding the same value for both first_even and first_odd (both are finding the first odd number)\n\n4. **Suspected location**:\n   - The issue is in these lines:\n     ```python\n     first_even = next((el for el in list1 if el",
+      "hypothesis": "Here's the analysis and repair plan for the failing function:\n\n1. **Failing behavior**:\n   The function always returns 0 because it's incorrectly finding the same value for both first_even and first_odd (both are finding the first odd number).\n\n2. **Evidence**:\n   - Test case 0: Expected 3 (4-1), got 0\n   - Test case 1: Expected 1 (2-1), got 0\n   - Test case 2: Expected 9 (10-1), got 0\n\n3. **Root cause**:\n   The function has a logical error in the generator expressions:\n   - Both `first_even` and `first_odd` are using the same condition `el%2!=0` (which finds odd numbers)\n   - The correct condition for even numbers should be `el%2==0`\n\n4. **Why this explains failure**:\n   Since both variables are finding the same value (first odd number), their difference is always 0. The function never actually finds the first even number.\n\n5. **Repair plan**:\n   Fix the condition for finding the first even number:\n   ```python\n   def diff_even_odd(list1):\n       first",
+      "patched_code": "def diff_even_odd(list1):\n    first_even = next((el for el in list1 if el%2==0),-1)\n    first_odd = next((el for el in list1 if el%2!=0),-1)\n    return (first_even-first_odd)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 18.51
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def diff_even_odd(list1):\n    first_even = next((el for el in list1 if el%2==0),-1)\n    first_odd = next((el for el in list1 if el%2!=0),-1)\n    return (first_even-first_odd)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (11/11 statements covered)\n- **solution.py**: 100% (4/4 statements covered)\n- **test_solution.py**: 100% (7/7 statements covered)\n\nThe coverage report indicates that all lines of code in both the solution and test files are executed during testing. This is a strong indicator that the test suite is comprehensive for the current implementation.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, there are potential edge cases that may not be explicitly tested or could be weakly tested. These include:\n- **Empty list**: The function returns `(-1 - -1) = 0` for an empty list, but this behavior may not be explicitly tested.\n- **List with only even numbers**: The function returns `(first_even - -1)`, which may not be the intended behavior (e.g., `[2, 4, 6]` returns `2 - -1 = 3`).\n- **List with only odd numbers**: The function returns `(-1 - first_odd)`, which may not be the intended",
+    "generated_tests": [
+      "assert diff_even_odd([2, 4, 6, 8]) == -1",
+      "assert diff_even_odd([1, 3, 5, 7]) == -1",
+      "assert diff_even_odd([0, 1, 2, 3]) == 0"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...FFF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert diff_even_odd([2, 4, 6, 8]) == -1\nE       assert 3 == -1\nE        +  where 3 = diff_even_odd([2, 4, 6, 8])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp748l9xml\\test_solution.py:13: AssertionError\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert diff_even_odd([1, 3, 5, 7]) == -1\nE       assert -2 == -1\nE        +  where -2 = diff_even_odd([1, 3, 5, 7])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp748l9xml\\test_solution.py:16: AssertionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert diff_even_odd([0, 1, 2, 3]) == 0\nE       assert -1 == 0\nE        +  where -1 = diff_even_odd([0, 1, 2, 3])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp748l9xml\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp748l9xml\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp748l9xml\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp748l9xml\\test_solution.py::test_case_5\n3 failed, 3 passed in 0.36s\n\n"
+  }
+}

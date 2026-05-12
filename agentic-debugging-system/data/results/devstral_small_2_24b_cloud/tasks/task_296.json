@@ -1,0 +1,51 @@
+{
+  "task_id": 296,
+  "task_prompt": "Write a python function to count inversions in an array.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def get_Inv_Count(arr):\n    inv_count = 0\n    for i in range(len(arr)):\n        for j in range(i + 1, len(arr)):\n            if arr[i] > arr[j]:\n                inv_count += 1\n    return inv_count",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 29.98,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def get_Inv_Count(arr): \n    inv_count = 0\n    for i in range(len(arr)): \n        for j in range(i - 1, len(arr)): \n            if (arr[i] > arr[j]): \n                inv_count += 1\n    return inv_count ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert get_Inv_Count([1,20,6,4,5]) == 5\nE       assert 7 == 5\nE        +  where 7 = get_Inv_Count([1, 20, 6, 4, 5])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4lspzo1n\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert get_Inv_Count([1,2,1]) == 1\nE       assert 2 == 1\nE        +  where 2 = get_Inv_Count([1, 2, 1])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4lspzo1n\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert get_Inv_Count([1,2,5,6,1]) == 3\nE       assert 6 == 3\nE        +  where 6 = get_Inv_Count([1, 2, 5, 6, 1])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4lspzo1n\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4lspzo1n\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4lspzo1n\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4lspzo1n\\test_solution.py::test_case_2\n3 failed in 0.34s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   - The function `get_Inv_Count` is incorrectly counting the number of inversions in an array. An inversion is a pair of indices `(i, j)` where `i < j` and `arr[i] > arr[j]`. The function is overcounting inversions in all test cases.\n\n2. **Evidence**:\n   - Test Case 0: Expected 5 inversions for `[1, 20, 6, 4, 5]`, but got 7.\n   - Test Case 1: Expected 1 inversion for `[1, 2, 1]`, but got 2.\n   - Test Case 2: Expected 3 inversions for `[1, 2, 5, 6, 1]`, but got 6.\n\n3. **Failure type**:\n   - **Logical Error**: The function is not correctly implementing the inversion counting logic. The nested loop structure is flawed, leading to incorrect counts.\n\n4. **Suspected location**:\n   - The issue is in the nested loop structure of the function:\n     ```python\n     for i in range(len(arr)):\n         for j in range(i - 1,",
+      "hypothesis": "### Failing Behavior\nThe function `get_Inv_Count` is incorrectly counting the number of inversions in an array. It consistently overcounts inversions across all test cases.\n\n### Evidence\n- **Test Case 0**: Input `[1, 20, 6, 4, 5]` \u2192 Expected 5 inversions, but got 7.\n- **Test Case 1**: Input `[1, 2, 1]` \u2192 Expected 1 inversion, but got 2.\n- **Test Case 2**: Input `[1, 2, 5, 6, 1]` \u2192 Expected 3 inversions, but got 6.\n\n### Root Cause\nThe root cause is a **logical error** in the nested loop structure. The current implementation:\n1. Uses `for j in range(i - 1, len(arr))`, which starts `j` from `i - 1` (instead of `i + 1`).\n   - This causes the function to compare `arr[i]` with elements *before* it (including itself when `i = 0`), which violates the inversion condition `i < j`.\n2. The loop also includes `j = i` (when `",
+      "patched_code": "def get_Inv_Count(arr):\n    inv_count = 0\n    for i in range(len(arr)):\n        for j in range(i + 1, len(arr)):\n            if arr[i] > arr[j]:\n                inv_count += 1\n    return inv_count",
+      "decision": "patch_and_retry",
+      "duration_seconds": 16.3
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def get_Inv_Count(arr):\n    inv_count = 0\n    for i in range(len(arr)):\n        for j in range(i + 1, len(arr)):\n            if arr[i] > arr[j]:\n                inv_count += 1\n    return inv_count",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.29s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.56
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (14/14 statements covered)\n  - `solution.py`: 100% (7/7 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n- The code and tests are fully covered, meaning all lines of code were executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage report shows 100% line coverage, this does not necessarily mean all edge cases or scenarios are thoroughly tested. Potential gaps include:\n- **Empty array**: The function may not be tested with an empty array (`arr = []`).\n- **Single-element array**: The function may not be tested with an array of length 1 (`arr = [1]`).\n- **Large arrays**: Performance or correctness may not be tested for very large arrays (e.g., `arr = list(range(10000, 0, -1))`).\n- **Duplicate elements**: The function may not be tested with arrays containing duplicate values (e.g., `arr = [2, 2, 1]`).\n- **",
+    "generated_tests": [
+      "assert get_Inv_Count([3, 1, 2]) == 2",
+      "assert get_Inv_Count([5, 4, 3, 2, 1]) == 10",
+      "assert get_Inv_Count([1, 1, 1, 1]) == 0"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.31s\n\n"
+  }
+}

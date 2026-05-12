@@ -1,0 +1,51 @@
+{
+  "task_id": 635,
+  "task_prompt": "Write a function to sort the given list.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "loop_range_n_to_n_minus_1",
+  "status": "repaired",
+  "final_code": "import heapq as hq\n\ndef heap_sort(iterable):\n    h = []\n    for value in iterable:\n        hq.heappush(h, value)\n    return [hq.heappop(h) for _ in range(len(h))]",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 23.11,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import heapq as hq\ndef heap_sort(iterable):\n    h = []\n    for value in iterable:\n        hq.heappush(h, value)\n    return [hq.heappop(h) for i in range(len(h - 1))]",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert heap_sort([1, 3, 5, 7, 9, 2, 4, 6, 8, 0])==[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp62obiwrq\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\niterable = [1, 3, 5, 7, 9, 2, ...]\n\n    def heap_sort(iterable):\n        h = []\n        for value in iterable:\n            hq.heappush(h, value)\n>       return [hq.heappop(h) for i in range(len(h - 1))]\n                                                 ^^^^^\nE       TypeError: unsupported operand type(s) for -: 'list' and 'int'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp62obiwrq\\solution.py:6: TypeError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert heap_sort([25, 35, 22, 85, 14, 65, 75, 25, 58])==[14, 22, 25, 25, 35, 58, 65, 75, 85]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp62obiwrq\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\niterable = [25, 35, 22, 85, 14, 65, ...]\n\n    def heap_sort(iterable):\n        h = []\n        for value in iterable:\n            hq.heappush(h, value)\n>       return [hq.heappop(h) for i in range(len(h - 1))]\n                                                 ^^^^^\nE       TypeError: unsupported operand type(s) for -: 'list' and 'int'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp62obiwrq\\solution.py:6: TypeError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert heap_sort( [7, 1, 9, 5])==[1,5,7,9]\n               ^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp62obiwrq\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\niterable = [7, 1, 9, 5]\n\n    def heap_sort(iterable):\n        h = []\n        for value in iterable:\n            hq.heappush(h, value)\n>       return [hq.heappop(h) for i in range(len(h - 1))]\n                                                 ^^^^^\nE       TypeError: unsupported operand type(s) for -: 'list' and 'int'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp62obiwrq\\solution.py:6: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp62obiwrq\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp62obiwrq\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp62obiwrq\\test_solution.py::test_case_2\n3 failed in 0.42s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `heap_sort()` is not producing the correct sorted output. Instead of returning a properly sorted list, it's raising a `TypeError` because it's trying to subtract 1 from a list (`h - 1`), which is not a valid operation.\n\n2. **Evidence**:\n   - The error message shows: `TypeError: unsupported operand type(s) for -: 'list' and 'int'`\n   - The test expects `[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]` but the function is not returning this\n   - The problematic line is: `return [hq.heappop(h) for i in range(len(h - 1))]`\n\n3. **Failure type**:\n   - Syntax/Type Error (the code is trying to perform an invalid operation)\n   - Logical Error (the function doesn't implement heap sort correctly)\n\n4. **Suspected location**:\n   The error is in the return statement where `len(h - 1)` is used. This should be `len(h)` instead, and the list comprehension should pop all",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing `heap_sort` function:\n\n---\n\n### **1. Failing Behavior**\nThe function raises a `TypeError` when trying to compute `len(h - 1)` because:\n- `h` is a list (heap), and Python does not support subtracting integers from lists (`h - 1` is invalid).\n- Even if the subtraction were valid, the loop would not iterate over the correct range (e.g., `range(len(h - 1))` would fail or produce incorrect bounds).\n\n---\n\n### **2. Evidence**\n- **Error message**: `TypeError: unsupported operand type(s) for -: 'list' and 'int'`\n- **Expected output**: `[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]` for input `[5, 3, 1, 4, 2, 8, 6, 7, 0, 9]`.\n- **Actual behavior**: The function crashes before producing any output.\n\n---\n\n### **3. Root Cause**\nThe root cause is **twofold**:\n1. **Syntax Error**: `h - 1` is invalid",
+      "patched_code": "import heapq as hq\n\ndef heap_sort(iterable):\n    h = []\n    for value in iterable:\n        hq.heappush(h, value)\n    return [hq.heappop(h) for _ in range(len(h))]",
+      "decision": "patch_and_retry",
+      "duration_seconds": 13.23
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import heapq as hq\n\ndef heap_sort(iterable):\n    h = []\n    for value in iterable:\n        hq.heappush(h, value)\n    return [hq.heappop(h) for _ in range(len(h))]",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.65
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided **heap_sort** function has **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All **6 statements** in `heap_sort` were executed during testing.\n- All **7 statements** in the test file were executed.\n\nSince coverage is perfect, the tests likely verify:\n- Basic functionality (sorting a list).\n- Edge cases (empty list, single-element list, already sorted/unsorted lists).\n- Possible exceptions (if any, though `heap_sort` does not raise exceptions for valid inputs).\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nDespite full coverage, some **potential edge cases** might not be explicitly tested. Common scenarios to consider:\n- **Empty list** (`[]`) \u2192 Should return `[]` without errors.\n- **Single-element list** (`[5]`) \u2192 Should return `[5]`.\n- **List with duplicate values** (`[3, 1, 2, 1]`) \u2192 Should sort correctly.\n- **Large list** (performance test, though coverage doesn\u2019t measure execution time).\n- **Non-integer values** (e.g., floats",
+    "generated_tests": [
+      "assert heap_sort([]) == []",
+      "assert heap_sort([-5, -1, -3, -2]) == [-5, -3, -2, -1]",
+      "assert heap_sort([1, 1, 1, 1, 1]) == [1, 1, 1, 1, 1]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.37s\n\n"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "task_id": 622,
+  "task_prompt": "Write a function to find the median of two sorted lists of same size.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def get_median(arr1, arr2, n):\n    i = 0\n    j = 0\n    m1 = -1\n    m2 = -1\n    count = 0\n    while count < n + 1:\n        count += 1\n        if i == n:\n            m1 = m2\n            m2 = arr2[0]\n            break\n        elif j == n:\n            m1 = m2\n            m2 = arr1[0]\n            break\n        if arr1[i] <= arr2[j]:\n            m1 = m2\n            m2 = arr1[i]\n            i += 1\n        else:\n            m1 = m2\n            m2 = arr2[j]\n            j += 1\n    return (m1 + m2)/2",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 129.42,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def get_median(arr1, arr2, n):\n  i = 0\n  j = 0\n  m1 = -1\n  m2 = -1\n  count = 0\n  while count < n - 1:\n    count += 1\n    if i == n:\n      m1 = m2\n      m2 = arr2[0]\n      break\n    elif j == n:\n      m1 = m2\n      m2 = arr1[0]\n      break\n    if arr1[i] <= arr2[j]:\n      m1 = m2\n      m2 = arr1[i]\n      i += 1\n    else:\n      m1 = m2\n      m2 = arr2[j]\n      j += 1\n  return (m1 + m2)/2",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0\nE       assert 12.5 == 16.0\nE        +  where 12.5 = get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmprdbr1ila\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5\nE       assert 5.5 == 8.5\nE        +  where 5.5 = get_median([2, 4, 8, 9], [7, 13, 19, 28], 4)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmprdbr1ila\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0\nE       assert 16.0 == 25.0\nE        +  where 16.0 = get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmprdbr1ila\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmprdbr1ila\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmprdbr1ila\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmprdbr1ila\\test_solution.py::test_case_2\n3 failed in 0.36s\n\n",
+      "failure": "### Analysis of the Failed Test Cases\n\n1. **What Failed**:\n   The function `get_median` is not correctly computing the median of two sorted lists of the same size. The test cases show that the function returns incorrect median values.\n\n2. **Evidence**:\n   - **Test Case 0**:\n     - Input: `[1, 12, 15, 26, 38]` and `[2, 13, 17, 30, 45]`, `n = 5`\n     - Expected Output: `16.0`\n     - Actual Output: `12.5`\n   - **Test Case 1**:\n     - Input: `[2, 4, 8, 9]` and `[7, 13, 19, 28]`, `n = 4`\n     - Expected Output: `8.5`\n     - Actual Output: `5.5`\n   - **Test Case 2**: (Incomplete in the provided output, but likely similar issues)\n\n3. **Failure Type**:\n   The function is not correctly identifying the two middle elements of the merged sorted list. The median of two sorted lists of size `n",
+      "hypothesis": "### Analysis of the Failed Test Cases\n\n1. **Failing Behavior**:\n   The function `get_median` is not correctly computing the median of two sorted lists of the same size. The test cases show that the function returns incorrect median values.\n\n2. **Evidence**:\n   - **Test Case 0**:\n     - Input: `[1, 12, 15, 26, 38]` and `[2, 13, 17, 30, 45]`, `n = 5`\n     - Expected Output: `16.0` (median of merged list `[1, 2, 12, 13, 15, 17, 26, 30, 38, 45]` is `(15 + 17)/2 = 16.0`)\n     - Actual Output: `12.5` (incorrect)\n   - **Test Case 1**:\n     - Input: `[2, 4, 8, 9]` and `[7, 13, 19, 28]`, `n = 4`\n     - Expected Output: `8.5",
+      "patched_code": "def get_median(arr1, arr2, n):\n    i = 0\n    j = 0\n    m1 = -1\n    m2 = -1\n    count = 0\n    while count < n + 1:\n        count += 1\n        if i == n:\n            m1 = m2\n            m2 = arr2[0]\n            break\n        elif j == n:\n            m1 = m2\n            m2 = arr1[0]\n            break\n        if arr1[i] <= arr2[j]:\n            m1 = m2\n            m2 = arr1[i]\n            i += 1\n        else:\n            m1 = m2\n            m2 = arr2[j]\n            j += 1\n    return (m1 + m2)/2",
+      "decision": "patch_and_retry",
+      "duration_seconds": 67.77
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def get_median(arr1, arr2, n):\n    i = 0\n    j = 0\n    m1 = -1\n    m2 = -1\n    count = 0\n    while count < n + 1:\n        count += 1\n        if i == n:\n            m1 = m2\n            m2 = arr2[0]\n            break\n        elif j == n:\n            m1 = m2\n            m2 = arr1[0]\n            break\n        if arr1[i] <= arr2[j]:\n            m1 = m2\n            m2 = arr1[i]\n            i += 1\n        else:\n            m1 = m2\n            m2 = arr2[j]\n            j += 1\n    return (m1 + m2)/2",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.63
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           24      6    75%   10-12, 14-16\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 31      6    81%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 81% (31 statements, 6 missed)\n- **Solution.py Coverage**: 75% (24 statements, 6 missed)\n- **Test_solution.py Coverage**: 100% (7 statements, 0 missed)\n\nThe coverage report indicates that the test suite covers 81% of the code, with 6 statements in `solution.py` not being executed during testing. The missing lines are 10-12 and 14-16, which correspond to the edge cases where one of the input arrays is exhausted before the other.\n\n#### 2. Missing or Weakly Tested Cases\nThe missing lines (10-12 and 14-16) correspond to the following scenarios:\n1. **Lines 10-12**: When `i == n` (i.e., all elements of `arr1` have been processed), the median is computed using the remaining elements of `arr2`.\n2. **Lines 14-16**: When `j == n` (i.e., all elements of `arr2` have been processed), the",
+    "generated_tests": [
+      "assert get_median([1, 2, 3, 4], [5, 6, 7, 8], 4) == 4.5",
+      "assert get_median([10, 20, 30, 40], [5, 15, 25, 35], 4) == 22.5",
+      "assert get_median([1, 3, 5, 7], [2, 4, 6, 8], 4) == 4.5"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.36s\n\n"
+  }
+}

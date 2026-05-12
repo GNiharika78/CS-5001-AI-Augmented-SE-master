@@ -1,0 +1,39 @@
+{
+  "task_id": 755,
+  "task_prompt": "Write a function to find the second smallest number in a list.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "boundary_lt_to_lte",
+  "status": "repaired",
+  "final_code": "def second_smallest(numbers):\n  unique_numbers = list(set(numbers))\n  unique_numbers.sort()\n  if len(unique_numbers) <= 2:\n    return None\n  else:\n    return unique_numbers[1]",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 13.3,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def second_smallest(numbers):\n  unique_numbers = list(set(numbers))\n  unique_numbers.sort()\n  if len(unique_numbers) <= 2:\n    return None\n  else:\n    return unique_numbers[1]",
+      "tests_passed_before_patch": true,
+      "test_output": "....                                                                     [100%]\n4 passed in 0.30s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       9      0   100%\n------------------------------------------------\nTOTAL                 15      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (15/15 statements covered)\n- **Solution Code Coverage**: 100% (6/6 statements covered)\n- **Test Code Coverage**: 100% (9/9 statements covered)\n\nThe coverage report indicates that all lines of code in both the solution and test files have been executed during testing. This is a strong indicator that the test suite is comprehensive.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, there are still potential edge cases or scenarios that might not be explicitly tested or could be weakly tested. These include:\n- **Empty List**: The function is not explicitly tested with an empty list (`[]`). While the current implementation would return `None` (since `len(unique_numbers) <= 2`), this edge case should be explicitly tested.\n- **Single-Element List**: A list with only one element (e.g., `[5]`). The function would return `None`, but this should be explicitly verified.\n- **All Identical Elements**: A list where all elements are the same (e.g., `[3, 3",
+    "generated_tests": [
+      "assert second_smallest([5, 1, 3, 2, 4]) == 2",
+      "assert second_smallest([10, 10, 10, 10]) == None",
+      "assert second_smallest([-5, -1, -3, -2, -4]) == -4"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": ".......                                                                  [100%]\n7 passed in 0.33s\n\n"
+  }
+}

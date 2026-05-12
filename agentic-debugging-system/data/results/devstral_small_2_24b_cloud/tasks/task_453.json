@@ -1,0 +1,51 @@
+{
+  "task_id": 453,
+  "task_prompt": "Write a python function to find the sum of even factors of a number.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import math\n\ndef sumofFactors(n):\n    if n % 2 != 0:\n        return 0\n    res = 0\n    for i in range(1, int(math.sqrt(n)) + 1):\n        if n % i == 0:\n            if i % 2 == 0:\n                res += i\n            if i != n // i and (n // i) % 2 == 0:\n                res += n // i\n    return res",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 48.38,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math \ndef sumofFactors(n) : \n    if (n % 2 != 0) : \n        return 0\n    res = 1\n    for i in range(2, (int)(math.sqrt(n)) + 1) :    \n        count = 0\n        curr_sum = 1\n        curr_term = 1\n        while (n % i == 0) : \n            count= count + 1\n            n = n // i \n            if (i == 2 and count == 1) : \n                curr_sum = 0\n            curr_term = curr_term + i \n            curr_sum = curr_sum + curr_term \n        res = res * curr_sum  \n    if (n >= 2) : \n        res = res * (1 + n) \n    return res",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert sumofFactors(18) == 26\nE       assert 36 == 26\nE        +  where 36 = sumofFactors(18)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpezvira9n\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert sumofFactors(30) == 48\nE       assert 105 == 48\nE        +  where 105 = sumofFactors(30)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpezvira9n\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert sumofFactors(6) == 8\nE       assert 12 == 8\nE        +  where 12 = sumofFactors(6)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpezvira9n\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpezvira9n\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpezvira9n\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpezvira9n\\test_solution.py::test_case_2\n3 failed in 0.37s\n\n",
+      "failure": "### Failure Analysis Report\n\n#### 1. What Failed\nThe function `sumofFactors(n)` is supposed to return the sum of even factors of a given number `n`. However, the test cases show that the function is returning incorrect sums for the inputs `18`, `30`, and `6`.\n\n#### 2. Evidence\n- For `n = 18`, the function returns `36` but the expected output is `26`.\n- For `n = 30`, the function returns `105` but the expected output is `48`.\n- For `n = 6`, the function returns `12` but the expected output is `8`.\n\n#### 3. Failure Type\nThe failure is due to **incorrect logic** in the function. The function is not correctly identifying and summing the even factors of the number. Instead, it seems to be calculating the sum of all factors (or some other incorrect sum) rather than just the even ones.\n\n#### 4. Suspected Location\nThe issue likely lies in the following parts of the code:\n1. The initial check `if (n % 2 != 0)` returns `0` for odd numbers, which is correct, but",
+      "hypothesis": "### Failure Analysis Report\n\n#### 1. Failing Behavior\nThe function `sumofFactors(n)` is intended to return the sum of even factors of a given number `n`. However, it fails to do so for the following test cases:\n- For `n = 18`, the function returns `36` (expected: `26`).\n- For `n = 30`, the function returns `105` (expected: `48`).\n- For `n = 6`, the function returns `12` (expected: `8`).\n\n#### 2. Evidence\n- **Input: 18**\n  - Even factors: 2, 6, 18 \u2192 Sum = 2 + 6 + 18 = 26\n  - Function output: 36 (incorrect)\n- **Input: 30**\n  - Even factors: 2, 6, 10, 30 \u2192 Sum = 2 + 6 + 10 + 30 = 48\n  - Function output: 105 (incorrect)\n- **Input: 6**\n  - Even factors: 2, 6 \u2192",
+      "patched_code": "import math\n\ndef sumofFactors(n):\n    if n % 2 != 0:\n        return 0\n    res = 0\n    for i in range(1, int(math.sqrt(n)) + 1):\n        if n % i == 0:\n            if i % 2 == 0:\n                res += i\n            if i != n // i and (n // i) % 2 == 0:\n                res += n // i\n    return res",
+      "decision": "patch_and_retry",
+      "duration_seconds": 36.17
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\n\ndef sumofFactors(n):\n    if n % 2 != 0:\n        return 0\n    res = 0\n    for i in range(1, int(math.sqrt(n)) + 1):\n        if n % i == 0:\n            if i % 2 == 0:\n                res += i\n            if i != n // i and (n // i) % 2 == 0:\n                res += n // i\n    return res",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.68
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           12      1    92%   5\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 19      1    95%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 95% (19 statements total, 1 missed)\n- **File Coverage**:\n  - `solution.py`: 92% (12 statements, 1 missed)\n  - `test_solution.py`: 100% (7 statements, 0 missed)\n- **Missing Line**: Line 5 in `solution.py` (the early return for odd `n`).\n\n#### 2. Missing or Weakly Tested Cases\n- **Missing Case**: The function is not tested for odd inputs (where it should return `0` immediately). This is why line 5 is not covered.\n- **Weakly Tested Cases**:\n  - Edge cases like `n = 0` or `n = 1` (though the function handles them correctly, they may not be explicitly tested).\n  - Large even numbers (e.g., `n = 1000000`) to test performance and correctness.\n  - Numbers with repeated even factors (e.g., `n = 16`, where `2` and `4` are factors, but `4` is a square).\n\n#### 3",
+    "generated_tests": [
+      "assert sumofFactors(24) == 40",
+      "assert sumofFactors(10) == 6",
+      "assert sumofFactors(4) == 4"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...FFF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert sumofFactors(24) == 40\nE       assert 56 == 40\nE        +  where 56 = sumofFactors(24)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmprhq0bnor\\test_solution.py:13: AssertionError\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert sumofFactors(10) == 6\nE       assert 12 == 6\nE        +  where 12 = sumofFactors(10)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmprhq0bnor\\test_solution.py:16: AssertionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert sumofFactors(4) == 4\nE       assert 6 == 4\nE        +  where 6 = sumofFactors(4)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmprhq0bnor\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmprhq0bnor\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmprhq0bnor\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmprhq0bnor\\test_solution.py::test_case_5\n3 failed, 3 passed in 0.37s\n\n"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "task_id": 450,
+  "task_prompt": "Write a function to extract specified size of strings from a given list of string values.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_eq_to_neq",
+  "status": "repaired",
+  "final_code": "def extract_string(str, l):\n    result = [e for e in str if len(e) == l]\n    return result",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 28.39,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def extract_string(str, l):\n    result = [e for e in str if len(e) != l] \n    return result",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert extract_string(['Python', 'list', 'exercises', 'practice', 'solution'] ,8)==['practice', 'solution']\nE       AssertionError: assert ['Python', 'l..., 'exercises'] == ['practice', 'solution']\nE         \nE         At index 0 diff: 'Python' != 'practice'\nE         Left contains one more item: 'exercises'\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa3_vaf45\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert extract_string(['Python', 'list', 'exercises', 'practice', 'solution'] ,6)==['Python']\nE       AssertionError: assert ['list', 'exe...', 'solution'] == ['Python']\nE         \nE         At index 0 diff: 'list' != 'Python'\nE         Left contains 3 more items, first extra item: 'exercises'\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa3_vaf45\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert extract_string(['Python', 'list', 'exercises', 'practice', 'solution'] ,9)==['exercises']\nE       AssertionError: assert ['Python', 'l...', 'solution'] == ['exercises']\nE         \nE         At index 0 diff: 'Python' != 'exercises'\nE         Left contains 3 more items, first extra item: 'list'\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa3_vaf45\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa3_vaf45\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa3_vaf45\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpa3_vaf45\\test_solution.py::test_case_2\n3 failed in 0.35s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   The function `extract_string` is not correctly extracting strings of the specified length `l` from the input list. Instead, it is returning all strings that do **not** have the specified length.\n\n2. **Evidence**:\n   - **Test Case 0**:\n     - Input: `['Python', 'list', 'exercises', 'practice', 'solution']`, `l = 8`\n     - Expected Output: `['practice', 'solution']` (strings of length 8)\n     - Actual Output: `['Python', 'list', 'exercises']` (strings that are **not** of length 8)\n   - **Test Case 1**:\n     - Input: `['Python', 'list', 'exercises', 'practice', 'solution']`, `l = 6`\n     - Expected Output: `['Python']` (string of length 6)\n     - Actual Output: `['list', 'exercises', 'practice', 'solution']` (strings that are **not** of length 6)\n\n3. **Failure type**:\n   - **Logical Error**: The function is filtering out strings of the specified length instead",
+      "hypothesis": "### Failure Analysis Report\n\n1. **Failing Behavior**:\n   The function `extract_string` incorrectly filters out strings of the specified length `l` instead of extracting them. It returns all strings that do **not** match the given length.\n\n2. **Evidence**:\n   - **Test Case 0**:\n     - Input: `['Python', 'list', 'exercises', 'practice', 'solution']`, `l = 8`\n     - Expected Output: `['practice', 'solution']` (strings of length 8)\n     - Actual Output: `['Python', 'list', 'exercises']` (strings that are **not** of length 8)\n   - **Test Case 1**:\n     - Input: `['Python', 'list', 'exercises', 'practice', 'solution']`, `l = 6`\n     - Expected Output: `['Python']` (string of length 6)\n     - Actual Output: `['list', 'exercises', 'practice', 'solution']` (strings that are **not** of length 6)\n\n3. **Root Cause**:\n   The list comprehension in the function uses `len(e) != l`, which excludes strings of length `",
+      "patched_code": "def extract_string(str, l):\n    result = [e for e in str if len(e) == l]\n    return result",
+      "decision": "patch_and_retry",
+      "duration_seconds": 14.1
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def extract_string(str, l):\n    result = [e for e in str if len(e) == l]\n    return result",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (10/10 statements covered)\n  - `solution.py`: 100% (3/3 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n- The code and tests are fully covered, meaning all lines of code were executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not have been explicitly tested:\n- **Empty list input**: `str = []`\n- **No matches**: `str = [\"a\", \"bb\", \"ccc\"]`, `l = 4` (no strings of length 4)\n- **All matches**: `str = [\"a\", \"a\", \"a\"]`, `l = 1` (all strings match)\n- **Mixed types**: If the input list contains non-string elements (e.g., `str = [\"a\", 123, None]`), the function will fail (but this is not a bug in the function, as the input is expected to be a list of strings).\n- **",
+    "generated_tests": [
+      "assert extract_string(['a', 'bb', 'ccc', 'dddd'], 1) == ['a']",
+      "assert extract_string(['hello', 'world', 'python'], 5) == ['hello', 'world']",
+      "assert extract_string(['test', 'case', 'example'], 4) == ['test', 'case']"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.33s\n\n"
+  }
+}

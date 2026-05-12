@@ -2,16 +2,28 @@ from app.llm_client import call_llm
 
 
 class CoverageAnalysisAgent:
-    def run(self, task_prompt: str, code: str, coverage_output: str) -> str:
+    def run(self, task_prompt: str, code: str, coverage_output: str, model: str) -> str:
         prompt = f"""
-Analyze coverage.
+You are a Coverage Analysis Agent.
 
-Coverage:
+Analyze the test coverage report for the repaired code.
+
+Task:
+{task_prompt}
+
+Code:
+{code}
+
+Coverage Report:
 {coverage_output[:1000]}
 
 Return:
 1. Coverage summary
-2. Missing cases
-3. Test suggestions
+2. Missing or weakly tested cases
+3. Suggested additional tests
 """
-        return call_llm(prompt, model="ministral-3:8b-cloud")
+        return call_llm(
+            prompt,
+            model=model,
+            max_tokens=256,
+        )

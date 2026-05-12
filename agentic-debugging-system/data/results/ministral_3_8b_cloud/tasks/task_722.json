@@ -1,0 +1,39 @@
+{
+  "task_id": 722,
+  "task_prompt": "The input is given as - a dictionary with a student name as a key and a tuple of float (student_height, student_weight) as a value, - minimal height, - minimal weight. Write a function to filter students that have height and weight above the minimum.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "boundary_gte_to_gt",
+  "status": "repaired",
+  "final_code": "def filter_data(students,h,w):\n    result = {k: s for k, s in students.items() if s[0] >h and s[1] >=w}\n    return result    ",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 11.37,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def filter_data(students,h,w):\n    result = {k: s for k, s in students.items() if s[0] >h and s[1] >=w}\n    return result    ",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.37s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.65
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided coverage report shows **100% statement coverage** for both the solution (`solution.py`) and test file (`test_solution.py`). This means:\n- All executable lines in the function (`filter_data`) were tested.\n- All statements in the test file were executed during testing.\n\n### **2. Missing or Weakly Tested Cases**\nDespite full coverage, we should analyze whether the tests adequately verify edge cases and correctness. Common scenarios to check:\n- **Empty input dictionary** \u2192 Does the function handle `students = {}` correctly?\n- **Students with exact minimal height/weight** \u2192 The current condition is `s[0] > h` (strictly greater) and `s[1] >= w` (greater than or equal). Does the test verify this behavior?\n- **Negative or zero values** \u2192 Are `h` or `w` ever negative? (If not allowed, should the function reject them?)\n- **Non-numeric inputs** \u2192 If `students` contains non-float values, does the function handle them gracefully?\n- **Edge cases for floating-point precision** \u2192 E.g., `h = 5.0`, `s[0] = 5.0",
+    "generated_tests": [
+      "assert filter_data({'Alice': (5.5, 55), 'Bob': (6.1, 80), 'Charlie': (5.8, 50), 'Diana': (6.0, 75)}, 5.6, 55) == {'Bob': (6.1, 80), 'Diana': (6.0, 75)}",
+      "assert filter_data({'Eve': (5.9, 60), 'Frank': (5.7, 62), 'Grace': (6.3, 70), 'Henry': (5.8, 58)}, 5.8, 61) == {'Grace': (6.3, 70)}",
+      "assert filter_data({'Ivy': (6.0, 65), 'Jack': (5.9, 64), 'Karen': (6.1, 66), 'Leo': (5.7, 63)}, 5.95, 65) == {'Karen': (6.1, 66)}"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert filter_data({'Ivy': (6.0, 65), 'Jack': (5.9, 64), 'Karen': (6.1, 66), 'Leo': (5.7, 63)}, 5.95, 65) == {'Karen': (6.1, 66)}\nE       AssertionError: assert {'Ivy': (6.0,...n': (6.1, 66)} == {'Karen': (6.1, 66)}\nE         \nE         Omitting 1 identical items, use -vv to show\nE         Left contains 1 more item:\nE         {'Ivy': (6.0, 65)}\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpl3d566ui\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpl3d566ui\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.38s\n\n"
+  }
+}

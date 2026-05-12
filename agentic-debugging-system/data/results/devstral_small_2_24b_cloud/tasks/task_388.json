@@ -1,0 +1,51 @@
+{
+  "task_id": 388,
+  "task_prompt": "Write a python function to find the highest power of 2 that is less than or equal to n.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_eq_to_neq",
+  "status": "repaired",
+  "final_code": "def highest_Power_of_2(n):\n    res = 0\n    for i in range(n, 0, -1):\n        if (i & (i - 1)) == 0:\n            res = i\n            break\n    return res",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 31.81,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def highest_Power_of_2(n): \n    res = 0 \n    for i in range(n, 0, -1): \n        if ((i & (i - 1)) != 0): \n            res = i \n            break \n    return res ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert highest_Power_of_2(10) == 8\nE       assert 10 == 8\nE        +  where 10 = highest_Power_of_2(10)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpsqclgxh7\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert highest_Power_of_2(19) == 16\nE       assert 19 == 16\nE        +  where 19 = highest_Power_of_2(19)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpsqclgxh7\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert highest_Power_of_2(32) == 32\nE       assert 31 == 32\nE        +  where 31 = highest_Power_of_2(32)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpsqclgxh7\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpsqclgxh7\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpsqclgxh7\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpsqclgxh7\\test_solution.py::test_case_2\n3 failed in 0.36s\n\n",
+      "failure": "### Analysis of the Failed Test Cases\n\n1. **What failed**:\n   The function `highest_Power_of_2(n)` is supposed to return the highest power of 2 that is less than or equal to `n`. However, the test cases show that the function is not returning the correct values:\n   - For `n = 10`, it returns `10` instead of `8`.\n   - For `n = 19`, it returns `19` instead of `16`.\n   - For `n = 32`, it returns `31` instead of `32`.\n\n2. **Evidence**:\n   - The test case `test_case_0` expects `highest_Power_of_2(10)` to return `8`, but the function returns `10`.\n   - The test case `test_case_1` expects `highest_Power_of_2(19)` to return `16`, but the function returns `19`.\n   - The test case `test_case_2` expects `highest_Power_of_2(32)` to return `32`, but the function returns `31`.\n\n3. **Failure type**:\n   The function",
+      "hypothesis": "### Analysis of the Failed Test Cases\n\n1. **Failing Behavior**:\n   The function `highest_Power_of_2(n)` is supposed to return the highest power of 2 that is less than or equal to `n`. However, the test cases show that the function is not returning the correct values:\n   - For `n = 10`, it returns `10` instead of `8`.\n   - For `n = 19`, it returns `19` instead of `16`.\n   - For `n = 32`, it returns `31` instead of `32`.\n\n2. **Evidence**:\n   - The test case `test_case_0` expects `highest_Power_of_2(10)` to return `8`, but the function returns `10`.\n   - The test case `test_case_1` expects `highest_Power_of_2(19)` to return `16`, but the function returns `19`.\n   - The test case `test_case_2` expects `highest_Power_of_2(32)` to return `32`, but the function returns `31`.\n\n3. **Root Cause**:\n   The",
+      "patched_code": "def highest_Power_of_2(n):\n    res = 0\n    for i in range(n, 0, -1):\n        if (i & (i - 1)) == 0:\n            res = i\n            break\n    return res",
+      "decision": "patch_and_retry",
+      "duration_seconds": 18.27
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def highest_Power_of_2(n):\n    res = 0\n    for i in range(n, 0, -1):\n        if (i & (i - 1)) == 0:\n            res = i\n            break\n    return res",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.30s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.57
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\nThe coverage report shows that both the implementation (`solution.py`) and the test file (`test_solution.py`) have **100% statement coverage**. This means all lines of code in both files were executed during testing.\n\n- **Total Statements**: 14\n- **Missed Statements**: 0\n- **Coverage**: 100%\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, this does not necessarily mean all edge cases or boundary conditions are thoroughly tested. Potential weakly tested cases include:\n- **n = 0**: The function should return 0 (since no power of 2 is \u2264 0).\n- **n = 1**: The function should return 1 (2^0 = 1).\n- **n = 2**: The function should return 2 (2^1 = 2).\n- **Large values of n**: Ensure the function works correctly for large inputs (e.g., `n = 2^30` or `n = 2^31 - 1`).\n- **Negative values of n**: The function should handle negative inputs gracefully (though",
+    "generated_tests": [
+      "assert highest_Power_of_2(0) == 0",
+      "assert highest_Power_of_2(1) == 1",
+      "assert highest_Power_of_2(100) == 64"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.31s\n\n"
+  }
+}

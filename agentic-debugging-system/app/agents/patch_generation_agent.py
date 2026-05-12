@@ -9,7 +9,9 @@ class PatchGenerationAgent:
         tests: list[str],
         failure_analysis: str,
         hypothesis: str,
+        model: str,
     ) -> str:
+
         prompt = f"""
 You are the Patch Generation Agent.
 
@@ -34,9 +36,19 @@ Failure Analysis:
 Hypothesis:
 {hypothesis[:1000]}
 """
-        response = call_llm(prompt, model="ministral-3:8b-cloud")
+
+        response = call_llm(
+            prompt,
+            model=model,
+            max_tokens=512,
+        )
 
         if response == "LLM_FAILED":
             return "LLM_FAILED"
 
-        return response.replace("```python", "").replace("```", "").strip()
+        return (
+            response
+            .replace("```python", "")
+            .replace("```", "")
+            .strip()
+        )

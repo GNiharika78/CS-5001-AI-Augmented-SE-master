@@ -1,0 +1,51 @@
+{
+  "task_id": 567,
+  "task_prompt": "Write a function to check whether a specified list is sorted or not.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def issort_list(list1):\n    return all(list1[i] >= list1[i-1] for i in range(1, len(list1)))",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 22.27,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def issort_list(list1):\n    result = all(list1[i] <= list1[i-1] for i in range(len(list1)-1))\n    return result",
+      "tests_passed_before_patch": false,
+      "test_output": "F..                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert issort_list([1,2,4,6,8,10,12,14,16,17])==True\nE       assert False == True\nE        +  where False = issort_list([1, 2, 4, 6, 8, 10, ...])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpscbkelj5\\test_solution.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpscbkelj5\\test_solution.py::test_case_0\n1 failed, 2 passed in 0.40s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `issort_list()` incorrectly returns `False` for a properly sorted ascending list `[1,2,4,6,8,10,12,14,16,17]`, when it should return `True`.\n\n2. **Evidence**:\n   - The test case expects `issort_list([1,2,4,6,8,10,12,14,16,17])` to return `True`\n   - The function returns `False` instead\n   - The assertion error shows `False == True` (the function's result vs expected result)\n\n3. **Failure type**:\n   - **Logical error**: The function's logic is backwards for checking ascending order\n   - The condition `list1[i] <= list1[i-1]` checks for descending order (each element should be \u2264 previous), but the test expects ascending order\n\n4. **Suspected location**:\n   The issue is in the generator expression inside the `all()` function:\n   ```python\n   all(list1[i] <= list1[i-1] for i in range(len(list1)-1))\n   ```",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing `issort_list` function:\n\n---\n\n### **1. Failing Behavior**\nThe function incorrectly returns `False` for a properly sorted **ascending** list (e.g., `[1, 2, 4, 6, 8, 10, 12, 14, 16, 17]`), when it should return `True`.\n\n---\n\n### **2. Evidence**\n- **Test Case**: `issort_list([1, 2, 4, 6, 8, 10, 12, 14, 16, 17])` \u2192 Expected: `True`, Actual: `False`.\n- **Assertion Error**: `False == True` (function's result vs expected result).\n- **Generator Logic**: The condition `list1[i] <= list1[i-1]` checks if the list is **non-increasing** (descending or equal), which is the opposite of ascending order.\n\n---\n\n### **3. Root Cause**\nThe function's logic is **backwards**:\n- The condition `list1[i] <= list1[i-1]` enforces **descending order** (each",
+      "patched_code": "def issort_list(list1):\n    return all(list1[i] >= list1[i-1] for i in range(1, len(list1)))",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.69
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def issort_list(list1):\n    return all(list1[i] >= list1[i-1] for i in range(1, len(list1)))",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.65
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All statements in `issort_list()` were executed during testing.\n- All statements in the test file were executed.\n\nHowever, **100% coverage does not necessarily mean 100% correctness**\u2014it only confirms that all lines were run. We must analyze whether edge cases were tested.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nThe function `issort_list()` checks if a list is **non-decreasing** (each element \u2265 the previous one). Potential edge cases that may not have been tested include:\n\n#### **A. Empty List**\n- **Expected Behavior**: Should return `True` (an empty list is trivially sorted).\n- **Risk**: If the loop condition `range(1, len(list1))` is empty, `all()` returns `True` (correct), but if the test did not explicitly check this, it might be overlooked.\n\n#### **B. Single-Element List**\n- **Expected Behavior**: Should return `True` (a single element is sorted).\n- **Risk",
+    "generated_tests": [
+      "assert issort_list([]) == True",
+      "assert issort_list([5]) == True",
+      "assert issort_list([10, 9, 8, 7, 6]) == False"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.36s\n\n"
+  }
+}

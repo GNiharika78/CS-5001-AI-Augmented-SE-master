@@ -1,0 +1,51 @@
+{
+  "task_id": 445,
+  "task_prompt": "Write a function to perform index wise multiplication of tuple elements in the given two tuples.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def index_multiplication(test_tup1, test_tup2):\n    res = tuple(tuple(a * b for a, b in zip(tup1, tup2)) for tup1, tup2 in zip(test_tup1, test_tup2))\n    return res",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 28.45,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def index_multiplication(test_tup1, test_tup2):\n  res = tuple(tuple(a + b for a, b in zip(tup1, tup2))\n   for tup1, tup2 in zip(test_tup1, test_tup2))\n  return (res) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert index_multiplication(((1, 3), (4, 5), (2, 9), (1, 10)),((6, 7), (3, 9), (1, 1), (7, 3)) ) == ((6, 21), (12, 45), (2, 9), (7, 30))\nE       assert ((7, 10), (7,... 10), (8, 13)) == ((6, 21), (12..., 9), (7, 30))\nE         \nE         At index 0 diff: (7, 10) != (6, 21)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdw9p_2oo\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert index_multiplication(((2, 4), (5, 6), (3, 10), (2, 11)),((7, 8), (4, 10), (2, 2), (8, 4)) ) == ((14, 32), (20, 60), (6, 20), (16, 44))\nE       assert ((9, 12), (9,...12), (10, 15)) == ((14, 32), (2...20), (16, 44))\nE         \nE         At index 0 diff: (9, 12) != (14, 32)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdw9p_2oo\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert index_multiplication(((3, 5), (6, 7), (4, 11), (3, 12)),((8, 9), (5, 11), (3, 3), (9, 5)) ) == ((24, 45), (30, 77), (12, 33), (27, 60))\nE       assert ((11, 14), (1...14), (12, 17)) == ((24, 45), (3...33), (27, 60))\nE         \nE         At index 0 diff: (11, 14) != (24, 45)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdw9p_2oo\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdw9p_2oo\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdw9p_2oo\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdw9p_2oo\\test_solution.py::test_case_2\n3 failed in 0.40s\n\n",
+      "failure": "Let me analyze the failure and provide a corrected solution.\n\n1. **What failed**:\nThe function is supposed to perform element-wise multiplication between corresponding elements of two nested tuples, but it's currently performing addition instead (due to `a + b` in the code).\n\n2. **Evidence**:\n- The test expects multiplication results (e.g., 1\u00d76=6, 3\u00d77=21 for first tuple pair)\n- The function is returning addition results (e.g., 1+6=7, 3+7=10)\n- The error shows the first tuple pair should be (6,21) but got (7,10)\n\n3. **Failure type**:\nLogical error - incorrect operation being performed (addition instead of multiplication)\n\n4. **Suspected location**:\nThe line `tuple(a + b for a, b in zip(tup1, tup2))` where `+` should be `*`\n\nHere's the corrected function:\n\n```python\ndef index_multiplication(test_tup1, test_tup2):\n    res = tuple(tuple(a * b for a, b in zip(tup1, tup2))\n                for tup1, tup2 in zip(test_tup",
+      "hypothesis": "Here's the structured analysis and corrected solution:\n\n---\n\n### **1. Failing Behavior**\nThe function incorrectly performs **element-wise addition** (`a + b`) instead of **element-wise multiplication** (`a * b`) for nested tuples. For example:\n- Input: `((1, 3), (2, 4))` and `((6, 7), (5, 8))`\n- Expected Output: `((6, 21), (10, 32))` (multiplication)\n- Actual Output: `((7, 10), (7, 12))` (addition)\n\n---\n\n### **2. Evidence**\n- The test case expects multiplication results (e.g., `1\u00d76=6`, `3\u00d77=21`).\n- The function returns addition results (e.g., `1+6=7`, `3+7=10`).\n- The error message confirms the first tuple pair should be `(6, 21)` but got `(7, 10)`.\n\n---\n\n### **3. Root Cause**\nThe line `tuple(a + b for a, b in zip(tup1, tup2))` uses the `+` operator instead",
+      "patched_code": "def index_multiplication(test_tup1, test_tup2):\n    res = tuple(tuple(a * b for a, b in zip(tup1, tup2)) for tup1, tup2 in zip(test_tup1, test_tup2))\n    return res",
+      "decision": "patch_and_retry",
+      "duration_seconds": 16.15
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def index_multiplication(test_tup1, test_tup2):\n    res = tuple(tuple(a * b for a, b in zip(tup1, tup2)) for tup1, tup2 in zip(test_tup1, test_tup2))\n    return res",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.65
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and test file (`test_solution.py`). This means:\n- All executable statements in `index_multiplication()` were executed during testing.\n- All test cases in `test_solution.py` ran successfully without missing any branches or paths.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nDespite full coverage, the following edge cases may not have been explicitly tested (even if they were covered indirectly):\n\n#### **Potential Weaknesses in Current Tests:**\n1. **Tuples of Unequal Length**\n   - The function uses `zip()`, which truncates to the shorter tuple. If the test cases only used tuples of equal length, this behavior might not have been explicitly verified.\n   - **Risk:** If one tuple is longer, the extra elements in the longer tuple are ignored, which could be unintuitive for users.\n\n2. **Empty Tuples**\n   - If both input tuples are empty, the function returns an empty tuple. This should be tested explicitly.\n\n3. **Non-Numeric Elements**\n   - The function assumes elements are multiplicable (e.g., `int`, `float`). If strings",
+    "generated_tests": [
+      "assert index_multiplication(((1,), (2, 3), (4, 5, 6)), ((7,), (8, 9), (10, 11, 12))) == ((7,), (16, 27), (40, 55, 72))",
+      "assert index_multiplication(((0, 1, 2), (3, 4, 5), (6, 7, 8)), ((1, 0, 1), (2, 3, 4), (5, 6, 7))) == ((0, 0, 2), (6, 12, 20), (30, 42, 56))",
+      "assert index_multiplication(((10,), (20, 30), (40, 50, 60)), ((1, 2), (3, 4), (5, 6, 7))) == ((10,), (60, 120), (200, 300, 420))"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.37s\n\n"
+  }
+}

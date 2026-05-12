@@ -1,0 +1,51 @@
+{
+  "task_id": 293,
+  "task_prompt": "Write a function to find the third side of a right angled triangle.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import math\ndef otherside_rightangle(w, h):\n    s = math.sqrt((w * w) + (h * h))\n    return s",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 28.95,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef otherside_rightangle(w,h):\n  s=math.sqrt((w+w)+(h*h))\n  return s",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert otherside_rightangle(7,8)==10.63014581273465\nE       assert 8.831760866327848 == 10.63014581273465\nE        +  where 8.831760866327848 = otherside_rightangle(7, 8)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9juir0uf\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert otherside_rightangle(3,4)==5\nE       assert 4.69041575982343 == 5\nE        +  where 4.69041575982343 = otherside_rightangle(3, 4)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9juir0uf\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert otherside_rightangle(7,15)==16.55294535724685\nE       assert 15.459624833740307 == 16.55294535724685\nE        +  where 15.459624833740307 = otherside_rightangle(7, 15)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9juir0uf\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9juir0uf\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9juir0uf\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9juir0uf\\test_solution.py::test_case_2\n3 failed in 0.34s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   The function `otherside_rightangle(w, h)` is supposed to calculate the hypotenuse of a right-angled triangle given the other two sides, but it is producing incorrect results for all test cases.\n\n2. **Evidence**:\n   - Test case 0: Expected `10.63014581273465` (for sides 7 and 8), but got `8.831760866327848`.\n   - Test case 1: Expected `5` (for sides 3 and 4), but got `4.69041575982343`.\n   - Test case 2: Expected `16.0` (for sides 7 and 15), but the actual output is not shown (likely incorrect).\n\n3. **Failure type**:\n   - **Logical Error**: The formula used in the function is incorrect. The function calculates `sqrt((w + w) + (h * h))`, which simplifies to `sqrt(2w + h\u00b2)`, but the correct formula for the hypotenuse is `sqrt",
+      "hypothesis": "### Failure Analysis Report\n\n1. **Failing behavior**:\n   The function `otherside_rightangle(w, h)` incorrectly calculates the hypotenuse of a right-angled triangle. It uses the formula `sqrt((w + w) + (h * h))`, which is mathematically incorrect for finding the hypotenuse.\n\n2. **Evidence**:\n   - For sides `7` and `8`, the expected hypotenuse is `10.63014581273465` (since `sqrt(7\u00b2 + 8\u00b2) = sqrt(49 + 64) = sqrt(113) \u2248 10.63`), but the function returns `8.831760866327848` (since `sqrt(2*7 + 8\u00b2) = sqrt(14 + 64) = sqrt(78) \u2248 8.83`).\n   - For sides `3` and `4`, the expected hypotenuse is `5` (since `sqrt(3\u00b2 + 4\u00b2) = 5`), but the function returns `4.69041575",
+      "patched_code": "import math\ndef otherside_rightangle(w, h):\n    s = math.sqrt((w * w) + (h * h))\n    return s",
+      "decision": "patch_and_retry",
+      "duration_seconds": 15.75
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef otherside_rightangle(w, h):\n    s = math.sqrt((w * w) + (h * h))\n    return s",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100%\n  - `solution.py`: 4 statements, 0 missed (100% coverage)\n  - `test_solution.py`: 7 statements, 0 missed (100% coverage)\n- The code and tests are fully covered, meaning all lines of code were executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not have been explicitly tested:\n- **Zero or negative inputs**: The function does not validate inputs, so passing `w = 0` or `h = -1` would still compute a result (though mathematically invalid for a right triangle).\n- **Non-numeric inputs**: Passing strings or other non-numeric types would raise a `TypeError`.\n- **Floating-point precision**: Large values of `w` or `h` might lead to floating-point inaccuracies.\n- **Special cases**: Very small or very large values (e.g., `w = 1e-10`, `h = 1e10`).\n\n#### 3. Suggested Additional Tests\nTo improve robustness,",
+    "generated_tests": [
+      "assert otherside_rightangle(5, 12) == 13",
+      "assert otherside_rightangle(0, 5) == 5",
+      "assert otherside_rightangle(1, 1) == math.sqrt(2)"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.32s\n\n"
+  }
+}

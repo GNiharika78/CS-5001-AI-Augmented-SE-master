@@ -1,0 +1,39 @@
+{
+  "task_id": 725,
+  "task_prompt": "Write a function to extract values between quotation marks \" \" of the given string.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import re\ndef extract_quotation(text1):\n  return (re.findall(r'\"(.+?)\"', text1))",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 9.91,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef extract_quotation(text1):\n  return (re.findall(r'\"(.+?)\"', text1))",
+      "tests_passed_before_patch": true,
+      "test_output": "....                                                                     [100%]\n4 passed in 0.37s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.66
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       9      0   100%\n------------------------------------------------\nTOTAL                 12      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and test file (`test_solution.py`). This means:\n- All **3 statements** in `extract_quotation()` were executed during testing.\n- All **9 statements** in the test file were executed.\n\nSince coverage is perfect, the tests likely cover:\n- Basic functionality (extracting quoted strings).\n- Edge cases (empty input, no quotes, multiple quotes, nested quotes, etc.).\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nDespite full coverage, some **potential edge cases** may not be explicitly tested. Common scenarios to verify include:\n\n| **Case**                     | **Tested?** | **Risk if Untested** |\n|------------------------------|-------------|----------------------|\n| **Empty string (`\"\"`)**      | ?           | May return `[]` (correct) or crash. |\n| **No quotes in input**       | ?           | Should return `[]` (correct). |\n| **Single quote (`'`)**       | ?           | Should ignore (regex only matches `\"`). |\n| **Escaped quotes (`\\\"`)**    | ?           |",
+    "generated_tests": [
+      "assert extract_quotation('\"Empty\" \"\" \"Single\" \"Double\"\" \"Nested \\\"quotes\\\"\"') == ['Empty', '', 'Single', 'Double', 'Nested \"quotes\"']",
+      "assert extract_quotation('No quotes here') == []",
+      "assert extract_quotation('\"Mixed\" content \"with\" \\'single\\' quotes \"and\" \"escaped\" \\\\\"quotes\\\\\"') == ['Mixed', 'content', 'with', 'escaped \"quotes\"']"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....F.F                                                                  [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert extract_quotation('\"Empty\" \"\" \"Single\" \"Double\"\" \"Nested \\\"quotes\\\"\"') == ['Empty', '', 'Single', 'Double', 'Nested \"quotes\"']\nE       assert ['Empty', '\" ...\" ', 'quotes'] == ['Empty', '',...ted \"quotes\"']\nE         \nE         At index 1 diff: '\" ' != ''\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmps40eed0u\\test_solution.py:16: AssertionError\n_________________________________ test_case_6 _________________________________\n\n    def test_case_6():\n>       assert extract_quotation('\"Mixed\" content \"with\" \\'single\\' quotes \"and\" \"escaped\" \\\\\"quotes\\\\\"') == ['Mixed', 'content', 'with', 'escaped \"quotes\"']\nE       assert ['Mixed', 'wi...', 'quotes\\\\'] == ['Mixed', 'co...ped \"quotes\"']\nE         \nE         At index 1 diff: 'with' != 'content'\nE         Left contains one more item: 'quotes\\\\'\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmps40eed0u\\test_solution.py:22: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmps40eed0u\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmps40eed0u\\test_solution.py::test_case_6\n2 failed, 5 passed in 0.39s\n\n"
+  }
+}

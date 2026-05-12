@@ -1,0 +1,51 @@
+{
+  "task_id": 75,
+  "task_prompt": "Write a function to find tuples which have all elements divisible by k from the given list of tuples.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_eq_to_neq",
+  "status": "repaired",
+  "final_code": "def find_tuples(test_list, K):\n    res = [sub for sub in test_list if all(ele % K == 0 for ele in sub)]\n    return res",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 101.35,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def find_tuples(test_list, K):\n  res = [sub for sub in test_list if all(ele % K != 0 for ele in sub)]\n  return res",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert find_tuples([(6, 24, 12), (7, 9, 6), (12, 18, 21)], 6) == [(6, 24, 12)]\nE       assert [] == [(6, 24, 12)]\nE         \nE         Right contains one more item: (6, 24, 12)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3qqfqnnh\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert find_tuples([(5, 25, 30), (4, 2, 3), (7, 8, 9)], 5) == [(5, 25, 30)]\nE       assert [(4, 2, 3), (7, 8, 9)] == [(5, 25, 30)]\nE         \nE         At index 0 diff: (4, 2, 3) != (5, 25, 30)\nE         Left contains one more item: (7, 8, 9)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3qqfqnnh\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert find_tuples([(7, 9, 16), (8, 16, 4), (19, 17, 18)], 4) == [(8, 16, 4)]\nE       assert [(19, 17, 18)] == [(8, 16, 4)]\nE         \nE         At index 0 diff: (19, 17, 18) != (8, 16, 4)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3qqfqnnh\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3qqfqnnh\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3qqfqnnh\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3qqfqnnh\\test_solution.py::test_case_2\n3 failed in 0.37s\n\n",
+      "failure": "Let's analyze the failure:\n\n1. **What failed**:\n   The function `find_tuples()` is not correctly identifying tuples where all elements are divisible by K. It's returning empty lists or incorrect tuples instead of the expected output.\n\n2. **Evidence**:\n   - Test case 0: Expected [(6, 24, 12)] but got []\n   - Test case 1: Expected [(5, 25, 30)] but got [(4, 2, 3), (7, 8, 9)]\n\n3. **Failure type**:\n   This is a logic error in the function implementation. The condition `all(ele % K != 0 for ele in sub)` is checking for elements that are NOT divisible by K, when it should be checking for elements that ARE divisible by K.\n\n4. **Suspected location**:\n   The error is in the list comprehension condition in the function:\n   ```python\n   res = [sub for sub in test_list if all(ele % K != 0 for ele in sub)]\n   ```\n   The condition should be `all(ele % K == 0 for ele in sub)` instead of `!= 0`.\n\nHere's the corrected function:\n```python",
+      "hypothesis": "Here's the structured analysis of the failure:\n\n1. **Failing behavior**:\n   The function incorrectly filters tuples by returning those where NO elements are divisible by K, rather than those where ALL elements are divisible by K.\n\n2. **Evidence**:\n   - For input `[(6, 24, 12)]` with K=6, it returns `[]` (should return the input tuple)\n   - For input `[(4, 2, 3), (5, 25, 30)]` with K=5, it returns `[(4, 2, 3), (7, 8, 9)]` (should return `[(5, 25, 30)]`)\n\n3. **Root cause**:\n   The condition `all(ele % K != 0 for ele in sub)` is inverted - it checks for elements NOT divisible by K when it should check for elements divisible by K.\n\n4. **Why this explains failure**:\n   The logic error causes the function to:\n   - Reject tuples that should be included (like (6,24,12) when K=6)\n   - Include tuples that should be rejected (like (4,2,3",
+      "patched_code": "def find_tuples(test_list, K):\n    res = [sub for sub in test_list if all(ele % K == 0 for ele in sub)]\n    return res",
+      "decision": "patch_and_retry",
+      "duration_seconds": 19.05
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def find_tuples(test_list, K):\n    res = [sub for sub in test_list if all(ele % K == 0 for ele in sub)]\n    return res",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (10/10 statements covered)\n  - `solution.py`: 100% (3/3 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n- The function `find_tuples` and all test cases are fully covered.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested (or may be weakly tested):\n- **Empty list**: `test_list = []` (should return `[]`).\n- **Empty tuples**: `test_list = [(), (1, 2, 3)]` (empty tuples should be included since `all()` on an empty iterable returns `True`).\n- **Tuples with zero**: `test_list = [(0, 5), (0, 0)]` (zero is divisible by any `K`).\n- **Negative numbers**: `test_list = [(-4, -2), (3, -6)]` (divisibility works for negatives).\n- **Large `K`",
+    "generated_tests": [
+      "assert find_tuples([(3, 6, 9), (2, 4, 8), (5, 10, 15)], 3) == [(3, 6, 9), (5, 10, 15)]",
+      "assert find_tuples([(10, 20, 30), (11, 22, 33), (12, 24, 36)], 11) == [(11, 22, 33)]",
+      "assert find_tuples([(1, 2, 3), (4, 5, 6), (7, 8, 9)], 10) == []"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...F..                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert find_tuples([(3, 6, 9), (2, 4, 8), (5, 10, 15)], 3) == [(3, 6, 9), (5, 10, 15)]\nE       assert [(3, 6, 9)] == [(3, 6, 9), (5, 10, 15)]\nE         \nE         Right contains one more item: (5, 10, 15)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpwk2j9vzv\\test_solution.py:13: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpwk2j9vzv\\test_solution.py::test_case_3\n1 failed, 5 passed in 0.38s\n\n"
+  }
+}

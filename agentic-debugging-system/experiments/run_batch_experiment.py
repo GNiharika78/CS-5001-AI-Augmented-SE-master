@@ -1,5 +1,6 @@
 import json
 import time
+import argparse
 from pathlib import Path
 
 from app.tools.mbpp_loader import load_all_mbpp_tasks
@@ -17,13 +18,53 @@ def save_json(data, path: str):
     )
 
 
+def safe_model_folder_name(model_name: str) -> str:
+    return (
+        model_name
+        .replace(":", "_")
+        .replace("/", "_")
+        .replace("-", "_")
+        .replace(".", "_")
+    )
+
+
 def main():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--model",
+        required=True,
+        help="Ollama model name, e.g., mistral:latest or ministral-3:8b-cloud",
+    )
+
+    parser.add_argument(
+        "--target",
+        type=int,
+        default=300,
+        help="Number of injectable tasks to evaluate",
+    )
+
+    parser.add_argument(
+        "--max-attempts",
+        type=int,
+        default=2,
+        help="Maximum repair attempts per task",
+    )
+
+    args = parser.parse_args()
+
     tasks = load_all_mbpp_tasks()
 
-    target_evaluated_tasks = 300
+    target_evaluated_tasks = args.target
     evaluated_count = 0
 
-    orchestrator = DebuggingOrchestrator(max_attempts=2)
+    model_folder = safe_model_folder_name(args.model)
+    output_dir = Path("data/results") / model_folder
+
+    orchestrator = DebuggingOrchestrator(
+        max_attempts=args.max_attempts,
+        model=args.model,
+    )
 
     results = []
 
@@ -40,11 +81,12 @@ def main():
             seed=task["task_id"],
         )
 
-        if buggy_code is None or bug_type is None:
+        if buggy_code is None or bug_type is None or bug_type == "no_injectable_bug":
             print("Skipped: no injectable bug")
             continue
 
         print(f"Running task {evaluated_count + 1}/{target_evaluated_tasks}")
+        print("Model:", args.model)
         print("Bug Type:", bug_type)
 
         result = orchestrator.run(
@@ -53,18 +95,20 @@ def main():
             bug_type=bug_type,
         )
 
+        result["model"] = args.model
+
         results.append(result)
         evaluated_count += 1
 
-        task_result_path = f"data/results/tasks/task_{task['task_id']}.json"
-        save_json(result, task_result_path)
+        task_result_path = output_dir / "tasks" / f"task_{task['task_id']}.json"
+        save_json(result, str(task_result_path))
 
         print("Status:", result["status"])
         print("Attempts:", result["attempts"])
         print("LLM Calls:", result.get("llm_calls"))
-        print("Duration Seconds:", result.get("total_duration_seconds"))
+        print("Duration Seconds:", result.get("duration"))
 
-        time.sleep(1)
+        time.sleep(0.2)
 
     total = len(results)
     repaired = sum(1 for r in results if r["status"] == "repaired")
@@ -78,7 +122,7 @@ def main():
     )
 
     avg_duration = (
-        sum(r.get("total_duration_seconds", r.get("duration", 0)) for r in results) / total
+        sum(r.get("duration", 0) for r in results) / total
         if total > 0
         else 0
     )
@@ -112,6 +156,7 @@ def main():
             bug_type_summary[bug_type]["failed"] += 1
 
     summary = {
+        "model": args.model,
         "target_evaluated_tasks": target_evaluated_tasks,
         "total_evaluated_tasks": total,
         "repaired": repaired,
@@ -124,10 +169,12 @@ def main():
         "bug_type_summary": bug_type_summary,
     }
 
-    save_json(results, "data/results/batch_results.json")
-    save_json(summary, "data/results/summary.json")
+    save_json(results, str(output_dir / "batch_results.json"))
+    save_json(summary, str(output_dir / "summary.json"))
 
     print("\n===== SUMMARY =====")
+    print("Model:", args.model)
+    print("Output Folder:", output_dir)
     print("Target:", target_evaluated_tasks)
     print("Total:", total)
     print("Repaired:", repaired)
@@ -137,7 +184,7 @@ def main():
     print("Average Attempts:", summary["average_attempts"])
     print("Average Duration Seconds:", summary["average_duration_seconds"])
     print("Average LLM Calls:", summary["average_llm_calls"])
-    print("Saved summary to data/results/summary.json")
+    print("Saved summary to", output_dir / "summary.json")
 
 
 if __name__ == "__main__":

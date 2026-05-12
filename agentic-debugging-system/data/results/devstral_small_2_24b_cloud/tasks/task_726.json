@@ -1,0 +1,51 @@
+{
+  "task_id": 726,
+  "task_prompt": "Write a function that takes as input a tuple of numbers (t_1,...,t_{N+1}) and returns a tuple of length N where the i-th element of the tuple is equal to t_i * t_{i+1}.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def multiply_elements(test_tup):\n  res = tuple(i * j for i, j in zip(test_tup, test_tup[1:]))\n  return (res)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 32.63,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def multiply_elements(test_tup):\n  res = tuple(i + j for i, j in zip(test_tup, test_tup[1:]))\n  return (res) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF.                                                                     [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert multiply_elements((1, 5, 7, 8, 10)) == (5, 35, 56, 80)\nE       assert (6, 12, 15, 18) == (5, 35, 56, 80)\nE         \nE         At index 0 diff: 6 != 5\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkz6ymai1\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert multiply_elements((2, 4, 5, 6, 7)) == (8, 20, 30, 42)\nE       assert (6, 9, 11, 13) == (8, 20, 30, 42)\nE         \nE         At index 0 diff: 6 != 8\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkz6ymai1\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert multiply_elements((12, 13, 14, 9, 15)) == (156, 182, 126, 135)\nE       assert (25, 27, 23, 24) == (156, 182, 126, 135)\nE         \nE         At index 0 diff: 25 != 156\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkz6ymai1\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkz6ymai1\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkz6ymai1\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpkz6ymai1\\test_solution.py::test_case_2\n3 failed, 1 passed in 0.33s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   The function `multiply_elements` is supposed to return a tuple where each element is the product of consecutive elements in the input tuple. However, the current implementation incorrectly adds the elements instead of multiplying them.\n\n2. **Evidence**:\n   - **Test Case 0**:\n     - Input: `(1, 5, 7, 8, 10)`\n     - Expected Output: `(5, 35, 56, 80)` (products: 1*5, 5*7, 7*8, 8*10)\n     - Actual Output: `(6, 12, 15, 18)` (sums: 1+5, 5+7, 7+8, 8+10)\n   - **Test Case 1**:\n     - Input: `(2, 4, 5, 6, 7)`\n     - Expected Output: `(8, 20, 30, 42)` (products: 2*4, 4*5, 5*6, 6*7)\n     - Actual Output: `(6, 9",
+      "hypothesis": "### Failure Analysis Report\n\n1. **Failing behavior**:\n   The function `multiply_elements` is supposed to return a tuple where each element is the product of consecutive elements in the input tuple. However, the current implementation incorrectly adds the elements instead of multiplying them.\n\n2. **Evidence**:\n   - **Test Case 0**:\n     - Input: `(1, 5, 7, 8, 10)`\n     - Expected Output: `(5, 35, 56, 80)` (products: 1*5, 5*7, 7*8, 8*10)\n     - Actual Output: `(6, 12, 15, 18)` (sums: 1+5, 5+7, 7+8, 8+10)\n   - **Test Case 1**:\n     - Input: `(2, 4, 5, 6, 7)`\n     - Expected Output: `(8, 20, 30, 42)` (products: 2*4, 4*5, 5*6, 6*7)\n     - Actual Output: `(6,",
+      "patched_code": "def multiply_elements(test_tup):\n  res = tuple(i * j for i, j in zip(test_tup, test_tup[1:]))\n  return (res)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 18.96
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def multiply_elements(test_tup):\n  res = tuple(i * j for i, j in zip(test_tup, test_tup[1:]))\n  return (res)",
+      "tests_passed_before_patch": true,
+      "test_output": "....                                                                     [100%]\n4 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       9      0   100%\n------------------------------------------------\nTOTAL                 12      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (12/12 statements covered)\n  - `solution.py`: 100% (3/3 statements covered)\n  - `test_solution.py`: 100% (9/9 statements covered)\n- The code is fully covered by the existing test suite, meaning all lines of code were executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, this does not necessarily mean all edge cases or unusual inputs are tested. Potential gaps include:\n- **Empty tuple**: The function may not handle an empty tuple gracefully (e.g., `multiply_elements(())`).\n- **Single-element tuple**: The function may not handle a tuple with only one element (e.g., `multiply_elements((5,))`).\n- **Large tuples**: Performance or correctness with very large tuples (e.g., `multiply_elements(tuple(range(10000)))`).\n- **Non-numeric types**: The function may not handle non-numeric types (e.g., `multiply_elements(('a', 'b'))`), though",
+    "generated_tests": [
+      "assert multiply_elements((3, 6, 9, 12)) == (18, 54, 108)",
+      "assert multiply_elements((0, 1, 2, 3, 4)) == (0, 2, 6, 12)",
+      "assert multiply_elements((-1, -2, -3, -4)) == (2, 6, 12)"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": ".......                                                                  [100%]\n7 passed in 0.31s\n\n"
+  }
+}

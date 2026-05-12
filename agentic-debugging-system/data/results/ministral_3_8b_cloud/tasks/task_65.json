@@ -1,0 +1,51 @@
+{
+  "task_id": 65,
+  "task_prompt": "Write a function to flatten a list and sum all of its elements.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def recursive_list_sum(data_list):\n    total = 0\n    for element in data_list:\n        if isinstance(element, list):\n            total += recursive_list_sum(element)\n        else:\n            total += element\n    return total",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 21.94,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def recursive_list_sum(data_list):\n\ttotal = 0\n\tfor element in data_list:\n\t\tif type(element) == type([]):\n\t\t\ttotal = total - recursive_list_sum(element)\n\t\telse:\n\t\t\ttotal = total + element\n\treturn total",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert recursive_list_sum(([1, 2, [3,4],[5,6]]))==21\nE       assert -15 == 21\nE        +  where -15 = recursive_list_sum([1, 2, [3, 4], [5, 6]])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdonwu6m7\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert recursive_list_sum(([7, 10, [15,14],[19,41]]))==106\nE       assert -72 == 106\nE        +  where -72 = recursive_list_sum([7, 10, [15, 14], [19, 41]])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdonwu6m7\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert recursive_list_sum(([10, 20, [30,40],[50,60]]))==210\nE       assert -150 == 210\nE        +  where -150 = recursive_list_sum([10, 20, [30, 40], [50, 60]])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdonwu6m7\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdonwu6m7\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdonwu6m7\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdonwu6m7\\test_solution.py::test_case_2\n3 failed in 0.39s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `recursive_list_sum` is not correctly summing the elements of a nested list structure. Instead of adding elements, it's subtracting the recursive sums (due to the `-` operator), resulting in negative values.\n\n2. **Evidence**:\n   - For input `[1, 2, [3,4],[5,6]]`, the expected sum is `21` (1+2+3+4+5+6), but the function returns `-15`.\n   - For input `[7, 10, [15,14],[19,41]]`, the expected sum is `106` (7+10+15+14+19+41), but the function returns `-72`.\n   - The function is using `total = total - recursive_list_sum(element)` for nested lists, which is incorrect.\n\n3. **Failure type**:\n   - **Logical Error**: The function has a fundamental flaw in its logic where it subtracts recursive sums instead of adding them.\n   - **Incorrect Operator**: The `-` operator is used instead of `+` when handling nested lists.\n\n4. **Sus",
+      "hypothesis": "Here\u2019s the structured analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `recursive_list_sum` incorrectly **subtracts** the recursive sums of nested lists instead of adding them, leading to negative totals. For example:\n- Input: `[1, 2, [3,4],[5,6]]` \u2192 Expected: `21` (1+2+3+4+5+6), but returns `-15`.\n- Input: `[7, 10, [15,14],[19,41]]` \u2192 Expected: `106`, but returns `-72`.\n\n---\n\n### **2. Evidence**\n- The function uses `total = total - recursive_list_sum(element)` for nested lists, which flips the sign of the sum.\n- Non-nested elements are correctly added (`total = total + element`), but the recursive logic breaks the overall sum.\n\n---\n\n### **3. Root Cause**\n- **Logical Error**: The function\u2019s recursive case **subtracts** the sum of nested lists (`- recursive_list_sum(element)`) instead of adding them (`+ recursive_list_sum(element)`).\n- **Incorrect Operator**: The `-` operator is mis",
+      "patched_code": "def recursive_list_sum(data_list):\n    total = 0\n    for element in data_list:\n        if isinstance(element, list):\n            total += recursive_list_sum(element)\n        else:\n            total += element\n    return total",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.49
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def recursive_list_sum(data_list):\n    total = 0\n    for element in data_list:\n        if isinstance(element, list):\n            total += recursive_list_sum(element)\n        else:\n            total += element\n    return total",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.67
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All **7 statements** in `recursive_list_sum()` were executed during testing.\n- All **7 statements** in the test file were executed.\n\nSince coverage is perfect, the tests likely cover:\n- Basic recursion for nested lists.\n- Non-list elements (integers, floats, etc.).\n- Edge cases like empty lists.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nDespite 100% coverage, some **logical edge cases** might not be explicitly tested. Common scenarios to verify:\n- **Empty nested lists** (e.g., `[1, [], [2, []]]`).\n- **Non-numeric elements** (e.g., strings, `None`, or mixed types like `[1, \"a\", [3]]`).\n- **Very deep recursion** (risk of stack overflow, though Python\u2019s recursion limit is usually high enough for small lists).\n- **Floating-point precision** (e.g., `[1.1, [2.2]]`).\n- **Large lists** (performance",
+    "generated_tests": [
+      "assert recursive_list_sum([1, [2, [3, 4]], 5]) == 15",
+      "assert recursive_list_sum([[[[9]]], 8, 7]) == 24",
+      "assert recursive_list_sum([0, [1, [2, [3, [4, 5]]]]]) == 15"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.36s\n\n"
+  }
+}

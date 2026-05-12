@@ -1,0 +1,51 @@
+{
+  "task_id": 612,
+  "task_prompt": "Write a python function which takes a list of lists, where each sublist has two elements, and returns a list of two lists where the first list has the first element of each sublist and the second one has the second.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def merge(lst):\n    return [list(ele) for ele in zip(*lst)]",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 54.1,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def merge(lst):  \n    return [list(ele) for ele in list(zip(+lst))] ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert merge([['x', 'y'], ['a', 'b'], ['m', 'n']]) == [['x', 'a', 'm'], ['y', 'b', 'n']]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpos5chcr8\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nlst = [['x', 'y'], ['a', 'b'], ['m', 'n']]\n\n    def merge(lst):\n>       return [list(ele) for ele in list(zip(+lst))]\n                                             ^^^^\nE       TypeError: bad operand type for unary +: 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpos5chcr8\\solution.py:2: TypeError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert merge([[1, 2], [3, 4], [5, 6], [7, 8]]) == [[1, 3, 5, 7], [2, 4, 6, 8]]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpos5chcr8\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nlst = [[1, 2], [3, 4], [5, 6], [7, 8]]\n\n    def merge(lst):\n>       return [list(ele) for ele in list(zip(+lst))]\n                                             ^^^^\nE       TypeError: bad operand type for unary +: 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpos5chcr8\\solution.py:2: TypeError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert merge([['x', 'y','z' ], ['a', 'b','c'], ['m', 'n','o']]) == [['x', 'a', 'm'], ['y', 'b', 'n'],['z', 'c','o']]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpos5chcr8\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nlst = [['x', 'y', 'z'], ['a', 'b', 'c'], ['m', 'n', 'o']]\n\n    def merge(lst):\n>       return [list(ele) for ele in list(zip(+lst))]\n                                             ^^^^\nE       TypeError: bad operand type for unary +: 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpos5chcr8\\solution.py:2: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpos5chcr8\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpos5chcr8\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpos5chcr8\\test_solution.py::test_case_2\n3 failed in 0.34s\n\n",
+      "failure": "### Analysis of the Failed Test Case\n\n1. **What failed**:\n   The function `merge` is supposed to take a list of lists (where each sublist has two elements) and return a list of two lists. The first list should contain the first elements of each sublist, and the second list should contain the second elements of each sublist. However, the function is not working as expected and raises a `TypeError`.\n\n2. **Evidence**:\n   - The test case `merge([['x', 'y'], ['a', 'b'], ['m', 'n']])` expects the output `[['x', 'a', 'm'], ['y', 'b', 'n']]`.\n   - The function raises a `TypeError: bad operand type for unary +: 'list'` when trying to execute `zip(+lst)`.\n\n3. **Failure type**:\n   - The failure is a `TypeError` due to the incorrect use of the unary `+` operator on a list (`+lst`). The `+` operator is not valid for lists in this context.\n\n4. **Suspected location**:\n   - The error occurs in the line `return [list(ele) for ele in list(zip(+lst))]`",
+      "hypothesis": "### Analysis of the Failed Test Case\n\n1. **Failing behavior**:\n   The function `merge` raises a `TypeError` when executed with the input `[['x', 'y'], ['a', 'b'], ['m', 'n']]`. The expected output is `[['x', 'a', 'm'], ['y', 'b', 'n']]`, but the function fails before producing any output.\n\n2. **Evidence**:\n   - The error message is: `TypeError: bad operand type for unary +: 'list'`.\n   - The error occurs in the line `return [list(ele) for ele in list(zip(+lst))]`.\n   - The `+` operator is incorrectly applied to the list `lst`, which is not a valid operation.\n\n3. **Root cause**:\n   The `+` operator is not valid for lists in this context. The intention was likely to unpack the list `lst` into `zip`, but the correct syntax for unpacking is `*lst`, not `+lst`. The `+` operator is used for addition or concatenation, not unpacking.\n\n4. **Why this explains the failure**:\n   - The `zip` function expects iterables as arguments. When `+",
+      "patched_code": "def merge(lst):\n    return [list(ele) for ele in zip(*lst)]",
+      "decision": "patch_and_retry",
+      "duration_seconds": 37.9
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def merge(lst):\n    return [list(ele) for ele in zip(*lst)]",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (9/9 statements covered)\n  - `solution.py`: 2 statements, 0 missed (100% coverage)\n  - `test_solution.py`: 7 statements, 0 missed (100% coverage)\n- The function `merge` and all test cases are fully covered.\n\n#### 2. Missing or Weakly Tested Cases\n- **No missing coverage**: All statements in the function and tests are executed.\n- **Potential edge cases not explicitly tested** (though coverage is 100%, these could be added for robustness):\n  - Empty input list (`[]`).\n  - Sublists with more than 2 elements (though the problem specifies 2 elements, this could be a validation test).\n  - Non-list inputs (e.g., tuples, mixed types).\n  - Sublists with fewer than 2 elements (e.g., `[1]`).\n\n#### 3. Suggested Additional Tests\nTo ensure robustness beyond the current 100% coverage, consider adding:\n1. **Empty list**:\n   ```python\n   assert merge([]) == [[], []",
+    "generated_tests": [
+      "assert merge([['a', 1], ['b', 2], ['c', 3]]) == [['a', 'b', 'c'], [1, 2, 3]]",
+      "assert merge([[True, False], [False, True]]) == [[True, False], [False, True]]",
+      "assert merge([['', ' '], ['\\t', '\\n']]) == [['', '\\t'], [' ', '\\n']]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.34s\n\n"
+  }
+}

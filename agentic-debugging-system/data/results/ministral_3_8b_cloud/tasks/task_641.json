@@ -1,0 +1,51 @@
+{
+  "task_id": 641,
+  "task_prompt": "Write a function to find the nth nonagonal number.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def is_nonagonal(n):\n\treturn int(n * (7 * n - 5) / 2)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 21.91,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def is_nonagonal(n): \n\treturn int(n + (7 * n - 5) / 2) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert is_nonagonal(10) == 325\nE       assert 42 == 325\nE        +  where 42 = is_nonagonal(10)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq4nxpmk9\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert is_nonagonal(15) == 750\nE       assert 65 == 750\nE        +  where 65 = is_nonagonal(15)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq4nxpmk9\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert is_nonagonal(18) == 1089\nE       assert 78 == 1089\nE        +  where 78 = is_nonagonal(18)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq4nxpmk9\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq4nxpmk9\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq4nxpmk9\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq4nxpmk9\\test_solution.py::test_case_2\n3 failed in 0.40s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `is_nonagonal(n)` is not correctly calculating nonagonal numbers. The current implementation is incorrect and produces wrong results for all test cases.\n\n2. **Evidence**:\n   - For input `10`, expected output is `325` but got `42`\n   - For input `15`, expected output is `750` but got `65`\n   - For input `18`, expected output is `1089` but got `78`\n\n3. **Failure type**:\n   The function is using the wrong formula for nonagonal numbers. The current implementation appears to be a mix-up with other polygonal number formulas.\n\n4. **Suspected location**:\n   The formula in the function is incorrect. The correct formula for the nth nonagonal number is:\n   `N(n) = n(7n - 5)/2`\n\n   However, the current implementation is:\n   `int(n + (7 * n - 5) / 2)`\n\n   The issue is that the function is adding `n` to the formula when it should just be multiplying `n` by the formula.\n\nHere's the corrected function",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing `is_nonagonal(n)` function:\n\n---\n\n### **1. Failing Behavior**\nThe function incorrectly computes nonagonal numbers, producing values far below the expected results (e.g., `42` for `n=10` instead of `325`).\n\n---\n\n### **2. Evidence**\n- **Input `10`**: Expected `325`, got `42` (computed as `10 + (70 - 5)/2 = 10 + 32.5 = 42.5 \u2192 int(42.5) = 42`).\n- **Input `15`**: Expected `750`, got `65` (computed as `15 + (105 - 5)/2 = 15 + 50 = 65`).\n- **Input `18`**: Expected `1089`, got `78` (computed as `18 + (126 - 5)/2 = 18 + 60.5 = 78.5 \u2192 int(78.5) = 78`).\n\n---\n\n###",
+      "patched_code": "def is_nonagonal(n):\n\treturn int(n * (7 * n - 5) / 2)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.7
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def is_nonagonal(n):\n\treturn int(n * (7 * n - 5) / 2)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.37s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.66
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All statements in `is_nonagonal(n)` were executed during testing.\n- All test cases in `test_solution.py` passed without missing any statements.\n\n### **2. Missing or Weakly Tested Cases**\nDespite full coverage, we should consider whether the tests adequately verify:\n- **Edge cases** (e.g., `n = 0`, negative `n`, non-integer `n`).\n- **Large values of `n`** (to check for integer overflow or correctness).\n- **Type safety** (e.g., if `n` is not an integer, does the function behave as expected?).\n- **Mathematical correctness** (e.g., does the formula `n*(7n-5)/2` hold for all valid `n`?).\n\nSince the report shows **no missed statements**, the tests likely cover the happy path (e.g., positive integers), but may not explicitly test edge cases.\n\n### **3. Suggested Additional Tests**\nTo improve robustness, consider adding tests for:\n1. **",
+    "generated_tests": [
+      "assert is_nonagonal(0) == 0",
+      "assert is_nonagonal(5) == 105",
+      "assert is_nonagonal(20) == 2530"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....FF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert is_nonagonal(5) == 105\nE       assert 75 == 105\nE        +  where 75 = is_nonagonal(5)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4qzal1s4\\test_solution.py:16: AssertionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert is_nonagonal(20) == 2530\nE       assert 1350 == 2530\nE        +  where 1350 = is_nonagonal(20)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4qzal1s4\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4qzal1s4\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4qzal1s4\\test_solution.py::test_case_5\n2 failed, 4 passed in 0.40s\n\n"
+  }
+}

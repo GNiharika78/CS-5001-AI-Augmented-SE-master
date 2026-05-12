@@ -1,0 +1,51 @@
+{
+  "task_id": 400,
+  "task_prompt": "Write a function to extract the number of unique tuples in the given list.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "len_to_len_minus_1",
+  "status": "repaired",
+  "final_code": "def extract_freq(test_list):\n    res = len({tuple(sorted(sub)) for sub in test_list})\n    return res",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 23.22,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def extract_freq(test_list):\n  res = len(list(set(tuple(sorted(sub) - 1) for sub in test_list)))\n  return (res)",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert extract_freq([(3, 4), (1, 2), (4, 3), (5, 6)] ) == 3\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpstcgo4t7\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpstcgo4t7\\solution.py:2: in extract_freq\n    res = len(list(set(tuple(sorted(sub) - 1) for sub in test_list)))\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n.0 = <list_iterator object at 0x000001CD6CA6A500>\n\n>   res = len(list(set(tuple(sorted(sub) - 1) for sub in test_list)))\n                             ^^^^^^^^^^^^^^^\nE   TypeError: unsupported operand type(s) for -: 'list' and 'int'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpstcgo4t7\\solution.py:2: TypeError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert extract_freq([(4, 15), (2, 3), (5, 4), (6, 7)] ) == 4\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpstcgo4t7\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpstcgo4t7\\solution.py:2: in extract_freq\n    res = len(list(set(tuple(sorted(sub) - 1) for sub in test_list)))\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n.0 = <list_iterator object at 0x000001CD6CA6AE30>\n\n>   res = len(list(set(tuple(sorted(sub) - 1) for sub in test_list)))\n                             ^^^^^^^^^^^^^^^\nE   TypeError: unsupported operand type(s) for -: 'list' and 'int'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpstcgo4t7\\solution.py:2: TypeError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert extract_freq([(5, 16), (2, 3), (6, 5), (6, 9)] ) == 4\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpstcgo4t7\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpstcgo4t7\\solution.py:2: in extract_freq\n    res = len(list(set(tuple(sorted(sub) - 1) for sub in test_list)))\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n.0 = <list_iterator object at 0x000001CD6CA6B700>\n\n>   res = len(list(set(tuple(sorted(sub) - 1) for sub in test_list)))\n                             ^^^^^^^^^^^^^^^\nE   TypeError: unsupported operand type(s) for -: 'list' and 'int'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpstcgo4t7\\solution.py:2: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpstcgo4t7\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpstcgo4t7\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpstcgo4t7\\test_solution.py::test_case_2\n3 failed in 0.40s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `extract_freq` is supposed to count the number of unique tuples in the input list, where tuples are considered identical if they contain the same elements regardless of order. However, the current implementation fails to correctly handle the tuple comparison and produces an error.\n\n2. **Evidence**:\n   - The test case expects `extract_freq([(3, 4), (1, 2), (4, 3), (5, 6)])` to return `3` (since `(3,4)` and `(4,3)` are considered the same, `(1,2)` is unique, and `(5,6)` is unique).\n   - The error occurs at `tuple(sorted(sub) - 1)`, where `- 1` is not a valid operation for tuples or lists. This suggests the code is trying to subtract 1 from the sorted tuple, which is incorrect.\n   - The error message shows `<list_iterator object at 0x000001CD6CA6A500>` which indicates the code is trying to iterate over something that isn't a list (likely due to the `- 1` operation failing).\n\n3",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `extract_freq` fails to return the correct count of unique tuples when order-insensitive comparison is required. Instead, it raises an error due to invalid operations on tuples.\n\n---\n\n### **2. Evidence**\n- **Test Case**: `extract_freq([(3, 4), (1, 2), (4, 3), (5, 6)])` should return `3` (since `(3,4)` and `(4,3)` are duplicates).\n- **Error**: The line `tuple(sorted(sub) - 1)` fails because:\n  - `sorted(sub)` returns a list (e.g., `[3, 4]` for `(3, 4)`).\n  - The `- 1` operation is invalid for lists (or tuples), causing a `TypeError`.\n  - The error message `<list_iterator object at ...>` suggests the code tried to iterate over a non-list (likely due to the failed `- 1` operation).\n\n---\n\n### **3. Root Cause**\nThe original code incorrectly attempts to subtract `1` from the sorted tuple/list (`sub - 1`), which is nonsens",
+      "patched_code": "def extract_freq(test_list):\n    res = len({tuple(sorted(sub)) for sub in test_list})\n    return res",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.95
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def extract_freq(test_list):\n    res = len({tuple(sorted(sub)) for sub in test_list})\n    return res",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All **3 statements** in `extract_freq()` were executed during testing.\n- All **7 statements** in the test file were executed.\n\nSince no statements were missed (`Miss = 0`), the tests fully exercised the function under all possible control paths.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nDespite full coverage, we should consider whether the tests adequately verify **edge cases** and **correctness** of the function. Potential weaknesses include:\n\n#### **Possible Edge Cases Not Explicitly Tested:**\n1. **Empty List (`[]`)**\n   - Does the function return `0` correctly?\n   - If `test_list = []`, the set comprehension `{tuple(sorted(sub)) for sub in test_list}` evaluates to an empty set, and `len({})` returns `0`. This is correct, but the test may not explicitly check this.\n\n2. **Nested Lists with Non-Hashable Types (e.g., Dictionaries, Lists with Lists)**\n   - The function assumes `sub` can be sorted",
+    "generated_tests": [
+      "assert extract_freq([(1, 1), (1, 1), (2, 2), (2, 2), (2, 2)]) == 2",
+      "assert extract_freq([(7, 8, 9), (9, 8, 7), (7, 9, 8), (8, 7, 9)]) == 1",
+      "assert extract_freq([(0, 0, 0), (0, 0), (0, 0, 0, 0)]) == 1"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert extract_freq([(0, 0, 0), (0, 0), (0, 0, 0, 0)]) == 1\nE       assert 3 == 1\nE        +  where 3 = extract_freq([(0, 0, 0), (0, 0), (0, 0, 0, 0)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpik0ikm52\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpik0ikm52\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.39s\n\n"
+  }
+}

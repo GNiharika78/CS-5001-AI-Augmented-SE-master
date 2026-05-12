@@ -1,0 +1,51 @@
+{
+  "task_id": 750,
+  "task_prompt": "Write a function to add the given tuple to the given list.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def add_tuple(test_list, test_tup):\n    test_list.extend(test_tup)\n    return test_list",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 64.55,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def add_tuple(test_list, test_tup):\n  test_list -= test_tup\n  return test_list",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert add_tuple([5, 6, 7], (9, 10)) == [5, 6, 7, 9, 10]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpzeg9cply\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\ntest_list = [5, 6, 7], test_tup = (9, 10)\n\n    def add_tuple(test_list, test_tup):\n>     test_list -= test_tup\nE     TypeError: unsupported operand type(s) for -=: 'list' and 'tuple'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpzeg9cply\\solution.py:2: TypeError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert add_tuple([6, 7, 8], (10, 11)) == [6, 7, 8, 10, 11]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpzeg9cply\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\ntest_list = [6, 7, 8], test_tup = (10, 11)\n\n    def add_tuple(test_list, test_tup):\n>     test_list -= test_tup\nE     TypeError: unsupported operand type(s) for -=: 'list' and 'tuple'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpzeg9cply\\solution.py:2: TypeError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert add_tuple([7, 8, 9], (11, 12)) == [7, 8, 9, 11, 12]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpzeg9cply\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\ntest_list = [7, 8, 9], test_tup = (11, 12)\n\n    def add_tuple(test_list, test_tup):\n>     test_list -= test_tup\nE     TypeError: unsupported operand type(s) for -=: 'list' and 'tuple'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpzeg9cply\\solution.py:2: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpzeg9cply\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpzeg9cply\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpzeg9cply\\test_solution.py::test_case_2\n3 failed in 0.33s\n\n",
+      "failure": "Here's the failure analysis for the given code:\n\n1. **What failed**:\n   The function `add_tuple()` failed to correctly add the elements of a tuple to a list. Instead, it attempted to perform an unsupported subtraction operation between a list and a tuple.\n\n2. **Evidence**:\n   - The test case `add_tuple([5, 6, 7], (9, 10))` expected `[5, 6, 7, 9, 10]` but raised a `TypeError`.\n   - The error message clearly states: `TypeError: unsupported operand type(s) for -=: 'list' and 'tuple'`.\n\n3. **Failure type**:\n   - **TypeError**: The code attempted an operation (`-=`) that is not supported between a list and a tuple.\n   - **Logical Error**: The function's implementation is incorrect for the intended purpose (adding tuple elements to a list).\n\n4. **Suspected location**:\n   The error occurs in the function `add_tuple()` at the line:\n   ```python\n   test_list -= test_tup\n   ```\n   This line is trying to subtract a tuple from a list, which is not a valid operation in Python.\n\n**Corre",
+      "hypothesis": "Here's the structured analysis of the failure:\n\n1. **Failing behavior**:\n   The function fails to add tuple elements to a list and instead raises a `TypeError` when attempting to subtract a tuple from a list.\n\n2. **Evidence**:\n   - Test case: `add_tuple([5, 6, 7], (9, 10))`\n   - Expected output: `[5, 6, 7, 9, 10]`\n   - Actual output: `TypeError: unsupported operand type(s) for -=: 'list' and 'tuple'`\n\n3. **Root cause**:\n   The implementation uses the `-=` operator, which is not valid for combining a list and tuple. Python doesn't support this operation between these types.\n\n4. **Why this explains failure**:\n   The operation `test_list -= test_tup` is syntactically invalid for the given types. Lists and tuples are different sequence types in Python, and the subtraction operation isn't defined between them.\n\n5. **Repair plan**:\n   Replace the subtraction operation with proper tuple unpacking or concatenation:\n   ```python\n   def add_tuple(test_list, test_tup):\n       test_list.extend(test_tup)  # or",
+      "patched_code": "def add_tuple(test_list, test_tup):\n    test_list.extend(test_tup)\n    return test_list",
+      "decision": "patch_and_retry",
+      "duration_seconds": 52.5
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def add_tuple(test_list, test_tup):\n    test_list.extend(test_tup)\n    return test_list",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.30s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.7
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (10/10 statements covered)\n- **solution.py**: 100% (3/3 statements covered)\n- **test_solution.py**: 100% (7/7 statements covered)\n\nThe coverage report indicates that all lines of code in both the implementation (`solution.py`) and the test file (`test_solution.py`) have been executed during testing. This is a strong indicator that the test suite is comprehensive for the current implementation.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, there are potential edge cases or scenarios that may not have been explicitly tested. These include:\n- **Empty tuple**: What happens if `test_tup` is empty? The function should still work, but this case may not be tested.\n- **Empty list**: What happens if `test_list` is empty? The function should still work, but this case may not be tested.\n- **Non-tuple input**: The function assumes `test_tup` is a tuple. What happens if a non-tuple (e.g., list, string) is passed? This could",
+    "generated_tests": [
+      "assert add_tuple([], (1, 2, 3)) == [1, 2, 3]",
+      "assert add_tuple([1, 2], ()) == [1, 2]",
+      "assert add_tuple([1, 2, 3], (4,)) == [1, 2, 3, 4]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.32s\n\n"
+  }
+}

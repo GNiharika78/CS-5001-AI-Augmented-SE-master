@@ -1,0 +1,39 @@
+{
+  "task_id": 433,
+  "task_prompt": "Write a function to check whether the entered number is greater than the elements of the given array.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "boundary_gt_to_gte",
+  "status": "repaired",
+  "final_code": "def check_greater(arr, number):\n  arr.sort()\n  return number >= arr[-1]",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 14.99,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def check_greater(arr, number):\n  arr.sort()\n  return number >= arr[-1]",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.59
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (10/10 lines covered)\n  - `solution.py`: 3 lines, 0 missed (100% coverage)\n  - `test_solution.py`: 7 lines, 0 missed (100% coverage)\n- The code and tests are fully covered by the existing test suite.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested or could be weakly tested:\n1. **Empty array**: The function may not handle an empty array gracefully (e.g., `arr = []`).\n   - Current behavior: `arr[-1]` will raise an `IndexError` for an empty array.\n2. **Single-element array**: The function may not be tested with an array of length 1.\n3. **Duplicate elements**: The function may not be tested with arrays containing duplicate values.\n4. **Negative numbers**: The function may not be tested with negative numbers in the array or as the input `number`.\n5. **Floating-point numbers**: The function may not be tested with floating-point numbers",
+    "generated_tests": [
+      "assert check_greater([-5, -3, -1, 0], -2) == False",
+      "assert check_greater([10, 20, 30], 30) == True",
+      "assert check_greater([], 5) == True"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert check_greater([], 5) == True\n               ^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpr3nz2_d0\\test_solution.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\narr = [], number = 5\n\n    def check_greater(arr, number):\n      arr.sort()\n>     return number >= arr[-1]\n                       ^^^^^^^\nE     IndexError: list index out of range\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpr3nz2_d0\\solution.py:3: IndexError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpr3nz2_d0\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.34s\n\n"
+  }
+}

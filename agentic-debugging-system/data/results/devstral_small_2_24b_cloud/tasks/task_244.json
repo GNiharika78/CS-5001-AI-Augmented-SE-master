@@ -1,0 +1,51 @@
+{
+  "task_id": 244,
+  "task_prompt": "Write a python function to find the next perfect square greater than a given number.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import math\ndef next_Perfect_Square(N):\n    nextN = math.floor(math.sqrt(N)) + 1\n    return nextN * nextN",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 28.88,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math  \ndef next_Perfect_Square(N): \n    nextN = math.floor(math.sqrt(N)) + 1\n    return nextN + nextN ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert next_Perfect_Square(35) == 36\nE       assert 12 == 36\nE        +  where 12 = next_Perfect_Square(35)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1kyfobaq\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert next_Perfect_Square(6) == 9\nE       assert 6 == 9\nE        +  where 6 = next_Perfect_Square(6)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1kyfobaq\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert next_Perfect_Square(9) == 16\nE       assert 8 == 16\nE        +  where 8 = next_Perfect_Square(9)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1kyfobaq\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1kyfobaq\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1kyfobaq\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1kyfobaq\\test_solution.py::test_case_2\n3 failed in 0.37s\n\n",
+      "failure": "### Analysis of the Failed Test Cases\n\n1. **What failed**:\n   The function `next_Perfect_Square(N)` is supposed to return the next perfect square greater than the given number `N`. However, the test cases show that the function is not returning the correct values.\n\n2. **Evidence**:\n   - For `N = 35`, the expected output is `36` (since 6\u00b2 = 36 is the next perfect square after 35), but the function returns `12`.\n   - For `N = 6`, the expected output is `9` (since 3\u00b2 = 9 is the next perfect square after 6), but the function returns `6`.\n   - For `N = 9`, the expected output is `16` (since 4\u00b2 = 16 is the next perfect square after 9), but the function returns `8`.\n\n3. **Failure type**:\n   The function is not correctly calculating the next perfect square. The issue lies in the logic of the function, specifically in how `nextN` is computed and returned.\n\n4. **Suspected location**:\n   The problem is in the line `return nextN + nextN`. This is incorrect",
+      "hypothesis": "### Analysis of the Failed Test Cases\n\n1. **Failing behavior**:\n   The function `next_Perfect_Square(N)` is supposed to return the next perfect square greater than the given number `N`. However, it is returning incorrect values for all test cases.\n\n2. **Evidence**:\n   - For `N = 35`, the expected output is `36` (since 6\u00b2 = 36 is the next perfect square after 35), but the function returns `12`.\n   - For `N = 6`, the expected output is `9` (since 3\u00b2 = 9 is the next perfect square after 6), but the function returns `6`.\n   - For `N = 9`, the expected output is `16` (since 4\u00b2 = 16 is the next perfect square after 9), but the function returns `8`.\n\n3. **Root cause**:\n   The issue lies in the logic of the function. The line `return nextN + nextN` is incorrect because:\n   - `nextN` is calculated as `math.floor(math.sqrt(N)) + 1`, which gives the next integer after the square root of `N`. For example, for",
+      "patched_code": "import math\ndef next_Perfect_Square(N):\n    nextN = math.floor(math.sqrt(N)) + 1\n    return nextN * nextN",
+      "decision": "patch_and_retry",
+      "duration_seconds": 17.05
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef next_Perfect_Square(N):\n    nextN = math.floor(math.sqrt(N)) + 1\n    return nextN * nextN",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.57
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (11/11 lines covered)\n  - `solution.py`: 4 lines, 0 missed (100% coverage)\n  - `test_solution.py`: 7 lines, 0 missed (100% coverage)\n- The code and tests are fully covered, meaning all executable lines were executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases or scenarios might not be explicitly tested (or could be weakly tested):\n1. **Negative Inputs**: The function may not handle negative numbers correctly (e.g., `N = -5`). The current implementation will return `1` (since `math.sqrt(-5)` raises a `ValueError` in Python, but `math.floor(math.sqrt(-5))` would fail unless handled).\n2. **Zero Input**: `N = 0` should return `1` (next perfect square after 0 is 1).\n3. **Perfect Square Input**: If `N` is already a perfect square (e.g., `N = 16`), the function should",
+    "generated_tests": [
+      "assert next_Perfect_Square(0) == 1",
+      "assert next_Perfect_Square(1) == 4",
+      "assert next_Perfect_Square(100) == 121"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.32s\n\n"
+  }
+}

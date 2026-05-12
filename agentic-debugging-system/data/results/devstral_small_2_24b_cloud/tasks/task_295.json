@@ -1,0 +1,63 @@
+{
+  "task_id": 295,
+  "task_prompt": "Write a function to return the sum of all divisors of a number.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_eq_to_neq",
+  "status": "repaired",
+  "final_code": "def sum_div(number):\n    divisors = [1]\n    for i in range(2, number):\n        if (number % i) == 0:\n            divisors.append(i)\n    return sum(divisors)",
+  "attempts": 3,
+  "llm_calls": 8,
+  "duration": 48.3,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def sum_div(number):\n    divisors = [1]\n    for i in range(2, number):\n        if (number % i)!=0:\n            divisors.append(i)\n    return sum(divisors)",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert sum_div(8)==7\nE       assert 22 == 7\nE        +  where 22 = sum_div(8)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp6z3e_fz3\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert sum_div(12)==16\nE       assert 51 == 16\nE        +  where 51 = sum_div(12)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp6z3e_fz3\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert sum_div(7)==1\nE       assert 21 == 1\nE        +  where 21 = sum_div(7)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp6z3e_fz3\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp6z3e_fz3\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp6z3e_fz3\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp6z3e_fz3\\test_solution.py::test_case_2\n3 failed in 0.33s\n\n",
+      "failure": "### Analysis of the Failed Function\n\n1. **What failed**:\n   The function `sum_div(number)` is supposed to return the sum of all divisors of a given number, but it is returning incorrect sums for the test cases.\n\n2. **Evidence**:\n   - For `sum_div(8)`, the function returns `22` instead of the expected `7`.\n   - For `sum_div(12)`, the function returns `51` instead of the expected `16`.\n   - For `sum_div(7)`, the function returns `21` instead of the expected `1`.\n\n3. **Failure type**:\n   The function is incorrectly identifying divisors. It is appending numbers to the `divisors` list when they are **not** divisors of the input number (i.e., when `number % i != 0`), which is the opposite of what should happen.\n\n4. **Suspected location**:\n   The issue is in the `if` condition inside the loop:\n   ```python\n   if (number % i) != 0:\n       divisors.append(i)\n   ```\n   This condition appends `i` to `divisors` when `i` is **not** a divisor of `",
+      "hypothesis": "### 1. Failing Behavior\nThe function `sum_div(number)` incorrectly calculates the sum of divisors of a given number. It returns sums that are much larger than expected because it includes non-divisors in the sum.\n\n### 2. Evidence\n- For `sum_div(8)`, the function returns `22` (expected: `7`).\n  - Correct divisors of 8: `[1, 2, 4, 8]` (sum = 15, but the function excludes 8 and includes non-divisors).\n  - The function's `divisors` list: `[1, 2, 3, 4, 5, 6, 7]` (sum = 28, but the function returns 22 due to incorrect logic).\n- For `sum_div(12)`, the function returns `51` (expected: `16`).\n  - Correct divisors of 12: `[1, 2, 3, 4, 6, 12]` (sum = 28, but the function excludes 12 and includes non-divisors).\n  - The function's `divisors` list: `[1",
+      "patched_code": "def sum_div(number):\n    divisors = [1]\n    for i in range(2, number):\n        if (number % i) == 0:\n            divisors.append(i)\n    return sum(divisors) + number",
+      "decision": "patch_and_retry",
+      "duration_seconds": 19.92
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def sum_div(number):\n    divisors = [1]\n    for i in range(2, number):\n        if (number % i) == 0:\n            divisors.append(i)\n    return sum(divisors) + number",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert sum_div(8)==7\nE       assert 15 == 7\nE        +  where 15 = sum_div(8)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv2aji9uh\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert sum_div(12)==16\nE       assert 28 == 16\nE        +  where 28 = sum_div(12)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv2aji9uh\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert sum_div(7)==1\nE       assert 8 == 1\nE        +  where 8 = sum_div(7)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv2aji9uh\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv2aji9uh\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv2aji9uh\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv2aji9uh\\test_solution.py::test_case_2\n3 failed in 0.32s\n\n",
+      "failure": "### Analysis of the Failed Test Cases\n\n1. **What Failed**:\n   - The function `sum_div` is supposed to return the sum of all divisors of a given number, but it is returning incorrect sums for the test cases.\n   - The test cases expect:\n     - `sum_div(8) == 7` (actual: 15)\n     - `sum_div(12) == 16` (actual: 28)\n     - `sum_div(7) == 1` (actual: 8)\n\n2. **Evidence**:\n   - For `sum_div(8)`:\n     - Divisors of 8: 1, 2, 4, 8\n     - Expected sum: 1 + 2 + 4 = 7 (excluding 8)\n     - Actual sum: 1 + 2 + 4 + 8 = 15 (including 8)\n   - For `sum_div(12)`:\n     - Divisors of 12: 1, 2, 3, 4, 6, 12\n     - Expected sum: 1 + 2 + 3 + 4 + 6 = 1",
+      "hypothesis": "### Failing Behavior\nThe function `sum_div` is incorrectly including the number itself in the sum of its divisors. For example:\n- For `sum_div(8)`, it returns `15` (1 + 2 + 4 + 8) instead of the expected `7` (1 + 2 + 4).\n- For `sum_div(12)`, it returns `28` (1 + 2 + 3 + 4 + 6 + 12) instead of the expected `16` (1 + 2 + 3 + 4 + 6).\n- For `sum_div(7)`, it returns `8` (1 + 7) instead of the expected `1` (1).\n\n### Evidence\n1. **Test Case 1**: `sum_div(8)`\n   - Divisors: 1, 2, 4, 8\n   - Expected sum: 1 + 2 + 4 = 7 (excluding 8)\n   - Actual sum: 1 + 2 + 4 + 8 = 15 (including 8)\n\n2. **Test Case 2**: `sum_div(12)`\n   - Divisors:",
+      "patched_code": "def sum_div(number):\n    divisors = [1]\n    for i in range(2, number):\n        if (number % i) == 0:\n            divisors.append(i)\n    return sum(divisors)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 16.92
+    },
+    {
+      "attempt": 3,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def sum_div(number):\n    divisors = [1]\n    for i in range(2, number):\n        if (number % i) == 0:\n            divisors.append(i)\n    return sum(divisors)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (13/13 statements covered)\n  - `solution.py`: 6/6 statements covered (100%)\n  - `test_solution.py`: 7/7 statements covered (100%)\n- The code and tests are fully covered by the existing test suite.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested or could be weakly tested:\n- **Input `number = 1`**: The function returns `1` (only divisor is `1`), but this case may not be tested.\n- **Input `number = 0` or negative numbers**: The function may not handle these cases correctly (e.g., infinite loop or incorrect output). The current implementation does not account for these.\n- **Prime numbers**: The function should return `1` for primes (e.g., `sum_div(7) == 1`), but this may not be explicitly tested.\n- **Large numbers**: Performance or correctness for large inputs (e.g., `number = 10^6`) may not be tested.",
+    "generated_tests": [
+      "assert sum_div(1) == 0",
+      "assert sum_div(10) == 8",
+      "assert sum_div(28) == 28"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...F..                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert sum_div(1) == 0\nE       assert 1 == 0\nE        +  where 1 = sum_div(1)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpnuk5znhu\\test_solution.py:13: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpnuk5znhu\\test_solution.py::test_case_3\n1 failed, 5 passed in 0.33s\n\n"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "task_id": 129,
+  "task_prompt": "Write a function to calculate whether the matrix is a magic square.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def magic_square_test(my_matrix):\n    iSize = len(my_matrix[0])\n    sum_list = []\n    sum_list.extend([sum (lines) for lines in my_matrix])\n    for col in range(iSize):\n        sum_list.append(sum(row[col] for row in my_matrix))\n    result1 = 0\n    for i in range(0,iSize):\n        result1 += my_matrix[i][i]\n    sum_list.append(result1)\n    result2 = 0\n    for i in range(iSize-1,-1,-1):\n        result2 += my_matrix[i][i]\n    sum_list.append(result2)\n    if len(set(sum_list))>1:\n        return False\n    return True",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 36.0,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def magic_square_test(my_matrix):\n    iSize = len(my_matrix[0])\n    sum_list = []\n    sum_list.extend([sum (lines) for lines in my_matrix])   \n    for col in range(iSize):\n        sum_list.append(sum(row[col] for row in my_matrix))\n    result1 = 0\n    for i in range(0,iSize):\n        result1 -=my_matrix[i][i]\n    sum_list.append(result1)      \n    result2 = 0\n    for i in range(iSize-1,-1,-1):\n        result2 +=my_matrix[i][i]\n    sum_list.append(result2)\n    if len(set(sum_list))>1:\n        return False\n    return True",
+      "tests_passed_before_patch": false,
+      "test_output": "FF.                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert magic_square_test([[7, 12, 1, 14], [2, 13, 8, 11], [16, 3, 10, 5], [9, 6, 15, 4]])==True\nE       assert False == True\nE        +  where False = magic_square_test([[7, 12, 1, 14], [2, 13, 8, 11], [16, 3, 10, 5], [9, 6, 15, 4]])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpalw3okaj\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert magic_square_test([[2, 7, 6], [9, 5, 1], [4, 3, 8]])==True\nE       assert False == True\nE        +  where False = magic_square_test([[2, 7, 6], [9, 5, 1], [4, 3, 8]])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpalw3okaj\\test_solution.py:7: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpalw3okaj\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpalw3okaj\\test_solution.py::test_case_1\n2 failed, 1 passed in 0.31s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   The function `magic_square_test` incorrectly returns `False` for valid magic squares, as shown in the two test cases.\n\n2. **Evidence**:\n   - Test case 0: `[[7, 12, 1, 14], [2, 13, 8, 11], [16, 3, 10, 5], [9, 6, 15, 4]]` is a valid magic square (all rows, columns, and diagonals sum to 34), but the function returns `False`.\n   - Test case 1: `[[2, 7, 6], [9, 5, 1], [4, 3, 8]]` is a valid magic square (all rows, columns, and diagonals sum to 15), but the function returns `False`.\n\n3. **Failure type**:\n   - **Logical Error**: The function incorrectly calculates the sum of the main diagonal (`result1`). The current implementation subtracts the diagonal elements instead of summing them.\n\n4. **Suspected location**:\n   - The error is in the calculation of `result",
+      "hypothesis": "### Failure Analysis Report\n\n1. **Failing behavior**:\n   The function `magic_square_test` incorrectly returns `False` for valid magic squares, as shown in the two test cases.\n\n2. **Evidence**:\n   - Test case 0: `[[7, 12, 1, 14], [2, 13, 8, 11], [16, 3, 10, 5], [9, 6, 15, 4]]` is a valid magic square (all rows, columns, and diagonals sum to 34), but the function returns `False`.\n   - Test case 1: `[[2, 7, 6], [9, 5, 1], [4, 3, 8]]` is a valid magic square (all rows, columns, and diagonals sum to 15), but the function returns `False`.\n\n3. **Root cause**:\n   - **Logical Error**: The function incorrectly calculates the sum of the main diagonal (`result1`). The current implementation subtracts the diagonal elements (`result1 -= my_matrix[i][i]`) instead of summing them (`result1 += my_matrix[i",
+      "patched_code": "def magic_square_test(my_matrix):\n    iSize = len(my_matrix[0])\n    sum_list = []\n    sum_list.extend([sum (lines) for lines in my_matrix])\n    for col in range(iSize):\n        sum_list.append(sum(row[col] for row in my_matrix))\n    result1 = 0\n    for i in range(0,iSize):\n        result1 += my_matrix[i][i]\n    sum_list.append(result1)\n    result2 = 0\n    for i in range(iSize-1,-1,-1):\n        result2 += my_matrix[i][i]\n    sum_list.append(result2)\n    if len(set(sum_list))>1:\n        return False\n    return True",
+      "decision": "patch_and_retry",
+      "duration_seconds": 20.21
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def magic_square_test(my_matrix):\n    iSize = len(my_matrix[0])\n    sum_list = []\n    sum_list.extend([sum (lines) for lines in my_matrix])\n    for col in range(iSize):\n        sum_list.append(sum(row[col] for row in my_matrix))\n    result1 = 0\n    for i in range(0,iSize):\n        result1 += my_matrix[i][i]\n    sum_list.append(result1)\n    result2 = 0\n    for i in range(iSize-1,-1,-1):\n        result2 += my_matrix[i][i]\n    sum_list.append(result2)\n    if len(set(sum_list))>1:\n        return False\n    return True",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.29s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.58
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           17      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 24      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (24/24 statements covered)\n- **File Coverage**:\n  - `solution.py`: 100% (17/17 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n- **No missing statements** in the code or tests.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage report shows 100% line coverage, this does not guarantee that all edge cases or logical branches are thoroughly tested. Potential gaps include:\n- **Non-square matrices**: The function assumes the input is a square matrix (e.g., `len(my_matrix) == len(my_matrix[0])`). This assumption is not validated.\n- **Empty matrix**: Behavior with an empty matrix (`[]` or `[[]]`) is not tested.\n- **Non-numeric values**: The function does not handle cases where the matrix contains non-integer values (e.g., strings, floats).\n- **Negative numbers**: The function may work with negative numbers, but this is not explicitly tested.\n- **Large matrices**: Performance or correctness for very large",
+    "generated_tests": [
+      "assert magic_square_test([[16, 3, 2, 13], [5, 10, 11, 8], [9, 6, 7, 12], [4, 15, 14, 1]]) == True",
+      "assert magic_square_test([[1, 2], [3, 4]]) == False",
+      "assert magic_square_test([[8]]) == True"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.30s\n\n"
+  }
+}

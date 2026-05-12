@@ -1,0 +1,51 @@
+{
+  "task_id": 63,
+  "task_prompt": "Write a function to find the maximum difference between available pairs in the given tuple list.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "builtin_max_to_min",
+  "status": "repaired",
+  "final_code": "def max_difference(test_list):\n  temp = [abs(b - a) for a, b in test_list]\n  res = max(temp)\n  return (res)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 47.01,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_difference(test_list):\n  temp = [abs(b - a) for a, b in test_list]\n  res = min(temp)\n  return (res) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert max_difference([(3, 5), (1, 7), (10, 3), (1, 2)]) == 7\nE       assert 1 == 7\nE        +  where 1 = max_difference([(3, 5), (1, 7), (10, 3), (1, 2)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpz1uy7mw5\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert max_difference([(4, 6), (2, 17), (9, 13), (11, 12)]) == 15\nE       assert 1 == 15\nE        +  where 1 = max_difference([(4, 6), (2, 17), (9, 13), (11, 12)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpz1uy7mw5\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert max_difference([(12, 35), (21, 27), (13, 23), (41, 22)]) == 23\nE       assert 6 == 23\nE        +  where 6 = max_difference([(12, 35), (21, 27), (13, 23), (41, 22)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpz1uy7mw5\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpz1uy7mw5\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpz1uy7mw5\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpz1uy7mw5\\test_solution.py::test_case_2\n3 failed in 0.39s\n\n",
+      "failure": "### Analysis of the Failed Test Cases\n\n1. **What Failed**:\n   - The function `max_difference` is supposed to return the **maximum difference** between the pairs in the given tuple list, but it is currently returning the **minimum difference** instead.\n\n2. **Evidence**:\n   - **Test Case 0**:\n     - Input: `[(3, 5), (1, 7), (10, 3), (1, 2)]`\n     - Expected Output: `7` (from the pair `(1, 7)`: `7 - 1 = 6` or `(10, 3)`: `10 - 3 = 7` \u2192 max is `7`)\n     - Actual Output: `1` (from the pair `(1, 2)`: `2 - 1 = 1` \u2192 min is `1`)\n   - **Test Case 1**:\n     - Input: `[(4, 6), (2, 17), (9, 13), (11, 12)]`\n     - Expected Output: `15` (from the pair `(2, 17)`: `17 - 2 =",
+      "hypothesis": "### Analysis of the Failed Test Cases\n\n1. **Failing Behavior**:\n   - The function `max_difference` incorrectly returns the **minimum difference** between pairs in the tuple list instead of the **maximum difference**.\n\n2. **Evidence**:\n   - **Test Case 0**:\n     - Input: `[(3, 5), (1, 7), (10, 3), (1, 2)]`\n     - Expected Output: `7` (from `(10, 3)`: `10 - 3 = 7`)\n     - Actual Output: `1` (from `(1, 2)`: `2 - 1 = 1`)\n   - **Test Case 1**:\n     - Input: `[(4, 6), (2, 17), (9, 13), (11, 12)]`\n     - Expected Output: `15` (from `(2, 17)`: `17 - 2 = 15`)\n     - Actual Output: `1` (from `(11, 12)`: `12 - 11 = 1`)\n\n3. **Root Cause**:\n   - The function",
+      "patched_code": "def max_difference(test_list):\n  temp = [abs(b - a) for a, b in test_list]\n  res = max(temp)\n  return (res)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 20.91
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_difference(test_list):\n  temp = [abs(b - a) for a, b in test_list]\n  res = max(temp)\n  return (res)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.37s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.7
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (11/11 statements covered)\n  - `solution.py`: 100% (4/4 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n- The code is fully covered by the existing tests, meaning all lines of code are executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested or could be weakly tested:\n1. **Empty List**: The function may not handle an empty input list gracefully (though the current implementation would raise a `ValueError` from `max()`).\n2. **Single Pair**: A list with only one pair (e.g., `[(1, 2)]`).\n3. **Negative Numbers**: Pairs with negative numbers (e.g., `[(1, -2), (-3, -4)]`).\n4. **Large Numbers**: Pairs with very large numbers (e.g., `[(1e10, 1e10 + 1)]`).\n5. **F",
+    "generated_tests": [
+      "assert max_difference([(5, 5), (10, 10), (15, 15)]) == 0",
+      "assert max_difference([(0, 100), (50, 50), (25, 75)]) == 100",
+      "assert max_difference([(1, 1000), (2, 999), (3, 998)]) == 999"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.36s\n\n"
+  }
+}

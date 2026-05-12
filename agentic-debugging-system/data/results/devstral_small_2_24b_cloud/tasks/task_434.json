@@ -1,0 +1,39 @@
+{
+  "task_id": 434,
+  "task_prompt": "Write a function that matches a string that has an a followed by one or more b's.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "import re\ndef text_match_one(text):\n        patterns = 'ab-?'\n        if re.search(patterns,  text):\n                return True\n        else:\n                return False\n",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 29.29,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef text_match_one(text):\n        patterns = 'ab-?'\n        if re.search(patterns,  text):\n                return True\n        else:\n                return False\n",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.30s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.58
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (13/13 statements covered)\n  - `solution.py`: 6/6 statements covered (100%)\n  - `test_solution.py`: 7/7 statements covered (100%)\n\nThe current test suite achieves full statement coverage for both the implementation and test files. However, coverage alone does not guarantee correctness or robustness.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage report shows 100% statement coverage, the following cases may not be adequately tested or could expose weaknesses in the implementation:\n\n1. **Incorrect Regex Pattern**:\n   - The current regex `'ab-?'` is incorrect for the task (matching \"a followed by one or more b's\"). It matches:\n     - `\"ab\"` (correct)\n     - `\"a\"` (incorrect, due to `-?` making the `b` optional)\n     - `\"ab-\"` (incorrect, due to `-?` allowing a literal `-` after `b`).\n   - The correct regex should be `'ab+'` (or `r'ab+'` for raw string).\n\n2. **",
+    "generated_tests": [
+      "assert text_match_one(\"a\") == False",
+      "assert text_match_one(\"abb\") == True",
+      "assert text_match_one(\"aabbb\") == True"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.32s\n\n"
+  }
+}

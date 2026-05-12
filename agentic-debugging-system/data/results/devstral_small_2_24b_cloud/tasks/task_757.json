@@ -1,0 +1,51 @@
+{
+  "task_id": 757,
+  "task_prompt": "Write a function to count the pairs of reverse strings in the given string list. https://www.geeksforgeeks.org/python-program-to-count-the-pairs-of-reverse-strings/",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_eq_to_neq",
+  "status": "repaired",
+  "final_code": "def count_reverse_pairs(test_list):\n    res = sum(1 for idx in range(len(test_list)) for idxn in range(idx + 1, len(test_list)) if test_list[idx] == test_list[idxn][::-1])\n    return res",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 27.72,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def count_reverse_pairs(test_list):\n  res = sum([1 for idx in range(0, len(test_list)) for idxn in range(idx, len( \n\ttest_list)) if test_list[idxn] != str(''.join(list(reversed(test_list[idx]))))]) \n  return res",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert count_reverse_pairs([\"julia\", \"best\", \"tseb\", \"for\", \"ailuj\"])== 2\nE       AssertionError: assert 13 == 2\nE        +  where 13 = count_reverse_pairs(['julia', 'best', 'tseb', 'for', 'ailuj'])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptwquokb5\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert count_reverse_pairs([\"geeks\", \"best\", \"for\", \"skeeg\"]) == 1\nE       AssertionError: assert 9 == 1\nE        +  where 9 = count_reverse_pairs(['geeks', 'best', 'for', 'skeeg'])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptwquokb5\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert count_reverse_pairs([\"makes\", \"best\", \"sekam\", \"for\", \"rof\"]) == 2\nE       AssertionError: assert 13 == 2\nE        +  where 13 = count_reverse_pairs(['makes', 'best', 'sekam', 'for', 'rof'])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptwquokb5\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptwquokb5\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptwquokb5\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptwquokb5\\test_solution.py::test_case_2\n3 failed in 0.35s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   - The function `count_reverse_pairs` is not correctly counting the number of reverse string pairs in the given list. It is returning a much higher count than expected.\n\n2. **Evidence**:\n   - For the input `[\"julia\", \"best\", \"tseb\", \"for\", \"ailuj\"]`, the function returns `13` instead of the expected `2`.\n   - For the input `[\"geeks\", \"best\", \"for\", \"skeeg\"]`, the function returns `9` instead of the expected `1`.\n\n3. **Failure type**:\n   - **Logical Error**: The function is counting all pairs where the strings are not reverses of each other, rather than counting the pairs where they are reverses.\n\n4. **Suspected location**:\n   - The issue lies in the list comprehension logic inside the `sum` function. The condition `if test_list[idxn] != str(''.join(list(reversed(test_list[idx]))))` is checking for non-reverse pairs, but the function should be counting reverse pairs. Additionally, the logic is counting all possible pairs (including duplicates and non-reverse pairs) instead of unique reverse pairs.",
+      "hypothesis": "### Failure Analysis Report\n\n1. **Failing Behavior**:\n   - The function `count_reverse_pairs` incorrectly counts the number of reverse string pairs in the given list. It returns a count that is much higher than expected, indicating it is not correctly identifying reverse pairs.\n\n2. **Evidence**:\n   - For the input `[\"julia\", \"best\", \"tseb\", \"for\", \"ailuj\"]`, the function returns `13` instead of the expected `2` (pairs: (\"best\", \"tseb\") and (\"julia\", \"ailuj\")).\n   - For the input `[\"geeks\", \"best\", \"for\", \"skeeg\"]`, the function returns `9` instead of the expected `1` (pair: (\"geeks\", \"skeeg\")).\n\n3. **Root Cause**:\n   - The function is counting all pairs where the strings are **not** reverses of each other (`test_list[idxn] != str(''.join(list(reversed(test_list[idx]))))`), which is the opposite of the intended logic.\n   - Additionally, the nested loop structure counts all possible pairs (including duplicates and non-reverse pairs) without ensuring uniqueness or correctness.\n\n4. **Why",
+      "patched_code": "def count_reverse_pairs(test_list):\n    res = sum(1 for idx in range(len(test_list)) for idxn in range(idx + 1, len(test_list)) if test_list[idx] == test_list[idxn][::-1])\n    return res",
+      "decision": "patch_and_retry",
+      "duration_seconds": 14.92
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def count_reverse_pairs(test_list):\n    res = sum(1 for idx in range(len(test_list)) for idxn in range(idx + 1, len(test_list)) if test_list[idx] == test_list[idxn][::-1])\n    return res",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (10/10 lines covered)\n  - `solution.py`: 3 lines, 0 missed (100% coverage)\n  - `test_solution.py`: 7 lines, 0 missed (100% coverage)\n- The function `count_reverse_pairs` and all test cases are fully covered.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested (or may be weakly tested):\n1. **Empty List**: Input `[]` (should return `0`).\n2. **Single Element**: Input `[\"a\"]` (should return `0`).\n3. **All Identical Strings**: Input `[\"a\", \"a\", \"a\"]` (should return `3` pairs: (0,1), (0,2), (1,2)).\n4. **No Reverse Pairs**: Input `[\"a\", \"b\", \"c\"]` (should return `0`).\n5. **Multiple Reverse Pairs**: Input `[\"ab\", \"ba\", \"cd",
+    "generated_tests": [
+      "assert count_reverse_pairs([\"hello\", \"world\", \"dlrow\"]) == 1",
+      "assert count_reverse_pairs([\"abc\", \"def\", \"cba\", \"fed\"]) == 2",
+      "assert count_reverse_pairs([\"test\", \"tset\", \"code\", \"edoc\"]) == 2"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.32s\n\n"
+  }
+}

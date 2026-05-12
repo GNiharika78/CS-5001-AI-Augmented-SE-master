@@ -1,0 +1,39 @@
+{
+  "task_id": 227,
+  "task_prompt": "Write a function to find minimum of three numbers.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "boundary_lte_to_lt",
+  "status": "repaired",
+  "final_code": "def min_of_three(a,b,c): \n      if (a < b) and (a <= c): \n        smallest = a \n      elif (b <= a) and (b <= c): \n        smallest = b \n      else: \n        smallest = c \n      return smallest ",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 13.18,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def min_of_three(a,b,c): \n      if (a < b) and (a <= c): \n        smallest = a \n      elif (b <= a) and (b <= c): \n        smallest = b \n      else: \n        smallest = c \n      return smallest ",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.62
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      1    86%   3\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      1    93%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe test coverage report shows:\n- **Total statements in `solution.py`:** 7\n- **Missed statements:** 1 (86% coverage)\n- **Total statements in `test_solution.py`:** 7\n- **All tests in `test_solution.py` pass (100% coverage).**\n- **Overall coverage:** 93% (1 missed statement in the solution).\n\nThis suggests that **one statement in `min_of_three()` is not being tested**, while the test file itself is fully exercised.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nThe **missing statement** is likely in the `else` block (`smallest = c`), meaning the test cases may not cover the scenario where **`c` is the smallest number** when neither `a` nor `b` is the smallest.\n\n#### **Possible Missing Test Cases:**\n1. **`c` is the smallest when `a` and `b` are equal and larger than `c`:**\n   - Example: `min_of_three(5, 5, 1)` \u2192 Should return `1`.\n2. **`c` is the smallest when `a` and `",
+    "generated_tests": [
+      "assert min_of_three(5, 5, 3) == 3",
+      "assert min_of_three(0, -1, -1) == -1",
+      "assert min_of_three(100, 100, 100) == 100"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.37s\n\n"
+  }
+}

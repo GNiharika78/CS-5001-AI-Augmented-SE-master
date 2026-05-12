@@ -1,0 +1,51 @@
+{
+  "task_id": 639,
+  "task_prompt": "Write a function to sum the length of the names of a given list of names after removing the names that start with a lowercase letter.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "boolean_and_to_or",
+  "status": "repaired",
+  "final_code": "def sample_nam(sample_names):\n    sample_names = list(filter(lambda el: el[0].isupper(), sample_names))\n    return sum(len(name) for name in sample_names)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 43.19,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def sample_nam(sample_names):\n  sample_names=list(filter(lambda el:el[0].isupper() or el[1:].islower(),sample_names))\n  return len(''.join(sample_names))",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert sample_nam(['sally', 'Dylan', 'rebecca', 'Diana', 'Joanne', 'keith'])==16\nE       AssertionError: assert 33 == 16\nE        +  where 33 = sample_nam(['sally', 'Dylan', 'rebecca', 'Diana', 'Joanne', 'keith'])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgg0dz17s\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert sample_nam([\"php\", \"res\", \"Python\", \"abcd\", \"Java\", \"aaa\"])==10\nE       AssertionError: assert 23 == 10\nE        +  where 23 = sample_nam(['php', 'res', 'Python', 'abcd', 'Java', 'aaa'])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgg0dz17s\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert sample_nam([\"abcd\", \"Python\", \"abba\", \"aba\"])==6\nE       AssertionError: assert 17 == 6\nE        +  where 17 = sample_nam(['abcd', 'Python', 'abba', 'aba'])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgg0dz17s\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgg0dz17s\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgg0dz17s\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgg0dz17s\\test_solution.py::test_case_2\n3 failed in 0.35s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   - The function `sample_nam` is not correctly filtering out names that start with a lowercase letter. It is also incorrectly including names that have all remaining characters in lowercase (due to the `or el[1:].islower()` condition), which is not the intended behavior.\n   - The function is returning the total length of the concatenated filtered names instead of the sum of the lengths of the individual filtered names.\n\n2. **Evidence**:\n   - Test Case 0:\n     - Input: `['sally', 'Dylan', 'rebecca', 'Diana', 'Joanne', 'keith']`\n     - Expected Output: `16` (sum of lengths of `'Dylan'`, `'Diana'`, `'Joanne'` = 5 + 5 + 6 = 16)\n     - Actual Output: `33` (concatenated length of all names, including those starting with lowercase)\n   - Test Case 1:\n     - Input: `[\"php\", \"res\", \"Python\", \"abcd\", \"Java\", \"aaa\"]`\n     - Expected Output: `10` (sum of lengths of `'Python'",
+      "hypothesis": "### Failure Analysis Report\n\n1. **Failing Behavior**:\n   - The function `sample_nam` incorrectly filters names and returns the wrong output. It fails to:\n     - Properly exclude names starting with a lowercase letter.\n     - Correctly sum the lengths of the filtered names (instead, it returns the length of the concatenated string).\n\n2. **Evidence**:\n   - **Test Case 0**:\n     - Input: `['sally', 'Dylan', 'rebecca', 'Diana', 'Joanne', 'keith']`\n     - Expected Output: `16` (sum of lengths of `'Dylan'`, `'Diana'`, `'Joanne'` = 5 + 5 + 6 = 16)\n     - Actual Output: `33` (concatenated length of all names, including those starting with lowercase).\n   - **Test Case 1**:\n     - Input: `[\"php\", \"res\", \"Python\", \"abcd\", \"Java\", \"aaa\"]`\n     - Expected Output: `10` (sum of lengths of `'Python'` and `'Java'` = 6 + 4 = 10)\n     - Actual Output: `21` (",
+      "patched_code": "def sample_nam(sample_names):\n    sample_names = list(filter(lambda el: el[0].isupper(), sample_names))\n    return sum(len(name) for name in sample_names)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 28.67
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def sample_nam(sample_names):\n    sample_names = list(filter(lambda el: el[0].isupper(), sample_names))\n    return sum(len(name) for name in sample_names)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.76
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (10/10 statements covered)\n  - `solution.py`: 3 statements, 0 missed (100% coverage)\n  - `test_solution.py`: 7 statements, 0 missed (100% coverage)\n- The code and tests are fully covered by the existing test suite.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested (though they are likely covered implicitly):\n- **Empty list**: Input `[]` (should return `0`).\n- **All lowercase names**: Input `[\"alice\", \"bob\"]` (should return `0`).\n- **Mixed case names**: Input `[\"Alice\", \"bob\", \"Charlie\"]` (should return `5 + 7 = 12`).\n- **Names with leading/trailing spaces**: Input `[\" Alice\", \"bob \"]` (should return `6` if spaces are part of the name, or `5` if stripped).\n- **Non-string inputs**: Input `[123, \"",
+    "generated_tests": [
+      "assert sample_nam(['Alice', 'bob', 'Charlie', 'dave']) == 10",
+      "assert sample_nam(['Xavier', 'yolanda', 'Zach', 'alex']) == 10",
+      "assert sample_nam(['A', 'b', 'C', 'd', 'E']) == 3"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...F..                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert sample_nam(['Alice', 'bob', 'Charlie', 'dave']) == 10\nE       AssertionError: assert 12 == 10\nE        +  where 12 = sample_nam(['Alice', 'bob', 'Charlie', 'dave'])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp6j58j7m0\\test_solution.py:13: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp6j58j7m0\\test_solution.py::test_case_3\n1 failed, 5 passed in 0.35s\n\n"
+  }
+}

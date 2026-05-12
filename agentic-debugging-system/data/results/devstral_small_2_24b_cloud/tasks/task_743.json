@@ -1,0 +1,51 @@
+{
+  "task_id": 743,
+  "task_prompt": "Write a function to rotate a given list by specified number of items to the right direction. https://www.geeksforgeeks.org/python-program-right-rotate-list-n/",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def rotate_right(lst, m):\n    return lst[-m:] + lst[:-m]",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 46.75,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def rotate_right(list, m):\n  result =  list[-m:] - list[:-m]\n  return result",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert rotate_right([1, 2, 3, 4, 5, 6, 7, 8, 9, 10],3)==[8, 9, 10, 1, 2, 3, 4, 5, 6, 7]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgp93s_b7\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nlist = [1, 2, 3, 4, 5, 6, ...], m = 3\n\n    def rotate_right(list, m):\n>     result =  list[-m:] - list[:-m]\n                ^^^^^^^^^^^^^^^^^^^^^\nE     TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgp93s_b7\\solution.py:2: TypeError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert rotate_right([1, 2, 3, 4, 5, 6, 7, 8, 9, 10],2)==[9, 10, 1, 2, 3, 4, 5, 6, 7, 8]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgp93s_b7\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nlist = [1, 2, 3, 4, 5, 6, ...], m = 2\n\n    def rotate_right(list, m):\n>     result =  list[-m:] - list[:-m]\n                ^^^^^^^^^^^^^^^^^^^^^\nE     TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgp93s_b7\\solution.py:2: TypeError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert rotate_right([1, 2, 3, 4, 5, 6, 7, 8, 9, 10],5)==[6, 7, 8, 9, 10, 1, 2, 3, 4, 5]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgp93s_b7\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nlist = [1, 2, 3, 4, 5, 6, ...], m = 5\n\n    def rotate_right(list, m):\n>     result =  list[-m:] - list[:-m]\n                ^^^^^^^^^^^^^^^^^^^^^\nE     TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgp93s_b7\\solution.py:2: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgp93s_b7\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgp93s_b7\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpgp93s_b7\\test_solution.py::test_case_2\n3 failed in 0.39s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   The function `rotate_right` failed to correctly rotate the list to the right by the specified number of items. Instead, it attempted to perform a subtraction operation between two lists, which is not supported in Python.\n\n2. **Evidence**:\n   - The test case `rotate_right([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 3)` expected the output `[8, 9, 10, 1, 2, 3, 4, 5, 6, 7]`, but the function raised a `TypeError`.\n   - The error message indicates: `TypeError: unsupported operand type(s) for -: 'list' and 'list'`.\n\n3. **Failure type**:\n   - **Logical Error**: The function incorrectly uses the `-` operator to concatenate lists, which is not valid in Python. The correct way to concatenate lists is using the `+` operator.\n   - **Syntax Error**: The `-` operator is not applicable for list concatenation.\n\n4. **Suspected location**:\n   - The error is in the line `result",
+      "hypothesis": "Here's the structured analysis of the failure and the repair plan:\n\n---\n\n### 1. Failing Behavior\nThe function `rotate_right` fails to rotate the list to the right by `m` positions. Instead, it raises a `TypeError` because it attempts to subtract two lists (`list[-m:] - list[:-m]`), which is not a valid operation in Python.\n\n### 2. Evidence\n- **Test Case**:\n  ```python\n  rotate_right([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 3)\n  ```\n- **Expected Output**:\n  ```python\n  [8, 9, 10, 1, 2, 3, 4, 5, 6, 7]\n  ```\n- **Actual Output**:\n  ```python\n  TypeError: unsupported operand type(s) for -: 'list' and 'list'\n  ```\n\n### 3. Root Cause\nThe function incorrectly uses the `-` operator to concatenate the two parts of the list (`list[-m:]` and `list[:-m]`). In Python, the `-` operator is not defined for lists,",
+      "patched_code": "def rotate_right(lst, m):\n    return lst[-m:] + lst[:-m]",
+      "decision": "patch_and_retry",
+      "duration_seconds": 25.02
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def rotate_right(lst, m):\n    return lst[-m:] + lst[:-m]",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.30s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "### 1. Coverage Summary\nThe coverage report shows that the code has **100% statement coverage**, meaning all lines of code in both `solution.py` and `test_solution.py` were executed during testing. The function `rotate_right` is fully covered, and no statements were missed.\n\n### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, this does not necessarily mean all edge cases or boundary conditions were tested. Potential missing or weakly tested cases include:\n- **Empty list**: What happens when `lst` is empty?\n- **Rotation count larger than list length**: What if `m > len(lst)`?\n- **Negative rotation count**: What if `m` is negative?\n- **Non-integer rotation count**: What if `m` is a float or string?\n- **Non-list input**: What if `lst` is not a list (e.g., tuple, string, or None)?\n\n### 3. Suggested Additional Tests\nTo ensure robustness, the following test cases should be added:\n1. **Empty list**:\n   ```python\n   assert rotate_right([], 3) == []\n   ```\n2. **Rotation count larger than list length**:\n   ```python",
+    "generated_tests": [
+      "assert rotate_right([], 3) == []",
+      "assert rotate_right([1, 2, 3], 0) == [1, 2, 3]",
+      "assert rotate_right([1, 2, 3, 4], 5) == [2, 3, 4, 1]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert rotate_right([1, 2, 3, 4], 5) == [2, 3, 4, 1]\nE       assert [1, 2, 3, 4] == [2, 3, 4, 1]\nE         \nE         At index 0 diff: 1 != 2\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxmtmp_2f\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxmtmp_2f\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.35s\n\n"
+  }
+}

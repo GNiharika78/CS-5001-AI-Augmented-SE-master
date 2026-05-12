@@ -1,0 +1,51 @@
+{
+  "task_id": 94,
+  "task_prompt": "Given a list of tuples, write a function that returns the first value of the tuple with the smallest second value.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "builtin_min_to_max",
+  "status": "repaired",
+  "final_code": "from operator import itemgetter\ndef index_minimum(test_list):\n  res = min(test_list, key = itemgetter(1))[0]\n  return (res)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 38.15,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "from operator import itemgetter \ndef index_minimum(test_list):\n  res = max(test_list, key = itemgetter(1))[0]\n  return (res) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert index_minimum([('Rash', 143), ('Manjeet', 200), ('Varsha', 100)]) == 'Varsha'\nE       AssertionError: assert 'Manjeet' == 'Varsha'\nE         \nE         - Varsha\nE         + Manjeet\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpz22jmri2\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert index_minimum([('Yash', 185), ('Dawood', 125), ('Sanya', 175)]) == 'Dawood'\nE       AssertionError: assert 'Yash' == 'Dawood'\nE         \nE         - Dawood\nE         + Yash\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpz22jmri2\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert index_minimum([('Sai', 345), ('Salman', 145), ('Ayesha', 96)]) == 'Ayesha'\nE       AssertionError: assert 'Sai' == 'Ayesha'\nE         \nE         - Ayesha\nE         + Sai\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpz22jmri2\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpz22jmri2\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpz22jmri2\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpz22jmri2\\test_solution.py::test_case_2\n3 failed in 0.34s\n\n",
+      "failure": "Let's analyze the failure:\n\n1. **What failed**:\n   - The function `index_minimum()` is returning the first value of the tuple with the *largest* second value instead of the *smallest* second value.\n   - In test_case_0, it returned 'Manjeet' (200) instead of 'Varsha' (100)\n   - In test_case_1, it returned 'Yash' (185) instead of 'Dawood' (125)\n\n2. **Evidence**:\n   - The function uses `max()` with `key=itemgetter(1)`, which finds the tuple with the maximum second value\n   - The test cases expect the tuple with the minimum second value\n   - The test outputs show the function is consistently returning the wrong result\n\n3. **Failure type**:\n   - Logic error - the function implements the opposite of what's required\n   - The function finds the maximum when it should find the minimum\n\n4. **Suspected location**:\n   - Line 3 in the function: `res = max(test_list, key = itemgetter(1))[0]`\n   - The `max()` function should be changed to `min()`\n\nThe",
+      "hypothesis": "Here's the structured analysis of the failure:\n\n1. **Failing behavior**:\n   The function returns the first value of the tuple with the *largest* second value instead of the *smallest* second value.\n\n2. **Evidence**:\n   - Test case 0: Input `[('Manjeet', 200), ('Varsha', 100)]` \u2192 Expected 'Varsha' (100), got 'Manjeet' (200)\n   - Test case 1: Input `[('Yash', 185), ('Dawood', 125)]` \u2192 Expected 'Dawood' (125), got 'Yash' (185)\n   - The function consistently returns the tuple with the maximum second value\n\n3. **Root cause**:\n   The function uses `max()` when it should use `min()`. The `key=itemgetter(1)` correctly identifies the second element of each tuple, but the wrong aggregation function is applied.\n\n4. **Why this explains failure**:\n   - `max()` finds the tuple with the highest second value\n   - The requirement is to find the tuple with the lowest second value\n   - This is a direct logic inversion",
+      "patched_code": "from operator import itemgetter\ndef index_minimum(test_list):\n  res = min(test_list, key = itemgetter(1))[0]\n  return (res)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 24.34
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "from operator import itemgetter\ndef index_minimum(test_list):\n  res = min(test_list, key = itemgetter(1))[0]\n  return (res)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.30s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\nThe coverage report shows that the code has **100% statement coverage** (all lines of code are executed during testing). Both the solution (`solution.py`) and the test file (`test_solution.py`) have no missing lines (`Miss = 0`).\n\n#### 2. Missing or Weakly Tested Cases\nWhile the code has 100% statement coverage, there are potential edge cases that may not be thoroughly tested:\n- **Empty list**: The function may not handle an empty input list gracefully (e.g., `index_minimum([])`).\n- **Tuples with equal second values**: If multiple tuples have the same smallest second value, the function will return the first occurrence, but this behavior should be verified.\n- **Non-tuple elements**: The function assumes all elements in `test_list` are tuples. Passing non-tuple elements (e.g., lists or integers) may cause errors.\n- **Single-element list**: A list with only one tuple (e.g., `[(5, 10)]`) should return the first value of that tuple.\n- **Negative or zero values**: The function should work correctly with negative or zero second values (e.g",
+    "generated_tests": [
+      "assert index_minimum([('Alice', 50), ('Bob', 30), ('Charlie', 40)]) == 'Bob'",
+      "assert index_minimum([('X', 10), ('Y', 5), ('Z', 8)]) == 'Y'",
+      "assert index_minimum([('A', 100), ('B', 100), ('C', 50)]) == 'C'"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.30s\n\n"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "task_id": 754,
+  "task_prompt": "We say that an element is common for lists l1, l2, l3 if it appears in all three lists under the same index. Write a function to find common elements from three lists. The function should return a list.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_eq_to_neq",
+  "status": "repaired",
+  "final_code": "def extract_index_list(l1, l2, l3):\n    result = []\n    for m, n, o in zip(l1, l2, l3):\n        if m == n == o:\n            result.append(m)\n    return result",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 30.92,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def extract_index_list(l1, l2, l3):\n    result = []\n    for m, n, o in zip(l1, l2, l3):\n        if (m != n == o):\n            result.append(m)\n    return result",
+      "tests_passed_before_patch": false,
+      "test_output": "FFFF                                                                     [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert extract_index_list([1, 1, 3, 4, 5, 6, 7],[0, 1, 2, 3, 4, 5, 7],[0, 1, 2, 3, 4, 5, 7])==[1, 7]\nE       assert [1, 3, 4, 5, 6] == [1, 7]\nE         \nE         At index 1 diff: 3 != 7\nE         Left contains 3 more items, first extra item: 4\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptywy5xwz\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert extract_index_list([1, 1, 3, 4, 5, 6, 7],[0, 1, 2, 3, 4, 6, 5],[0, 1, 2, 3, 4, 6, 7])==[1, 6]\nE       assert [1, 3, 4, 5] == [1, 6]\nE         \nE         At index 1 diff: 3 != 6\nE         Left contains 2 more items, first extra item: 4\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptywy5xwz\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert extract_index_list([1, 1, 3, 4, 6, 5, 6],[0, 1, 2, 3, 4, 5, 7],[0, 1, 2, 3, 4, 5, 7])==[1, 5]\nE       assert [1, 3, 4, 6, 6] == [1, 5]\nE         \nE         At index 1 diff: 3 != 5\nE         Left contains 3 more items, first extra item: 4\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptywy5xwz\\test_solution.py:10: AssertionError\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert extract_index_list([1, 2, 3, 4, 6, 6, 6],[0, 1, 2, 3, 4, 5, 7],[0, 1, 2, 3, 4, 5, 7])==[]\nE       assert [1, 2, 3, 4, 6, 6, ...] == []\nE         \nE         Left contains 7 more items, first extra item: 1\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptywy5xwz\\test_solution.py:13: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptywy5xwz\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptywy5xwz\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptywy5xwz\\test_solution.py::test_case_2\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptywy5xwz\\test_solution.py::test_case_3\n4 failed in 0.34s\n\n",
+      "failure": "### Analysis of the Failure\n\n1. **What failed**:\n   The function `extract_index_list` is supposed to return elements that appear in all three lists at the same index. However, the current implementation incorrectly checks the condition `(m != n == o)`, which does not correctly identify common elements across all three lists.\n\n2. **Evidence**:\n   - **Test Case 0**:\n     - Input: `l1 = [1, 1, 3, 4, 5, 6, 7]`, `l2 = [0, 1, 2, 3, 4, 5, 7]`, `l3 = [0, 1, 2, 3, 4, 5, 7]`\n     - Expected Output: `[1, 7]` (elements at indices 1 and 6 are common in all three lists)\n     - Actual Output: `[1, 3, 4, 5, 6]` (incorrectly includes elements where `l2` and `l3` match but `l1` does not match `l2` or `l3`).\n   - **Test Case 1**:\n     - Input: `l",
+      "hypothesis": "### Analysis of the Failure\n\n1. **Failing Behavior**:\n   The function `extract_index_list` incorrectly identifies common elements across the three lists. It appends elements to the result list when `m != n == o`, which means it checks if `m` is not equal to `n` and `n` is equal to `o`. This logic does not correctly identify elements that are common across all three lists at the same index.\n\n2. **Evidence**:\n   - **Test Case 0**:\n     - Input: `l1 = [1, 1, 3, 4, 5, 6, 7]`, `l2 = [0, 1, 2, 3, 4, 5, 7]`, `l3 = [0, 1, 2, 3, 4, 5, 7]`\n     - Expected Output: `[1, 7]` (elements at indices 1 and 6 are common in all three lists)\n     - Actual Output: `[1, 3, 4, 5, 6]` (incorrectly includes elements where `l2` and `l3` match but `l1` does",
+      "patched_code": "def extract_index_list(l1, l2, l3):\n    result = []\n    for m, n, o in zip(l1, l2, l3):\n        if m == n == o:\n            result.append(m)\n    return result",
+      "decision": "patch_and_retry",
+      "duration_seconds": 15.16
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def extract_index_list(l1, l2, l3):\n    result = []\n    for m, n, o in zip(l1, l2, l3):\n        if m == n == o:\n            result.append(m)\n    return result",
+      "tests_passed_before_patch": true,
+      "test_output": "....                                                                     [100%]\n4 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.61
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       9      0   100%\n------------------------------------------------\nTOTAL                 15      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (15/15 statements covered)\n  - `solution.py`: 100% (6/6 statements covered)\n  - `test_solution.py`: 100% (9/9 statements covered)\n- The code and tests are fully covered, meaning all lines of code were executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, this does not necessarily mean all edge cases or scenarios are tested. Potential gaps include:\n- **Empty lists**: What if one or more input lists are empty?\n- **Lists of unequal length**: The current implementation uses `zip`, which stops at the shortest list. Does this behavior match expectations?\n- **Non-hashable or complex elements**: The function works for simple types (e.g., integers, strings), but what about nested lists or dictionaries?\n- **Large lists**: Performance with very large lists is not tested.\n- **All elements common**: All elements at every index are the same.\n- **No common elements**: No elements are common at any index.\n\n#### 3. Suggested Additional Tests",
+    "generated_tests": [
+      "assert extract_index_list([], [], []) == []",
+      "assert extract_index_list([1, 2, 3], [1, 2, 3], [1, 2, 3]) == [1, 2, 3]",
+      "assert extract_index_list([1, 2, 3], [4, 5, 6], [7, 8, 9]) == []"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": ".......                                                                  [100%]\n7 passed in 0.31s\n\n"
+  }
+}

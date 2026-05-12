@@ -1,0 +1,51 @@
+{
+  "task_id": 393,
+  "task_prompt": "Write a function to find the list with maximum length.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "builtin_max_to_min",
+  "status": "repaired",
+  "final_code": "def max_length_list(input_list):\n    max_length = max(len(x) for x in input_list)\n    max_list = max(input_list, key=lambda i: len(i))\n    return (max_length, max_list)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 39.22,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_length_list(input_list):\n    max_length = min(len(x) for x in input_list )   \n    max_list = max(input_list, key = lambda i: len(i))    \n    return(max_length, max_list)",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert max_length_list([[0], [1, 3], [5, 7], [9, 11], [13, 15, 17]])==(3, [13, 15, 17])\nE       assert (1, [13, 15, 17]) == (3, [13, 15, 17])\nE         \nE         At index 0 diff: 1 != 3\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqk8uh3nc\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert max_length_list([[1,2,3,4,5],[1,2,3,4],[1,2,3],[1,2],[1]])==(5,[1,2,3,4,5])\nE       assert (1, [1, 2, 3, 4, 5]) == (5, [1, 2, 3, 4, 5])\nE         \nE         At index 0 diff: 1 != 5\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqk8uh3nc\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert max_length_list([[3,4,5],[6,7,8,9],[10,11,12]])==(4,[6,7,8,9])\nE       assert (3, [6, 7, 8, 9]) == (4, [6, 7, 8, 9])\nE         \nE         At index 0 diff: 3 != 4\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqk8uh3nc\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqk8uh3nc\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqk8uh3nc\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqk8uh3nc\\test_solution.py::test_case_2\n3 failed in 0.36s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   The function `max_length_list` is returning an incorrect tuple where the first element (the maximum length) is always the minimum length of the sublists instead of the maximum length.\n\n2. **Evidence**:\n   - In `test_case_0`, the function returns `(1, [13, 15, 17])` when it should return `(3, [13, 15, 17])`. The correct maximum length is 3, but the function returns 1 (the minimum length).\n   - In `test_case_1`, the function returns `(1, [1, 2, 3, 4, 5])` when it should return `(5, [1, 2, 3, 4, 5])`. The correct maximum length is 5, but the function returns 1 (the minimum length).\n\n3. **Failure type**:\n   - **Logical Error**: The function incorrectly calculates `max_length` as the minimum length of the sublists (`min(len(x) for x in input_list)`) instead of the maximum length.\n\n4. **Suspected location**:\n   - The error is in the line",
+      "hypothesis": "### Failure Analysis Report\n\n1. **Failing behavior**:\n   The function `max_length_list` returns a tuple where the first element is the minimum length of the sublists in `input_list` instead of the maximum length. The second element (the longest sublist) is correctly identified.\n\n2. **Evidence**:\n   - For `test_case_0 = [[1, 2], [13, 15, 17], [10]]`, the function returns `(1, [13, 15, 17])` instead of the expected `(3, [13, 15, 17])`. The correct maximum length is 3, but the function returns 1 (the minimum length of the sublists).\n   - For `test_case_1 = [[1, 2, 3, 4, 5], [1], [2, 3]]`, the function returns `(1, [1, 2, 3, 4, 5])` instead of the expected `(5, [1, 2, 3, 4, 5])`. The correct maximum length is 5, but the function returns 1 (the minimum length",
+      "patched_code": "def max_length_list(input_list):\n    max_length = max(len(x) for x in input_list)\n    max_list = max(input_list, key=lambda i: len(i))\n    return (max_length, max_list)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 24.22
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_length_list(input_list):\n    max_length = max(len(x) for x in input_list)\n    max_list = max(input_list, key=lambda i: len(i))\n    return (max_length, max_list)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.29s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.57
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (11/11 statements covered)\n- **solution.py**: 100% (4/4 statements covered)\n- **test_solution.py**: 100% (7/7 statements covered)\n\nThe coverage report indicates that all lines of code in both the solution and test files are executed during testing. This is a strong indicator that the test suite is comprehensive for the current implementation.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, there are still potential edge cases or scenarios that might not be explicitly tested or could be weakly tested. These include:\n- **Empty input list**: The function might not handle an empty list gracefully (e.g., `max_length_list([])`). The current implementation would raise a `ValueError` because `max()` cannot operate on an empty sequence.\n- **Input with multiple lists of the same maximum length**: The function returns the first list encountered with the maximum length (due to `max`'s behavior). This might not be explicitly tested.\n- **Input with non-list elements**: The function assumes all elements in `input_list`",
+    "generated_tests": [
+      "assert max_length_list([[], [1], [2, 3], [4, 5, 6]]) == (3, [4, 5, 6])",
+      "assert max_length_list([['a'], ['b', 'c'], ['d', 'e', 'f'], ['g', 'h', 'i', 'j']]) == (4, ['g', 'h', 'i', 'j'])",
+      "assert max_length_list([[1, 2], [3, 4, 5, 6, 7], [8, 9, 10]]) == (5, [3, 4, 5, 6, 7])"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.33s\n\n"
+  }
+}

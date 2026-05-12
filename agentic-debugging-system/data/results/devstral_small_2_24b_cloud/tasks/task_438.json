@@ -1,0 +1,39 @@
+{
+  "task_id": 438,
+  "task_prompt": "Write a function to count bidirectional tuple pairs.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def count_bidirectional(test_list):\n  res = 0\n  for idx in range(0, len(test_list)):\n    for iidx in range(idx - 1, len(test_list)):\n      if test_list[iidx][0] == test_list[idx][1] and test_list[idx][1] == test_list[iidx][0]:\n        res += 1\n  return res",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 16.24,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def count_bidirectional(test_list):\n  res = 0\n  for idx in range(0, len(test_list)):\n    for iidx in range(idx - 1, len(test_list)):\n      if test_list[iidx][0] == test_list[idx][1] and test_list[idx][1] == test_list[iidx][0]:\n        res += 1\n  return res",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.61
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (14/14 statements covered)\n- **Solution Code Coverage**: 100% (7/7 statements covered)\n- **Test Code Coverage**: 100% (7/7 statements covered)\n\nThe coverage report indicates that all statements in both the solution and test files are executed during testing. This is a strong initial indicator of thorough testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, this does not necessarily mean all edge cases or logical scenarios are tested. Potential gaps include:\n- **Empty List**: The function's behavior with an empty list (`test_list = []`) is not explicitly tested.\n- **Single Tuple**: A list with only one tuple (`test_list = [(1, 2)]`) should return 0, as no bidirectional pairs can exist.\n- **No Bidirectional Pairs**: A list with tuples that do not form any bidirectional pairs (e.g., `test_list = [(1, 2), (3, 4)]`) should return 0.\n- **All Tuples Identical**: A list where all tuples",
+    "generated_tests": [
+      "assert count_bidirectional([(1, 2), (2, 1), (3, 4), (4, 3)]) == 2",
+      "assert count_bidirectional([(1, 1), (2, 2), (3, 3)]) == 0",
+      "assert count_bidirectional([(1, 2), (2, 3), (3, 1)]) == 0"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...FFF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert count_bidirectional([(1, 2), (2, 1), (3, 4), (4, 3)]) == 2\nE       assert 4 == 2\nE        +  where 4 = count_bidirectional([(1, 2), (2, 1), (3, 4), (4, 3)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5jwgtdx4\\test_solution.py:13: AssertionError\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert count_bidirectional([(1, 1), (2, 2), (3, 3)]) == 0\nE       assert 3 == 0\nE        +  where 3 = count_bidirectional([(1, 1), (2, 2), (3, 3)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5jwgtdx4\\test_solution.py:16: AssertionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert count_bidirectional([(1, 2), (2, 3), (3, 1)]) == 0\nE       assert 2 == 0\nE        +  where 2 = count_bidirectional([(1, 2), (2, 3), (3, 1)])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5jwgtdx4\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5jwgtdx4\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5jwgtdx4\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5jwgtdx4\\test_solution.py::test_case_5\n3 failed, 3 passed in 0.36s\n\n"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "task_id": 554,
+  "task_prompt": "Write a python function which takes a list of integers and only returns the odd ones.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_neq_to_eq",
+  "status": "repaired",
+  "final_code": "def Split(lst):\n    od_li = []\n    for i in lst:\n        if (i % 2 != 0):\n            od_li.append(i)\n    return od_li",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 24.11,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def Split(list): \n    od_li = [] \n    for i in list: \n        if (i % 2 == 0): \n            od_li.append(i)  \n    return od_li",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert Split([1,2,3,4,5,6]) == [1,3,5]\nE       assert [2, 4, 6] == [1, 3, 5]\nE         \nE         At index 0 diff: 2 != 1\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpp18xm141\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert Split([10,11,12,13]) == [11,13]\nE       assert [10, 12] == [11, 13]\nE         \nE         At index 0 diff: 10 != 11\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpp18xm141\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert Split([7,8,9,1]) == [7,9,1]\nE       assert [8] == [7, 9, 1]\nE         \nE         At index 0 diff: 8 != 7\nE         Right contains 2 more items, first extra item: 9\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpp18xm141\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpp18xm141\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpp18xm141\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpp18xm141\\test_solution.py::test_case_2\n3 failed in 0.40s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `Split()` is incorrectly filtering the list. It's supposed to return only the **odd** numbers, but instead it's returning the **even** numbers (as evidenced by the test failures).\n\n2. **Evidence**:\n   - Test case 0: Input `[1,2,3,4,5,6]` \u2192 Expected `[1,3,5]` (odds) but got `[2,4,6]` (evens)\n   - Test case 1: Input `[10,11,12,13]` \u2192 Expected `[11,13]` (odds) but got `[10,12]` (evens)\n   - Test case 2: Input `[7,8,9,1]` \u2192 Expected `[7,9,1]` (odds) but got `[8]` (evens)\n\n3. **Failure type**:\n   - **Logical error**: The condition `if (i % 2 == 0)` checks for even numbers instead of odd numbers. The function appends even numbers to `od_li` (which is a misleading name since it suggests \"odd\" but actually",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `Split()` incorrectly returns **even** numbers instead of **odd** numbers. The output list contains numbers divisible by 2 (`i % 2 == 0`), which is the opposite of the intended behavior.\n\n---\n\n### **2. Evidence**\n- **Test Case 0**: Input `[1,2,3,4,5,6]` \u2192 Expected `[1,3,5]` (odds) but got `[2,4,6]` (evens).\n- **Test Case 1**: Input `[10,11,12,13]` \u2192 Expected `[11,13]` (odds) but got `[10,12]` (evens).\n- **Test Case 2**: Input `[7,8,9,1]` \u2192 Expected `[7,9,1]` (odds) but got `[8]` (evens).\n\n---\n\n### **3. Root Cause**\nThe condition `if (i % 2 == 0)` checks for **even** numbers (since `i % 2 == 0` is true for evens). However, the function is",
+      "patched_code": "def Split(lst):\n    od_li = []\n    for i in lst:\n        if (i % 2 != 0):\n            od_li.append(i)\n    return od_li",
+      "decision": "patch_and_retry",
+      "duration_seconds": 14.76
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def Split(lst):\n    od_li = []\n    for i in lst:\n        if (i % 2 != 0):\n            od_li.append(i)\n    return od_li",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.67
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the **solution code (`solution.py`)** and the **test file (`test_solution.py`)**. This means:\n- All **6 statements** in the `Split()` function were executed during testing.\n- All **7 statements** in the test file were executed.\n\nSince **no statements were missed**, the tests appear to be thorough in covering the function's logic.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nDespite **100% coverage**, we should check if the tests cover **edge cases** that might not be explicitly tested but are still important. Common edge cases for this function include:\n\n| **Edge Case**               | **Description**                                                                 |\n|-----------------------------|---------------------------------------------------------------------------------|\n| **Empty list**              | `Split([])` should return `[]`.                                                 |\n| **All even numbers**        | `Split([2, 4, 6])` should return `[]`.                                           |\n| **All odd numbers**         | `Split([1, 3, 5])` should return `[1, 3, 5]`.                                   |\n| **Negative odd numbers**",
+    "generated_tests": [
+      "assert Split([]) == []",
+      "assert Split([-1, -2, -3, -4, -5]) == [-1, -3, -5]",
+      "assert Split([0, 2, 4, 6, 8]) == []"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.36s\n\n"
+  }
+}

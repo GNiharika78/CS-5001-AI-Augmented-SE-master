@@ -1,0 +1,51 @@
+{
+  "task_id": 638,
+  "task_prompt": "Write a function to calculate the wind chill index rounded to the next integer given the wind velocity in km/h and a temperature in celsius.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import math\ndef wind_chill(v,t):\n    windchill = 13.12 + 0.6215 * t - 11.37 * math.pow(v, 0.16) + 0.3965 * t * math.pow(v, 0.16)\n    return int(round(windchill, 0))",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 60.08,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef wind_chill(v,t):\n windchill = 13.12 + 0.6215+t -  11.37*math.pow(v, 0.16) + 0.3965*t*math.pow(v, 0.16)\n return int(round(windchill, 0))",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert wind_chill(120,35)==40\nE       assert 54 == 40\nE        +  where 54 = wind_chill(120, 35)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpoft_0jnx\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert wind_chill(40,20)==19\nE       assert 28 == 19\nE        +  where 28 = wind_chill(40, 20)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpoft_0jnx\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert wind_chill(10,8)==6\nE       assert 10 == 6\nE        +  where 10 = wind_chill(10, 8)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpoft_0jnx\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpoft_0jnx\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpoft_0jnx\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpoft_0jnx\\test_solution.py::test_case_2\n3 failed in 0.35s\n\n",
+      "failure": "### Analysis of the Failure\n\n1. **What failed**:\n   The function `wind_chill(v, t)` is not producing the expected output for the given test cases. The calculated wind chill index does not match the expected values.\n\n2. **Evidence**:\n   - Test Case 0: `wind_chill(120, 35)` returns `54` but the expected value is `40`.\n   - Test Case 1: `wind_chill(40, 20)` returns `28` but the expected value is `19`.\n   - Test Case 2: `wind_chill(10, 8)` returns `10` but the expected value is `6`.\n\n3. **Failure type**:\n   The failure is due to an incorrect formula or implementation of the wind chill calculation. The current formula does not match the standard wind chill index formula, leading to incorrect results.\n\n4. **Suspected location**:\n   The issue is in the formula used in the `wind_chill` function. The current formula:\n   ```python\n   windchill = 13.12 + 0.6215 + t - 11.37 * math.pow(v",
+      "hypothesis": "### Analysis of the Failure\n\n1. **Failing behavior**:\n   The function `wind_chill(v, t)` returns incorrect wind chill index values for given inputs. For example:\n   - `wind_chill(120, 35)` returns `54` (expected: `40`).\n   - `wind_chill(40, 20)` returns `28` (expected: `19`).\n   - `wind_chill(10, 8)` returns `10` (expected: `6`).\n\n2. **Evidence**:\n   The discrepancies between the actual and expected outputs suggest the formula is not correctly modeling the wind chill effect. The current formula:\n   ```python\n   windchill = 13.12 + 0.6215 + t - 11.37 * math.pow(v, 0.16) + 0.3965 * t * math.pow(v, 0.16)\n   ```\n   does not match the standard wind chill index formula, which is:\n   ```\n   WCI = 13.12 + 0.6215 * t - 11.37",
+      "patched_code": "import math\ndef wind_chill(v,t):\n    windchill = 13.12 + 0.6215 * t - 11.37 * math.pow(v, 0.16) + 0.3965 * t * math.pow(v, 0.16)\n    return int(round(windchill, 0))",
+      "decision": "patch_and_retry",
+      "duration_seconds": 17.84
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef wind_chill(v,t):\n    windchill = 13.12 + 0.6215 * t - 11.37 * math.pow(v, 0.16) + 0.3965 * t * math.pow(v, 0.16)\n    return int(round(windchill, 0))",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (11/11 statements covered)\n- **Solution Code Coverage**: 100% (4/4 statements covered)\n- **Test Code Coverage**: 100% (7/7 statements covered)\n\nThe coverage report indicates that all lines of code in both the solution (`solution.py`) and the test file (`test_solution.py`) have been executed during testing. This is a strong indicator that the test suite is comprehensive for the current implementation.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, this does not necessarily mean all edge cases or boundary conditions have been tested. Potential weakly tested cases include:\n- **Extreme Values**:\n  - Very high wind velocities (e.g., > 100 km/h).\n  - Very low temperatures (e.g., < -50\u00b0C).\n  - Very high temperatures (e.g., > 50\u00b0C).\n- **Edge Cases**:\n  - Zero wind velocity (`v = 0`). The formula may not be valid for `v = 0` (wind chill is typically undefined or equal to the",
+    "generated_tests": [
+      "assert wind_chill(5, -10) == -13",
+      "assert wind_chill(30, 5) == 2",
+      "assert wind_chill(70, 15) == 12"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....F.                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert wind_chill(30, 5) == 2\nE       assert 0 == 2\nE        +  where 0 = wind_chill(30, 5)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpsloir2qg\\test_solution.py:16: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpsloir2qg\\test_solution.py::test_case_4\n1 failed, 5 passed in 0.33s\n\n"
+  }
+}

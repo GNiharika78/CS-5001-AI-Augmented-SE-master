@@ -1,0 +1,51 @@
+{
+  "task_id": 632,
+  "task_prompt": "Write a python function to move all zeroes to the end of the given list.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def move_zero(num_list):\n    a = [0 for i in range(num_list.count(0))]\n    x = [i for i in num_list if i != 0]\n    return x + a",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 55.73,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def move_zero(num_list):\n    a = [0 for i in range(num_list.count(0))]\n    x = [i for i in num_list if i != 0]\n    return x - a",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert move_zero([1,0,2,0,3,4]) == [1,2,3,4,0,0]\n               ^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptcpqe_zq\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nnum_list = [1, 0, 2, 0, 3, 4]\n\n    def move_zero(num_list):\n        a = [0 for i in range(num_list.count(0))]\n        x = [i for i in num_list if i != 0]\n>       return x - a\n               ^^^^^\nE       TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptcpqe_zq\\solution.py:4: TypeError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert move_zero([2,3,2,0,0,4,0,5,0]) == [2,3,2,4,5,0,0,0,0]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptcpqe_zq\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nnum_list = [2, 3, 2, 0, 0, 4, ...]\n\n    def move_zero(num_list):\n        a = [0 for i in range(num_list.count(0))]\n        x = [i for i in num_list if i != 0]\n>       return x - a\n               ^^^^^\nE       TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptcpqe_zq\\solution.py:4: TypeError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert move_zero([0,1,0,1,1]) == [1,1,1,0,0]\n               ^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptcpqe_zq\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nnum_list = [0, 1, 0, 1, 1]\n\n    def move_zero(num_list):\n        a = [0 for i in range(num_list.count(0))]\n        x = [i for i in num_list if i != 0]\n>       return x - a\n               ^^^^^\nE       TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptcpqe_zq\\solution.py:4: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptcpqe_zq\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptcpqe_zq\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptcpqe_zq\\test_solution.py::test_case_2\n3 failed in 0.32s\n\n",
+      "failure": "### Analysis of the Failed Test Case\n\n1. **What failed**:\n   The function `move_zero` is supposed to move all zeroes to the end of the list while maintaining the order of non-zero elements. However, the function fails with a `TypeError` because it attempts to subtract two lists (`x - a`), which is not a supported operation in Python.\n\n2. **Evidence**:\n   - The test case `move_zero([1,0,2,0,3,4])` expects `[1,2,3,4,0,0]` but fails with `TypeError: unsupported operand type(s) for -: 'list' and 'list'`.\n   - The function constructs two lists:\n     - `a`: A list of zeroes with length equal to the count of zeroes in the input list (e.g., `[0, 0]` for `[1,0,2,0,3,4]`).\n     - `x`: A list of non-zero elements from the input list (e.g., `[1, 2, 3, 4]` for `[1,0,2,0,3,4]`).\n   - The function then tries to return `x - a`,",
+      "hypothesis": "### Analysis of the Failed Test Case\n\n1. **Failing Behavior**:\n   The function `move_zero` fails with a `TypeError` when attempting to subtract two lists (`x - a`). The expected behavior is to move all zeroes to the end of the list while preserving the order of non-zero elements.\n\n2. **Evidence**:\n   - Input: `[1, 0, 2, 0, 3, 4]`\n   - Expected Output: `[1, 2, 3, 4, 0, 0]`\n   - Actual Output: `TypeError: unsupported operand type(s) for -: 'list' and 'list'`\n   - The function constructs:\n     - `a = [0, 0]` (count of zeroes in the input list)\n     - `x = [1, 2, 3, 4]` (non-zero elements)\n   - The line `return x - a` is invalid because list subtraction is not supported in Python.\n\n3. **Root Cause**:\n   The function incorrectly assumes that list subtraction (`x - a`) is a valid operation to concatenate the non-zero elements (`x`) with the zeroes (`a`). In Python,",
+      "patched_code": "def move_zero(num_list):\n    a = [0 for i in range(num_list.count(0))]\n    x = [i for i in num_list if i != 0]\n    return x + a",
+      "decision": "patch_and_retry",
+      "duration_seconds": 24.76
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def move_zero(num_list):\n    a = [0 for i in range(num_list.count(0))]\n    x = [i for i in num_list if i != 0]\n    return x + a",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (11/11 statements covered)\n  - `solution.py`: 4/4 statements covered (100%)\n  - `test_solution.py`: 7/7 statements covered (100%)\n- The code and tests are fully covered, meaning all lines of code were executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage report shows 100% line coverage, it does not guarantee that all edge cases or scenarios are thoroughly tested. Potential weakly tested cases include:\n- **Empty list**: `move_zero([])` (should return `[]`).\n- **List with all zeroes**: `move_zero([0, 0, 0])` (should return `[0, 0, 0]`).\n- **List with no zeroes**: `move_zero([1, 2, 3])` (should return `[1, 2, 3]`).\n- **Large lists**: Performance or correctness with very large lists (e.g., `move_zero([0] * 10000 + [1] * 10",
+    "generated_tests": [
+      "assert move_zero([0, 0, 0, 1, 2]) == [1, 2, 0, 0, 0]",
+      "assert move_zero([1, 2, 3, 4, 5]) == [1, 2, 3, 4, 5]",
+      "assert move_zero([0]) == [0]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.31s\n\n"
+  }
+}

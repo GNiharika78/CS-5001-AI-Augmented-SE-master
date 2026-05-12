@@ -1,0 +1,51 @@
+{
+  "task_id": 3,
+  "task_prompt": "Write a python function to identify non-prime numbers.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "import math\ndef is_not_prime(n):\n    if n < 2:\n        return True\n    for i in range(2, int(math.sqrt(n)) + 1):\n        if n % i == 0:\n            return True\n    return False",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 26.98,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef is_not_prime(n):\n    result = False\n    for i in range(2,int(math.sqrt(n)) - 1):\n        if n % i == 0:\n            result = True\n    return result",
+      "tests_passed_before_patch": false,
+      "test_output": ".FF.                                                                     [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert is_not_prime(10) == True\nE       assert False == True\nE        +  where False = is_not_prime(10)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqv0ze7ij\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert is_not_prime(35) == True\nE       assert False == True\nE        +  where False = is_not_prime(35)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqv0ze7ij\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqv0ze7ij\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqv0ze7ij\\test_solution.py::test_case_2\n2 failed, 2 passed in 0.38s\n\n",
+      "failure": "### Analysis of the Failed Test Cases\n\n1. **What failed**:\n   - The function `is_not_prime(n)` is supposed to return `True` for non-prime numbers, but it returns `False` for the test cases `10` and `35`, which are non-prime numbers.\n\n2. **Evidence**:\n   - Test case 1: `is_not_prime(10)` returns `False` (expected `True`).\n   - Test case 2: `is_not_prime(35)` returns `False` (expected `True`).\n\n3. **Failure type**:\n   - **Logical Error**: The function does not correctly identify non-prime numbers due to an incorrect loop range and missing edge cases.\n\n4. **Suspected location**:\n   - The loop `for i in range(2, int(math.sqrt(n)) - 1)` is incorrect because:\n     - It excludes the upper bound (`int(math.sqrt(n)) - 1`), which means it may miss divisors.\n     - It does not handle the case where `n` is divisible by `int(math.sqrt(n))`.\n     - It does not handle edge cases like `n = 1` (which is not a prime)",
+      "hypothesis": "### Analysis of the Failed Test Cases\n\n1. **Failing Behavior**:\n   - The function `is_not_prime(n)` incorrectly returns `False` for non-prime numbers like `10` and `35`, which should return `True`.\n\n2. **Evidence**:\n   - For `n = 10`:\n     - The loop runs for `i in range(2, int(math.sqrt(10)) - 1)`, which is `range(2, 2)` (since `math.sqrt(10) \u2248 3.16`, so `int(math.sqrt(10)) - 1 = 2`).\n     - The loop does not execute, so `result` remains `False`, even though `10` is divisible by `2` and `5`.\n   - For `n = 35`:\n     - The loop runs for `i in range(2, int(math.sqrt(35)) - 1)`, which is `range(2, 4)` (since `math.sqrt(35) \u2248 5.91`, so `int(math.sqrt(35)) - 1 = 4`).\n     - The loop checks `i = 2",
+      "patched_code": "import math\ndef is_not_prime(n):\n    if n < 2:\n        return True\n    for i in range(2, int(math.sqrt(n)) + 1):\n        if n % i == 0:\n            return True\n    return False",
+      "decision": "patch_and_retry",
+      "duration_seconds": 15.9
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef is_not_prime(n):\n    if n < 2:\n        return True\n    for i in range(2, int(math.sqrt(n)) + 1):\n        if n % i == 0:\n            return True\n    return False",
+      "tests_passed_before_patch": true,
+      "test_output": "....                                                                     [100%]\n4 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            8      1    88%   4\ntest_solution.py       9      0   100%\n------------------------------------------------\nTOTAL                 17      1    94%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 94% (17 statements total, 1 missed)\n- **Solution.py Coverage**: 88% (8 statements, 1 missed)\n- **Test_solution.py Coverage**: 100% (9 statements, 0 missed)\n- **Missing Line**: Line 4 in `solution.py` (the `return True` statement for `n < 2`).\n\n#### 2. Missing or Weakly Tested Cases\n- **Edge Case for `n < 2`**: The function returns `True` for `n < 2` (non-prime), but this case is not tested (line 4 is missed). This includes:\n  - `n = 0`\n  - `n = 1`\n  - Negative numbers (e.g., `n = -1`, `n = -5`).\n- **Prime Numbers**: While primes are likely tested (since the loop is covered), the coverage report does not explicitly confirm this. Weakly tested primes might include:\n  - Small primes (e.g., `2`, `3`, `5`).\n  - Large primes (e.g.,",
+    "generated_tests": [
+      "assert is_not_prime(1) == True",
+      "assert is_not_prime(9) == True",
+      "assert is_not_prime(17) == False"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": ".......                                                                  [100%]\n7 passed in 0.33s\n\n"
+  }
+}

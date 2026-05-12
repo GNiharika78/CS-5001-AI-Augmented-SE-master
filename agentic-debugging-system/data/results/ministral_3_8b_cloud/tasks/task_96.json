@@ -1,0 +1,51 @@
+{
+  "task_id": 96,
+  "task_prompt": "Write a python function to find the number of divisors of a given integer.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def divisor(n):\n    return len([i for i in range(1, n + 1) if n % i == 0])",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.57,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def divisor(n):\n  for i in range(n):\n    x = len([i for i in range(1,n-1) if not n % i])\n  return x",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert divisor(15) == 4\nE       assert 3 == 4\nE        +  where 3 = divisor(15)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptgcsos1g\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert divisor(12) == 6\nE       assert 5 == 6\nE        +  where 5 = divisor(12)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptgcsos1g\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert divisor(9) == 3\nE       assert 2 == 3\nE        +  where 2 = divisor(9)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptgcsos1g\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptgcsos1g\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptgcsos1g\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptgcsos1g\\test_solution.py::test_case_2\n3 failed in 0.40s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `divisor(n)` is not correctly counting the number of divisors for the given test cases. It should return:\n   - 4 for 15 (divisors: 1, 3, 5, 15)\n   - 6 for 12 (divisors: 1, 2, 3, 4, 6, 12)\n   - 3 for 9 (divisors: 1, 3, 9)\n   But it's returning incorrect values (3, 5, 2 respectively).\n\n2. **Evidence**:\n   - The test cases show the function is returning fewer divisors than expected.\n   - The current implementation has several logical issues:\n     a) The inner list comprehension is incorrect (range(1,n-1) is wrong)\n     b) The outer loop is unnecessary and incorrect\n     c) The function doesn't include n itself as a potential divisor\n     d) The range in the list comprehension should be from 1 to n+1\n\n3. **Failure type**:\n   - Logical errors in the divisor counting algorithm\n   - Incorrect",
+      "hypothesis": "Here's the detailed analysis and repair plan for the `divisor(n)` function:\n\n---\n\n### **1. Failing Behavior**\nThe function returns incorrect counts:\n- `divisor(15)` \u2192 **3** (expected: 4)\n- `divisor(12)` \u2192 **5** (expected: 6)\n- `divisor(9)` \u2192 **2** (expected: 3)\n\n---\n\n### **2. Evidence**\n- **Incorrect range**: The inner list comprehension uses `range(1, n-1)`, missing `n` itself and some divisors (e.g., `n` is always a divisor).\n- **Unnecessary outer loop**: The loop `for i in range(n)` is redundant and incorrect\u2014it doesn't iterate over potential divisors.\n- **Inefficient logic**: The function checks divisors in a way that skips valid candidates (e.g., `n` is never considered).\n- **Off-by-one errors**: The range `range(1, n-1)` excludes `n` and some smaller divisors (e.g., for `n=9`, it misses `9` and `3`).\n\n---\n\n### **3. Root Cause**\nThe function has **",
+      "patched_code": "def divisor(n):\n    return len([i for i in range(1, n + 1) if n % i == 0])",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.49
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def divisor(n):\n    return len([i for i in range(1, n + 1) if n % i == 0])",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.68
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All statements in `divisor(n)` were executed during testing.\n- All statements in the test cases were executed.\n\nSince **no statements were missed**, the current test suite effectively exercises the function under various conditions.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nDespite full coverage, we should consider edge cases that might not have been explicitly tested but are still important for correctness:\n\n#### **Potential Weaknesses in Current Testing:**\n- **Negative numbers**: The function may not handle negative inputs correctly (though mathematically, divisors are typically considered for positive integers).\n- **Zero (`n = 0`)**: Division by zero is undefined, so the function should either:\n  - Raise an error (e.g., `ValueError`).\n  - Return `0` (since 0 has infinitely many divisors, but this is mathematically ambiguous).\n- **Non-integer inputs**: If the function is expected to work only with integers, floating-point inputs should be rejected.\n- **Large numbers**: Performance could degrade for very large `n",
+    "generated_tests": [
+      "assert divisor(0) == 0",
+      "assert divisor(1) == 1",
+      "assert divisor(25) == 3"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.36s\n\n"
+  }
+}

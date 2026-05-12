@@ -1,0 +1,39 @@
+{
+  "task_id": 434,
+  "task_prompt": "Write a function that matches a string that has an a followed by one or more b's.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "import re\ndef text_match_one(text):\n        patterns = 'ab-?'\n        if re.search(patterns,  text):\n                return True\n        else:\n                return False\n",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 10.74,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef text_match_one(text):\n        patterns = 'ab-?'\n        if re.search(patterns,  text):\n                return True\n        else:\n                return False\n",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.38s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.69
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the solution (`solution.py`) and test file (`test_solution.py`). This means:\n- All executable statements in the function (`text_match_one`) were executed during testing.\n- No statements were left untested.\n\nHowever, **100% coverage does not necessarily mean 100% correctness**\u2014it only confirms that all lines were executed. The logic of the function may still be flawed.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nThe current implementation has **critical logical flaws**:\n- The regex pattern `'ab-?'` is **incorrect** for matching:\n  - A string that starts with `'a'` followed by **one or more `'b'`s**.\n  - The `-?` is invalid syntax (should be `b+` or `b*`).\n  - The function does not enforce the **full string match** (e.g., `\"abc\"` would match `\"ab\"` but not the entire string).\n\n#### **Weaknesses in Testing:**\n- **No test for edge cases** (e.g., empty string, strings without `'a'`, strings with `'a'` but no `'",
+    "generated_tests": [
+      "assert text_match_one(\"a\") == False",
+      "assert text_match_one(\"abb\") == True",
+      "assert text_match_one(\"abbbbb\") == True"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.35s\n\n"
+  }
+}

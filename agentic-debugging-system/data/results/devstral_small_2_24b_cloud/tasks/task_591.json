@@ -1,0 +1,51 @@
+{
+  "task_id": 591,
+  "task_prompt": "Write a python function to interchange the first and last elements in a list.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "len_to_len_minus_1",
+  "status": "repaired",
+  "final_code": "def swap_List(newList):\n    size = len(newList)\n    temp = newList[0]\n    newList[0] = newList[size - 1]\n    newList[size - 1] = temp\n    return newList",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 40.53,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def swap_List(newList): \n    size = len(newList) - 1 \n    temp = newList[0] \n    newList[0] = newList[size - 1] \n    newList[size - 1] = temp  \n    return newList ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert swap_List([12, 35, 9, 56, 24]) == [24, 35, 9, 56, 12]\nE       assert [56, 35, 9, 12, 24] == [24, 35, 9, 56, 12]\nE         \nE         At index 0 diff: 56 != 24\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpsnvbnwgu\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert swap_List([1, 2, 3]) == [3, 2, 1]\nE       assert [2, 1, 3] == [3, 2, 1]\nE         \nE         At index 0 diff: 2 != 3\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpsnvbnwgu\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert swap_List([4, 5, 6]) == [6, 5, 4]\nE       assert [5, 4, 6] == [6, 5, 4]\nE         \nE         At index 0 diff: 5 != 6\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpsnvbnwgu\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpsnvbnwgu\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpsnvbnwgu\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpsnvbnwgu\\test_solution.py::test_case_2\n3 failed in 0.34s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   The function `swap_List` is not correctly swapping the first and last elements of the list. Instead, it is swapping the first element with the second-to-last element.\n\n2. **Evidence**:\n   - Test case 0: Input `[12, 35, 9, 56, 24]` expected `[24, 35, 9, 56, 12]`, but got `[56, 35, 9, 12, 24]`.\n   - Test case 1: Input `[1, 2, 3]` expected `[3, 2, 1]`, but got `[2, 1, 3]`.\n   - Test case 2: (Output not shown, but likely similar issue.)\n\n3. **Failure type**:\n   - **Logical Error**: The function is using `size - 1` to access the last element, but `size` is already `len(newList) - 1`, so `size - 1` is incorrect. This causes the function to swap the first element with the second-to-last element instead of the last",
+      "hypothesis": "### Failure Analysis Report\n\n1. **Failing Behavior**:\n   The function `swap_List` is not correctly swapping the first and last elements of the list. Instead, it swaps the first element with the second-to-last element.\n\n2. **Evidence**:\n   - Test case 0: Input `[12, 35, 9, 56, 24]` expected `[24, 35, 9, 56, 12]`, but got `[56, 35, 9, 12, 24]`.\n   - Test case 1: Input `[1, 2, 3]` expected `[3, 2, 1]`, but got `[2, 1, 3]`.\n   - Test case 2: (Output not shown, but likely similar issue.)\n\n3. **Root Cause**:\n   The function calculates `size = len(newList) - 1`, which is the index of the last element. However, when swapping, it uses `newList[size - 1]`, which is the second-to-last element. This is incorrect because the intention is to swap the first element (`newList[0]",
+      "patched_code": "def swap_List(newList):\n    size = len(newList)\n    temp = newList[0]\n    newList[0] = newList[size - 1]\n    newList[size - 1] = temp\n    return newList",
+      "decision": "patch_and_retry",
+      "duration_seconds": 16.54
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def swap_List(newList):\n    size = len(newList)\n    temp = newList[0]\n    newList[0] = newList[size - 1]\n    newList[size - 1] = temp\n    return newList",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (13/13 statements covered)\n  - `solution.py`: 6/6 statements covered (100%)\n  - `test_solution.py`: 7/7 statements covered (100%)\n- No missing lines or branches in the code or tests.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested (or may be weakly tested):\n- **Empty list**: The function may not handle an empty list gracefully (though the current implementation would raise an `IndexError`).\n- **Single-element list**: The function would work (no change), but this case may not be tested.\n- **Large lists**: Performance or correctness for very large lists (e.g., 1M+ elements) may not be verified.\n- **Non-list inputs**: The function assumes the input is a list. Passing other iterables (e.g., tuples, strings) or non-iterables may not be tested.\n- **Immutable inputs**: If the input is a tuple, the function would fail (tuples are immutable).",
+    "generated_tests": [
+      "assert swap_List([10]) == [10]",
+      "assert swap_List([1, 2]) == [2, 1]",
+      "assert swap_List([]) == []"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert swap_List([]) == []\n               ^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpj6byizqc\\test_solution.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nnewList = []\n\n    def swap_List(newList):\n        size = len(newList)\n>       temp = newList[0]\n               ^^^^^^^^^^\nE       IndexError: list index out of range\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpj6byizqc\\solution.py:3: IndexError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpj6byizqc\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.35s\n\n"
+  }
+}

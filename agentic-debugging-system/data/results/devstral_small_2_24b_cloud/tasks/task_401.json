@@ -1,0 +1,51 @@
+{
+  "task_id": 401,
+  "task_prompt": "Write a function to perform index wise addition of tuple elements in the given two nested tuples.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def add_nested_tuples(test_tup1, test_tup2):\n  res = tuple(tuple(a + b for a, b in zip(tup1, tup2))\n   for tup1, tup2 in zip(test_tup1, test_tup2))\n  return (res)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 37.98,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def add_nested_tuples(test_tup1, test_tup2):\n  res = tuple(tuple(a - b for a, b in zip(tup1, tup2))\n   for tup1, tup2 in zip(test_tup1, test_tup2))\n  return (res) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert add_nested_tuples(((1, 3), (4, 5), (2, 9), (1, 10)), ((6, 7), (3, 9), (1, 1), (7, 3))) == ((7, 10), (7, 14), (3, 10), (8, 13))\nE       assert ((-5, -4), (1..., 8), (-6, 7)) == ((7, 10), (7,... 10), (8, 13))\nE         \nE         At index 0 diff: (-5, -4) != (7, 10)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1xfdy9jz\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert add_nested_tuples(((2, 4), (5, 6), (3, 10), (2, 11)), ((7, 8), (4, 10), (2, 2), (8, 4))) == ((9, 12), (9, 16), (5, 12), (10, 15))\nE       assert ((-5, -4), (1..., 8), (-6, 7)) == ((9, 12), (9,...12), (10, 15))\nE         \nE         At index 0 diff: (-5, -4) != (9, 12)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1xfdy9jz\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert add_nested_tuples(((3, 5), (6, 7), (4, 11), (3, 12)), ((8, 9), (5, 11), (3, 3), (9, 5))) == ((11, 14), (11, 18), (7, 14), (12, 17))\nE       assert ((-5, -4), (1..., 8), (-6, 7)) == ((11, 14), (1...14), (12, 17))\nE         \nE         At index 0 diff: (-5, -4) != (11, 14)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1xfdy9jz\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1xfdy9jz\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1xfdy9jz\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1xfdy9jz\\test_solution.py::test_case_2\n3 failed in 0.34s\n\n",
+      "failure": "Let's analyze the failure:\n\n1. **What failed**:\n   The function `add_nested_tuples()` is performing subtraction instead of addition on the tuple elements. The test cases expect element-wise addition, but the function is doing element-wise subtraction.\n\n2. **Evidence**:\n   - Test case 0 expects `((7, 10), (7, 14), (3, 10), (8, 13))` but gets `((-5, -4), (1, -4), (1, 8), (-6, 7))`\n   - Test case 1 expects `((9, 12), (9, 16), (5, 12), (10, 15))` but gets similar incorrect results\n   - The first elements show clear subtraction: 1-6=-5 (should be 1+6=7), 3-7=-4 (should be 3+7=10)\n\n3. **Failure type**:\n   This is a logic error - the function is using the wrong arithmetic operation (subtraction instead of addition).\n\n4. **Suspected location**:\n   The error is in the list comprehension where `a",
+      "hypothesis": "Here's the structured analysis of the failure:\n\n1. **Failing behavior**:\n   The function performs element-wise subtraction between corresponding elements of nested tuples instead of the expected addition operation.\n\n2. **Evidence**:\n   - For input `((1, 3), (4, 7), (2, 5), (3, 6))` and `((6, 7), (3, 7), (1, 5), (9, 7))`, the function returns `((-5, -4), (1, -4), (1, 8), (-6, 7))` when it should return `((7, 10), (7, 14), (3, 10), (8, 13))`\n   - The pattern shows consistent subtraction (a-b) where addition (a+b) was expected\n\n3. **Root cause**:\n   The arithmetic operation in the list comprehension is using subtraction (`a - b`) instead of addition (`a + b`).\n\n4. **Why this explains failure**:\n   The core functionality is correct (properly zipping and iterating through nested tuples), but the fundamental arithmetic operation is wrong. This single character difference (`+` vs `-`)",
+      "patched_code": "def add_nested_tuples(test_tup1, test_tup2):\n  res = tuple(tuple(a + b for a, b in zip(tup1, tup2))\n   for tup1, tup2 in zip(test_tup1, test_tup2))\n  return (res)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 23.2
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def add_nested_tuples(test_tup1, test_tup2):\n  res = tuple(tuple(a + b for a, b in zip(tup1, tup2))\n   for tup1, tup2 in zip(test_tup1, test_tup2))\n  return (res)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.61
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100%\n  - `solution.py`: 3 statements, 0 missed (100% coverage)\n  - `test_solution.py`: 7 statements, 0 missed (100% coverage)\n- The code and tests are fully covered, meaning all lines of code were executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not have been explicitly tested (or may not be obvious from the coverage report alone):\n- **Empty tuples**: What if `test_tup1` or `test_tup2` is empty?\n- **Tuples of unequal length**: What if `test_tup1` and `test_tup2` have different lengths?\n- **Nested tuples of unequal length**: What if the inner tuples in `test_tup1` and `test_tup2` have different lengths?\n- **Non-numeric elements**: What if the tuples contain non-numeric elements (e.g., strings, lists)?\n- **Mixed types**: What if the tuples contain mixed types (e.g., integers and floats)?",
+    "generated_tests": [
+      "assert add_nested_tuples(((0, 0), (0, 0)), ((0, 0), (0, 0))) == ((0, 0), (0, 0))",
+      "assert add_nested_tuples(((10, 20), (30, 40)), ((5, 10), (15, 20))) == ((15, 30), (45, 60))",
+      "assert add_nested_tuples(((1, 2, 3), (4, 5, 6)), ((7, 8, 9), (10, 11, 12))) == ((8, 10, 12), (14, 16, 18))"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.31s\n\n"
+  }
+}

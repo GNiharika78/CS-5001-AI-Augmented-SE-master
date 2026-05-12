@@ -1,0 +1,51 @@
+{
+  "task_id": 630,
+  "task_prompt": "Write a function to extract all the adjacent coordinates of the given coordinate tuple.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def adjac(ele, sub=[]):\n    if not ele:\n        yield sub\n    else:\n        yield from [idx for j in range(ele[0] - 1, ele[0] + 2)\n                   for idx in adjac(ele[1:], sub + [j])]\n\ndef get_coordinates(test_tup):\n    return list(adjac(test_tup))",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 88.46,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def adjac(ele, sub = []): \n  if not ele: \n     yield sub \n  else: \n     yield from [idx for j in range(ele[0] - 1, ele[0] - 2) \n                for idx in adjac(ele[1:], sub + [j])] \ndef get_coordinates(test_tup):\n  return list(adjac(test_tup))",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert get_coordinates((3, 4)) == [[2, 3], [2, 4], [2, 5], [3, 3], [3, 4], [3, 5], [4, 3], [4, 4], [4, 5]]\nE       assert [] == [[2, 3], [2, ..., [3, 5], ...]\nE         \nE         Right contains 9 more items, first extra item: [2, 3]\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3vunl_kh\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert get_coordinates((4, 5)) ==[[3, 4], [3, 5], [3, 6], [4, 4], [4, 5], [4, 6], [5, 4], [5, 5], [5, 6]]\nE       assert [] == [[3, 4], [3, ..., [4, 6], ...]\nE         \nE         Right contains 9 more items, first extra item: [3, 4]\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3vunl_kh\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert get_coordinates((5, 6)) == [[4, 5], [4, 6], [4, 7], [5, 5], [5, 6], [5, 7], [6, 5], [6, 6], [6, 7]]\nE       assert [] == [[4, 5], [4, ..., [5, 7], ...]\nE         \nE         Right contains 9 more items, first extra item: [4, 5]\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3vunl_kh\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3vunl_kh\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3vunl_kh\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3vunl_kh\\test_solution.py::test_case_2\n3 failed in 0.36s\n\n",
+      "failure": "### Analysis of the Failure\n\n1. **What failed**:\n   The function `get_coordinates` is supposed to return all adjacent coordinates (including the given coordinate itself) for a given tuple, but it returns an empty list instead.\n\n2. **Evidence**:\n   - For input `(3, 4)`, the expected output is `[[2, 3], [2, 4], [2, 5], [3, 3], [3, 4], [3, 5], [4, 3], [4, 4], [4, 5]]`, but the actual output is `[]`.\n   - For input `(4, 5)`, the expected output is `[[3, 4], [3, 5], [3, 6], [4, 4], [4, 5], [4, 6], [5, 4], [5, 5], [5, 6]]`, but the actual output is `[]`.\n\n3. **Failure type**:\n   - **Logical Error**: The function `adjac` is not correctly generating the adjacent coordinates. The issue lies in the recursive logic and the range used for generating adjacent values.\n\n4. **Sus",
+      "hypothesis": "### Analysis of the Failure\n\n1. **Failing behavior**:\n   The function `get_coordinates` returns an empty list for any input tuple, instead of generating all adjacent coordinates (including the given coordinate itself).\n\n2. **Evidence**:\n   - For input `(3, 4)`, the expected output is `[[2, 3], [2, 4], [2, 5], [3, 3], [3, 4], [3, 5], [4, 3], [4, 4], [4, 5]]`, but the actual output is `[]`.\n   - For input `(4, 5)`, the expected output is `[[3, 4], [3, 5], [3, 6], [4, 4], [4, 5], [4, 6], [5, 4], [5, 5], [5, 6]]`, but the actual output is `[]`.\n\n3. **Root cause**:\n   - The `adjac` function uses a recursive approach with a list comprehension that incorrectly generates ranges for adjacent coordinates.\n   - The range `range(ele[0] - 1, ele[0] -",
+      "patched_code": "def adjac(ele, sub=[]):\n    if not ele:\n        yield sub\n    else:\n        yield from [idx for j in range(ele[0] - 1, ele[0] + 2)\n                   for idx in adjac(ele[1:], sub + [j])]\n\ndef get_coordinates(test_tup):\n    return list(adjac(test_tup))",
+      "decision": "patch_and_retry",
+      "duration_seconds": 37.61
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def adjac(ele, sub=[]):\n    if not ele:\n        yield sub\n    else:\n        yield from [idx for j in range(ele[0] - 1, ele[0] + 2)\n                   for idx in adjac(ele[1:], sub + [j])]\n\ndef get_coordinates(test_tup):\n    return list(adjac(test_tup))",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.67
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (13/13 statements covered)\n- **File Coverage**:\n  - `solution.py`: 100% (6/6 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n- **No missing lines** in either file.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage report shows 100% line coverage, there are potential edge cases or scenarios that may not be thoroughly tested:\n- **Empty input**: The behavior of `get_coordinates(())` (empty tuple) is not explicitly tested.\n- **Single-element input**: The behavior of `get_coordinates((x,))` (single-element tuple) is not explicitly tested.\n- **Large inputs**: Performance or correctness for large tuples (e.g., `(1, 2, 3, 4, 5)`) is not verified.\n- **Negative coordinates**: The function may not handle negative coordinates correctly (e.g., `(-1, -1)`).\n- **Non-integer inputs**: The function may not handle non-integer inputs (",
+    "generated_tests": [
+      "assert get_coordinates((0, 0)) == [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 0], [0, 1], [1, -1], [1, 0], [1, 1]]",
+      "assert get_coordinates((1, 1)) == [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]",
+      "assert get_coordinates((2, 2)) == [[1, 1], [1, 2], [1, 3], [2, 1], [2, 2], [2, 3], [3, 1], [3, 2], [3, 3]]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.33s\n\n"
+  }
+}

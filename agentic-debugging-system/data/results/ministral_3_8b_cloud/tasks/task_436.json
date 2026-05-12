@@ -1,0 +1,39 @@
+{
+  "task_id": 436,
+  "task_prompt": "Write a python function to return the negative numbers in a list.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "boundary_lt_to_lte",
+  "status": "repaired",
+  "final_code": "def neg_nos(list1):\n  out = []\n  for num in list1: \n    if num <= 0: \n      out.append(num)\n  return out ",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 10.87,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def neg_nos(list1):\n  out = []\n  for num in list1: \n    if num <= 0: \n      out.append(num)\n  return out ",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.37s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.68
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All **6 statements** in the function (`neg_nos`) were executed during testing.\n- All **7 statements** in the test file were executed.\n\nSince no statements were missed, the tests thoroughly exercised the function's logic.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nDespite full coverage, we should consider edge cases that might not have been explicitly tested but are still important for robustness:\n\n#### **Potential Weaknesses:**\n1. **Empty List**\n   - The function should handle `[]` gracefully (returns `[]`).\n   - **Risk:** If the test did not include an empty list, the function might still work, but it\u2019s good practice to verify.\n\n2. **Non-Numeric Inputs**\n   - The function assumes `list1` contains only numbers (e.g., `int` or `float`).\n   - **Risk:** If the input contains strings, booleans, or `None`, the function may behave unexpectedly (e.g., `TypeError` or incorrect filtering).",
+    "generated_tests": [
+      "assert neg_nos([0, 1, -2, 3, -4, 5]) == [0, -2, -4]",
+      "assert neg_nos([10, 20, 30]) == []",
+      "assert neg_nos([-10, -20, -30, -40]) == [-10, -20, -30, -40]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.36s\n\n"
+  }
+}

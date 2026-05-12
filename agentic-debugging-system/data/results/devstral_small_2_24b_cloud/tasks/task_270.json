@@ -1,0 +1,51 @@
+{
+  "task_id": 270,
+  "task_prompt": "Write a python function to find the sum of even numbers at even positions of a list.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def sum_even_and_even_index(arr):\n    i = 0\n    sum = 0\n    for i in range(0, len(arr),2):\n        if (arr[i] % 2 == 0):\n            sum += arr[i]\n    return sum",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 47.52,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def sum_even_and_even_index(arr):  \n    i = 0\n    sum = 0\n    for i in range(0, len(arr),2): \n        if (arr[i] % 2 == 0) : \n            sum -= arr[i]  \n    return sum",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert sum_even_and_even_index([5, 6, 12, 1, 18, 8]) == 30\nE       assert -30 == 30\nE        +  where -30 = sum_even_and_even_index([5, 6, 12, 1, 18, 8])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmticvqhu\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert sum_even_and_even_index([3, 20, 17, 9, 2, 10, 18, 13, 6, 18]) == 26\nE       assert -26 == 26\nE        +  where -26 = sum_even_and_even_index([3, 20, 17, 9, 2, 10, ...])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmticvqhu\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert sum_even_and_even_index([5, 6, 12, 1]) == 12\nE       assert -12 == 12\nE        +  where -12 = sum_even_and_even_index([5, 6, 12, 1])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmticvqhu\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmticvqhu\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmticvqhu\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpmticvqhu\\test_solution.py::test_case_2\n3 failed in 0.34s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   - The function `sum_even_and_even_index` is returning the negative of the expected sum of even numbers at even positions (indices 0, 2, 4, etc.) in the list.\n   - For example, in the first test case `[5, 6, 12, 1, 18, 8]`, the expected sum is `30` (12 + 18), but the function returns `-30`.\n\n2. **Evidence**:\n   - Test Case 0:\n     - Input: `[5, 6, 12, 1, 18, 8]`\n     - Expected Output: `30` (12 + 18)\n     - Actual Output: `-30`\n   - Test Case 1:\n     - Input: `[3, 20, 17, 9, 2, 10, 18, 13, 6, 18]`\n     - Expected Output: `26` (20 + 2 + 18 + 6)\n     - Actual Output: `-26`\n   -",
+      "hypothesis": "### Failure Analysis Report\n\n1. **Failing Behavior**:\n   - The function `sum_even_and_even_index` incorrectly returns the negative of the sum of even numbers at even indices (0, 2, 4, etc.) in the list. Instead of adding the even numbers, it subtracts them from the sum.\n\n2. **Evidence**:\n   - **Test Case 0**:\n     - Input: `[5, 6, 12, 1, 18, 8]`\n     - Expected Output: `30` (12 + 18)\n     - Actual Output: `-30`\n   - **Test Case 1**:\n     - Input: `[3, 20, 17, 9, 2, 10, 18, 13, 6, 18]`\n     - Expected Output: `26` (20 + 2 + 18 + 6)\n     - Actual Output: `-26`\n\n3. **Root Cause**:\n   - The line `sum -= arr[i]` in the function subtracts the even numbers from the sum instead of adding them. This is the opposite of the intended behavior.\n\n4",
+      "patched_code": "def sum_even_and_even_index(arr):\n    i = 0\n    sum = 0\n    for i in range(0, len(arr),2):\n        if (arr[i] % 2 == 0):\n            sum += arr[i]\n    return sum",
+      "decision": "patch_and_retry",
+      "duration_seconds": 36.05
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def sum_even_and_even_index(arr):\n    i = 0\n    sum = 0\n    for i in range(0, len(arr),2):\n        if (arr[i] % 2 == 0):\n            sum += arr[i]\n    return sum",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.61
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (14/14 statements covered)\n- **Solution.py**: 100% (7/7 statements covered)\n- **Test_solution.py**: 100% (7/7 statements covered)\n\nThe coverage report indicates that all lines of code in both the solution and test files have been executed during testing. This is a strong indicator that the test suite is comprehensive for the given implementation.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, there are still potential edge cases or scenarios that might not have been explicitly tested or could be weakly tested. These include:\n- **Empty List**: The function should return `0` for an empty list, but this might not have been explicitly tested.\n- **List with All Odd Numbers**: The function should return `0` if all numbers at even indices are odd.\n- **List with All Even Numbers**: The function should return the sum of all numbers at even indices.\n- **List with Mixed Numbers**: The function should correctly sum only the even numbers at even indices.\n- **List with Negative Numbers**: The function should handle negative",
+    "generated_tests": [
+      "assert sum_even_and_even_index([2, 4, 6, 8, 10]) == 18",
+      "assert sum_even_and_even_index([1, 3, 5, 7, 9]) == 0",
+      "assert sum_even_and_even_index([0, 0, 0, 0, 0]) == 0"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.32s\n\n"
+  }
+}

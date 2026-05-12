@@ -1,0 +1,51 @@
+{
+  "task_id": 71,
+  "task_prompt": "Write a function to sort a list of elements.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def comb_sort(nums):\n    shrink_fact = 1.3\n    gaps = len(nums)\n    swapped = True\n    i = 0\n    while gaps > 1 or swapped:\n        gaps = max(int(float(gaps) / shrink_fact), 1)\n        swapped = False\n        i = 0\n        while i + gaps < len(nums):\n            if nums[i] > nums[i + gaps]:\n                nums[i], nums[i + gaps] = nums[i + gaps], nums[i]\n                swapped = True\n            i += 1\n    return nums",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 21.7,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def comb_sort(nums):\n    shrink_fact = 1.3\n    gaps = len(nums)\n    swapped = True\n    i = 0\n    while gaps > 1 or swapped:\n        gaps = int(float(gaps) / shrink_fact)\n        swapped = False\n        i = 0\n        while gaps - i < len(nums):\n            if nums[i] > nums[i+gaps]:\n                nums[i], nums[i+gaps] = nums[i+gaps], nums[i]\n                swapped = True\n            i += 1\n    return nums",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert comb_sort([5, 15, 37, 25, 79]) == [5, 15, 25, 37, 79]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3yt5_qdm\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nnums = [5, 15, 37, 25, 79]\n\n    def comb_sort(nums):\n        shrink_fact = 1.3\n        gaps = len(nums)\n        swapped = True\n        i = 0\n        while gaps > 1 or swapped:\n            gaps = int(float(gaps) / shrink_fact)\n            swapped = False\n            i = 0\n            while gaps - i < len(nums):\n>               if nums[i] > nums[i+gaps]:\n                             ^^^^^^^^^^^^\nE               IndexError: list index out of range\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3yt5_qdm\\solution.py:11: IndexError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert comb_sort([41, 32, 15, 19, 22]) == [15, 19, 22, 32, 41]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3yt5_qdm\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nnums = [19, 22, 15, 41, 32]\n\n    def comb_sort(nums):\n        shrink_fact = 1.3\n        gaps = len(nums)\n        swapped = True\n        i = 0\n        while gaps > 1 or swapped:\n            gaps = int(float(gaps) / shrink_fact)\n            swapped = False\n            i = 0\n            while gaps - i < len(nums):\n>               if nums[i] > nums[i+gaps]:\n                             ^^^^^^^^^^^^\nE               IndexError: list index out of range\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3yt5_qdm\\solution.py:11: IndexError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert comb_sort([99, 15, 13, 47]) == [13, 15, 47, 99]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3yt5_qdm\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nnums = [47, 15, 13, 99]\n\n    def comb_sort(nums):\n        shrink_fact = 1.3\n        gaps = len(nums)\n        swapped = True\n        i = 0\n        while gaps > 1 or swapped:\n            gaps = int(float(gaps) / shrink_fact)\n            swapped = False\n            i = 0\n            while gaps - i < len(nums):\n>               if nums[i] > nums[i+gaps]:\n                             ^^^^^^^^^^^^\nE               IndexError: list index out of range\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3yt5_qdm\\solution.py:11: IndexError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3yt5_qdm\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3yt5_qdm\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3yt5_qdm\\test_solution.py::test_case_2\n3 failed in 0.41s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The `comb_sort` function failed to sort the input list `[5, 15, 37, 25, 79]` correctly and instead raised an `IndexError` during execution.\n\n2. **Evidence**:\n   - The test case expects the output `[5, 15, 25, 37, 79]` but the function raises an `IndexError` at `nums[i+gaps]` when `i+gaps` exceeds the list bounds.\n   - The error occurs when `gaps` becomes smaller than the remaining elements to compare, causing an out-of-bounds access.\n\n3. **Failure type**:\n   - **IndexError**: The function attempts to access an index that doesn't exist in the list.\n\n4. **Suspected location**:\n   The issue is in the inner `while` loop condition and the comparison logic. Specifically:\n   - The condition `gaps - i < len(nums)` is incorrect for the comb sort implementation.\n   - The comparison `nums[i+gaps]` can go out of bounds when `i + gaps` exceeds `len(nums) - 1`.\n\n### Corrected Implementation",
+      "hypothesis": "Here's the detailed analysis and corrected implementation of the `comb_sort` function:\n\n---\n\n### **1. Failing Behavior**\nThe function raises an `IndexError` when trying to access `nums[i + gaps]` because `i + gaps` exceeds the list bounds. For example, with input `[5, 15, 37, 25, 79]`, the error occurs when `gaps` becomes small (e.g., `gaps = 1`), and `i + gaps` goes beyond the list length.\n\n---\n\n### **2. Evidence**\n- **Test Case**: Input `[5, 15, 37, 25, 79]` should return `[5, 15, 25, 37, 79]`.\n- **Error**: `IndexError: list index out of range` at `nums[i + gaps]` when `i + gaps >= len(nums)`.\n- **Root Cause**: The loop condition `gaps - i < len(nums)` is flawed. It allows `i + gaps` to exceed the list bounds.\n\n---\n\n### **3. Root Cause**\nThe inner `while` loop condition `gaps - i < len(nums)` is incorrect",
+      "patched_code": "def comb_sort(nums):\n    shrink_fact = 1.3\n    gaps = len(nums)\n    swapped = True\n    i = 0\n    while gaps > 1 or swapped:\n        gaps = max(int(float(gaps) / shrink_fact), 1)\n        swapped = False\n        i = 0\n        while i + gaps < len(nums):\n            if nums[i] > nums[i + gaps]:\n                nums[i], nums[i + gaps] = nums[i + gaps], nums[i]\n                swapped = True\n            i += 1\n    return nums",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.35
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def comb_sort(nums):\n    shrink_fact = 1.3\n    gaps = len(nums)\n    swapped = True\n    i = 0\n    while gaps > 1 or swapped:\n        gaps = max(int(float(gaps) / shrink_fact), 1)\n        swapped = False\n        i = 0\n        while i + gaps < len(nums):\n            if nums[i] > nums[i + gaps]:\n                nums[i], nums[i + gaps] = nums[i + gaps], nums[i]\n                swapped = True\n            i += 1\n    return nums",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.37s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.68
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           15      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 22      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided **comb_sort** function has **100% statement coverage** in both the implementation (`solution.py`) and test file (`test_solution.py`). This means:\n- All executable lines in `comb_sort` were executed during testing.\n- All test cases in `test_solution.py` passed without missing any branches or statements.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nDespite full statement coverage, **branch coverage** (checking if all possible logical paths are executed) and **edge-case coverage** should be reviewed. Potential gaps include:\n\n#### **A. Branch Coverage Issues**\n- **Loop Conditions:**\n  - The outer `while` loop (`gaps > 1 or swapped`) has two conditions. Was the `swapped=False` path tested when `gaps=1`?\n  - The inner `while` loop (`i + gaps < len(nums)`) depends on `gaps` and `i`. Were cases where `gaps` is very small (e.g., `gaps=1`) tested thoroughly?\n- **Swap Logic:**\n  - The `if nums[i] > nums[i + gaps]` condition was tested, but was the **no-swap**",
+    "generated_tests": [
+      "assert comb_sort([1, 1, 1, 1, 1]) == [1, 1, 1, 1, 1]",
+      "assert comb_sort([]) == []",
+      "assert comb_sort([-5, 0, 10, -3, 7]) == [-5, -3, 0, 7, 10]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.39s\n\n"
+  }
+}

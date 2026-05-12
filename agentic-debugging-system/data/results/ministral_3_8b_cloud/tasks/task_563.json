@@ -1,0 +1,39 @@
+{
+  "task_id": 563,
+  "task_prompt": "Write a function to extract values between quotation marks from a string.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import re\ndef extract_values(text):\n return (re.findall(r'\"(.+?)\"', text))",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 13.57,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef extract_values(text):\n return (re.findall(r'\"(.+?)\"', text))",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.38s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.66
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe test coverage report shows **100% statement coverage** for both the `solution.py` (3 statements) and `test_solution.py` (7 statements). This means:\n- All executable lines in `extract_values()` were tested.\n- All test cases in `test_solution.py` executed successfully.\n\n### **2. Missing or Weakly Tested Cases**\nDespite full coverage, potential edge cases may not be explicitly tested. Common scenarios to verify:\n- **Empty string input** (`\"\"` \u2192 Should return `[]`).\n- **No quoted strings** (`\"Hello world\"` \u2192 Should return `[]`).\n- **Nested quotes** (`'\"inner\" outer'` \u2192 Should return `[\"inner\"]`).\n- **Escaped quotes** (`'\\\"quoted\\\"'` \u2192 Should return `[\"quoted\"]` if regex handles escaping).\n- **Unicode/non-ASCII quotes** (`\"caf\u00e9\"` \u2192 Should return `[\"caf\u00e9\"]`).\n- **Quotes at start/end** (`'\"start\" text` or `text \"end\"'` \u2192 Should return `[\"start\"]` or `[\"end\"]`).\n- **Multiple quotes in one match** (`",
+    "generated_tests": [
+      "assert extract_values('\"a\", b, \"c\", \"d\"') == ['a', 'c', 'd']",
+      "assert extract_values('\"nested\" \"quotes\" \"here\"') == ['nested', 'quotes', 'here']",
+      "assert extract_values('\"empty\"\"string\"') == ['empty', 'string']"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.37s\n\n"
+  }
+}

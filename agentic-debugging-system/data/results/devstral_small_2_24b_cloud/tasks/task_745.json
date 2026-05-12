@@ -1,0 +1,51 @@
+{
+  "task_id": 745,
+  "task_prompt": "Write a function to find numbers within a given range from startnum ti endnum where every number is divisible by every digit it contains. https://www.w3resource.com/python-exercises/lambda/python-lambda-exercise-24.php",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def divisible_by_digits(startnum, endnum):\n    return [n for n in range(startnum, endnum + 1) \\\n                if not any(map(lambda x: int(x) == 0 or n % int(x) != 0, str(n)))]",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 40.47,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def divisible_by_digits(startnum, endnum):\n    return [n for n in range(startnum, endnum-1) \\\n                if not any(map(lambda x: int(x) == 0 or n%int(x) != 0, str(n)))]",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert divisible_by_digits(1,22)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]\nE       assert [1, 2, 3, 4, 5, 6, ...] == [1, 2, 3, 4, 5, 6, ...]\nE         \nE         Right contains one more item: 22\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp437fux1b\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert divisible_by_digits(1,15)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15]\nE       assert [1, 2, 3, 4, 5, 6, ...] == [1, 2, 3, 4, 5, 6, ...]\nE         \nE         Right contains one more item: 15\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp437fux1b\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert divisible_by_digits(20,25)==[22, 24]\nE       assert [22] == [22, 24]\nE         \nE         Right contains one more item: 24\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp437fux1b\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp437fux1b\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp437fux1b\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp437fux1b\\test_solution.py::test_case_2\n3 failed in 0.35s\n\n",
+      "failure": "### Analysis of the Failure\n\n1. **What failed**:\n   The function `divisible_by_digits` is not correctly identifying numbers where every digit divides the number itself. Specifically, it is missing some valid numbers (like 15 and 22) in the test cases.\n\n2. **Evidence**:\n   - For `divisible_by_digits(1, 22)`, the expected output is `[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]`, but the function returns `[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15]` (missing 22).\n   - For `divisible_by_digits(1, 15)`, the expected output is `[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15]`, but the function returns `[1, 2, 3, 4,",
+      "hypothesis": "### Analysis of the Failure\n\n1. **Failing Behavior**:\n   The function `divisible_by_digits` fails to include numbers like `22` in the output when it should. For example, `22` is divisible by both of its digits (`2` and `2`), but the function excludes it.\n\n2. **Evidence**:\n   - For `divisible_by_digits(1, 22)`, the expected output is `[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]`, but the function returns `[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15]` (missing `22`).\n   - For `divisible_by_digits(1, 15)`, the expected output is `[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15]`, but the function returns `[1,",
+      "patched_code": "def divisible_by_digits(startnum, endnum):\n    return [n for n in range(startnum, endnum + 1) \\\n                if not any(map(lambda x: int(x) == 0 or n % int(x) != 0, str(n)))]",
+      "decision": "patch_and_retry",
+      "duration_seconds": 16.55
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def divisible_by_digits(startnum, endnum):\n    return [n for n in range(startnum, endnum + 1) \\\n                if not any(map(lambda x: int(x) == 0 or n % int(x) != 0, str(n)))]",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\nThe coverage report shows **100% statement coverage** for both the solution (`solution.py`) and the test file (`test_solution.py`). This means all executable lines of code were executed during testing.\n\n- **`solution.py`**: 2 statements, 0 missed (100% coverage)\n- **`test_solution.py`**: 7 statements, 0 missed (100% coverage)\n- **Total**: 9 statements, 0 missed (100% coverage)\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, this does not guarantee that all edge cases or logical scenarios are thoroughly tested. Potential gaps include:\n- **Numbers with `0` as a digit**: The function explicitly checks for `0` (since division by zero is undefined), but the test suite may not verify this behavior.\n- **Single-digit numbers**: These trivially satisfy the condition (e.g., `5` is divisible by `5`), but edge cases like `0` or `1` might not be tested.\n- **Large ranges**: Performance or correctness for large ranges (e.g., `startnum=",
+    "generated_tests": [
+      "assert divisible_by_digits(10, 30) == [11, 12, 15, 22, 24]",
+      "assert divisible_by_digits(50, 60) == [55]",
+      "assert divisible_by_digits(100, 110) == [111]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert divisible_by_digits(100, 110) == [111]\nE       assert [] == [111]\nE         \nE         Right contains one more item: 111\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpow2xiovg\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpow2xiovg\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.34s\n\n"
+  }
+}

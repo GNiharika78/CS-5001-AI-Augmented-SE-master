@@ -1,0 +1,51 @@
+{
+  "task_id": 440,
+  "task_prompt": "Write a function to find the first adverb and their positions in a given sentence.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "import re\ndef find_adverb_position(text):\n    for m in re.finditer(r\"\\b\\w+ly\\b\", text):\n        return (m.start(), m.end(), m.group(0))",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 59.41,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef find_adverb_position(text):\n for m in re.finditer(r\"\\w-ly\", text):\n    return (m.start(), m.end(), m.group(0))",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert find_adverb_position(\"clearly!! we can see the sky\")==(0, 7, 'clearly')\nE       AssertionError: assert None == (0, 7, 'clearly')\nE        +  where None = find_adverb_position('clearly!! we can see the sky')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5w6bke_p\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert find_adverb_position(\"seriously!! there are many roses\")==(0, 9, 'seriously')\nE       AssertionError: assert None == (0, 9, 'seriously')\nE        +  where None = find_adverb_position('seriously!! there are many roses')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5w6bke_p\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert find_adverb_position(\"unfortunately!! sita is going to home\")==(0, 13, 'unfortunately')\nE       AssertionError: assert None == (0, 13, 'unfortunately')\nE        +  where None = find_adverb_position('unfortunately!! sita is going to home')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5w6bke_p\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5w6bke_p\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5w6bke_p\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp5w6bke_p\\test_solution.py::test_case_2\n3 failed in 0.33s\n\n",
+      "failure": "1. **What failed**: The function `find_adverb_position` is not correctly identifying adverbs ending with \"-ly\" in the given sentences. It returns `None` instead of the expected tuple containing the start position, end position, and the matched adverb.\n\n2. **Evidence**:\n   - For the input `\"clearly!! we can see the sky\"`, the function returns `None` instead of `(0, 7, 'clearly')`.\n   - For the input `\"seriously!! there are many roses\"`, the function returns `None` instead of `(0, 9, 'seriously')`.\n\n3. **Failure type**: The function fails to match adverbs ending with \"-ly\" due to an incorrect regular expression pattern. The current pattern `r\"\\w-ly\"` does not account for word boundaries or punctuation, causing it to miss valid matches.\n\n4. **Suspected location**: The issue lies in the regular expression pattern `r\"\\w-ly\"` in the `find_adverb_position` function. The pattern should be adjusted to properly match words ending with \"-ly\" while ignoring punctuation or other non-word characters.\n\n### Corrected Code:\n```python\nimport re\n\ndef find_adverb_position(text):",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing `find_adverb_position` function:\n\n---\n\n### 1. Failing Behavior\nThe function fails to identify adverbs ending with \"-ly\" in sentences, returning `None` instead of the expected tuple `(start, end, adverb)`.\n\n### 2. Evidence\n- Input: `\"clearly!! we can see the sky\"`\n  Expected: `(0, 7, 'clearly')`\n  Actual: `None`\n- Input: `\"seriously!! there are many roses\"`\n  Expected: `(0, 9, 'seriously')`\n  Actual: `None`\n\n### 3. Root Cause\nThe regular expression `r\"\\w-ly\"` is incorrect because:\n- `\\w` matches word characters (letters, digits, underscores), but the `-` is treated as a literal hyphen, not as part of the suffix.\n- The pattern does not account for word boundaries or punctuation after the adverb (e.g., `!!` in the test cases).\n\n### 4. Why This Explains Failure\nThe pattern `r\"\\w-ly\"` looks for a word character followed by a literal `-ly`, which is not how adverbs are structured. Ad",
+      "patched_code": "import re\ndef find_adverb_position(text):\n    for m in re.finditer(r\"\\b\\w+ly\\b\", text):\n        return (m.start(), m.end(), m.group(0))",
+      "decision": "patch_and_retry",
+      "duration_seconds": 26.82
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef find_adverb_position(text):\n    for m in re.finditer(r\"\\b\\w+ly\\b\", text):\n        return (m.start(), m.end(), m.group(0))",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.62
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (11/11 statements covered)\n- **Solution.py**: 100% (4/4 statements covered)\n- **Test_solution.py**: 100% (7/7 statements covered)\n\nThe current test suite achieves full statement coverage for both the implementation and test files. This means every line of code is executed at least once during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, there are potential edge cases and scenarios that may not be thoroughly tested:\n\n1. **No Adverbs in Text**: The function may not be tested with sentences containing no adverbs (should return `None` or handle gracefully).\n2. **Multiple Adverbs**: The function only returns the first adverb. Behavior with multiple adverbs (e.g., \"quickly and happily\") is not explicitly tested.\n3. **Case Sensitivity**: The regex `\\b\\w+ly\\b` is case-sensitive. Adverbs like \"Quickly\" or \"LY\" may not be matched.\n4. **Non-Word Characters**: Adverbs",
+    "generated_tests": [
+      "assert find_adverb_position(\"quickly, the rabbit ran away\") == (0, 6, 'quickly')",
+      "assert find_adverb_position(\"he spoke softly to the child\") == (7, 12, 'softly')",
+      "assert find_adverb_position(\"the test was surprisingly easy\") == (12, 24, 'surprisingly')"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...FFF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert find_adverb_position(\"quickly, the rabbit ran away\") == (0, 6, 'quickly')\nE       AssertionError: assert (0, 7, 'quickly') == (0, 6, 'quickly')\nE         \nE         At index 1 diff: 7 != 6\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9eeodkfx\\test_solution.py:13: AssertionError\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert find_adverb_position(\"he spoke softly to the child\") == (7, 12, 'softly')\nE       AssertionError: assert (9, 15, 'softly') == (7, 12, 'softly')\nE         \nE         At index 0 diff: 9 != 7\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9eeodkfx\\test_solution.py:16: AssertionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert find_adverb_position(\"the test was surprisingly easy\") == (12, 24, 'surprisingly')\nE       AssertionError: assert (13, 25, 'surprisingly') == (12, 24, 'surprisingly')\nE         \nE         At index 0 diff: 13 != 12\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9eeodkfx\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9eeodkfx\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9eeodkfx\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9eeodkfx\\test_solution.py::test_case_5\n3 failed, 3 passed in 0.35s\n\n"
+  }
+}

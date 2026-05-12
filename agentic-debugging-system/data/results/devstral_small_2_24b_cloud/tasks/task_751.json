@@ -1,0 +1,39 @@
+{
+  "task_id": 751,
+  "task_prompt": "Write a function to check if the given array represents min heap or not. https://www.geeksforgeeks.org/how-to-check-if-a-given-array-represents-a-binary-heap/",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def check_min_heap_helper(arr, i):\n    if 2 + i + 2 > len(arr):\n        return True\n    left_child = (arr[i] <= arr[2 * i + 1]) and check_min_heap_helper(arr, 2 * i + 1)\n    right_child = (2 * i + 2 == len(arr)) or (arr[i] <= arr[2 * i + 2] \n                                      and check_min_heap_helper(arr, 2 * i + 2))\n    return left_child and right_child\n\ndef check_min_heap(arr):\n  return check_min_heap_helper(arr, 0)",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 14.41,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def check_min_heap_helper(arr, i):\n    if 2 + i + 2 > len(arr):\n        return True\n    left_child = (arr[i] <= arr[2 * i + 1]) and check_min_heap_helper(arr, 2 * i + 1)\n    right_child = (2 * i + 2 == len(arr)) or (arr[i] <= arr[2 * i + 2] \n                                      and check_min_heap_helper(arr, 2 * i + 2))\n    return left_child and right_child\n\ndef check_min_heap(arr):\n  return check_min_heap_helper(arr, 0)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.57
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            8      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 15      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (15/15 statements covered)\n- **File Coverage**:\n  - `solution.py`: 100% (8/8 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n\nThe code is fully covered by the existing tests, meaning all statements, branches, and conditions have been executed at least once during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, there are some edge cases and scenarios that might not be thoroughly tested or could benefit from additional validation:\n\n1. **Empty Array**: The function should return `True` for an empty array (since it trivially satisfies the min-heap property).\n2. **Single-Element Array**: The function should return `True` for an array with one element.\n3. **Non-Heap Arrays**:\n   - Arrays where the root violates the min-heap property (e.g., `[5, 3, 2]`).\n   - Arrays where a non-root node violates the min-heap property (e.g., `[1,",
+    "generated_tests": [
+      "assert check_min_heap([0, 1, 2, 3, 4, 5]) == True",
+      "assert check_min_heap([1, 1, 1, 1, 1, 1]) == True",
+      "assert check_min_heap([5, 4, 3, 2, 1, 0]) == False"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.31s\n\n"
+  }
+}

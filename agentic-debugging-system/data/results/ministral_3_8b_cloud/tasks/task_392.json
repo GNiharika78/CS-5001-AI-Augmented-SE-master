@@ -1,0 +1,51 @@
+{
+  "task_id": 392,
+  "task_prompt": "Write a function to find the maximum sum possible by using the given equation f(n) = max( (f(n/2) + f(n/3) + f(n/4) + f(n/5)), n).",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def get_max_sum(n):\n    res = [0] * (n + 1)\n    res[1] = 1\n    for i in range(2, n + 1):\n        res[i] = max(i, res[int(i / 2)] + res[int(i / 3)] + res[int(i / 4)] + res[int(i / 5)])\n    return res[n]",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 22.78,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def get_max_sum (n):\n\tres = list()\n\tres.append(0)\n\tres.append(1)\n\ti = 2\n\twhile i<n - 1:\n\t\tres.append(max(i, (res[int(i / 2)] \n\t\t\t\t\t\t+ res[int(i / 3)] +\n\t\t\t\t\t\t\tres[int(i / 4)]\n\t\t\t\t\t\t+ res[int(i / 5)])))\n\t\ti = i + 1\n\treturn res[n]",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert get_max_sum(60) == 106\n               ^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9dmiztgx\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nn = 60\n\n    def get_max_sum (n):\n    \tres = list()\n    \tres.append(0)\n    \tres.append(1)\n    \ti = 2\n    \twhile i<n - 1:\n    \t\tres.append(max(i, (res[int(i / 2)]\n    \t\t\t\t\t\t+ res[int(i / 3)] +\n    \t\t\t\t\t\t\tres[int(i / 4)]\n    \t\t\t\t\t\t+ res[int(i / 5)])))\n    \t\ti = i + 1\n>   \treturn res[n]\n            ^^^^^^\nE    IndexError: list index out of range\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9dmiztgx\\solution.py:12: IndexError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert get_max_sum(10) == 12\n               ^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9dmiztgx\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nn = 10\n\n    def get_max_sum (n):\n    \tres = list()\n    \tres.append(0)\n    \tres.append(1)\n    \ti = 2\n    \twhile i<n - 1:\n    \t\tres.append(max(i, (res[int(i / 2)]\n    \t\t\t\t\t\t+ res[int(i / 3)] +\n    \t\t\t\t\t\t\tres[int(i / 4)]\n    \t\t\t\t\t\t+ res[int(i / 5)])))\n    \t\ti = i + 1\n>   \treturn res[n]\n            ^^^^^^\nE    IndexError: list index out of range\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9dmiztgx\\solution.py:12: IndexError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert get_max_sum(2) == 2\n               ^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9dmiztgx\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nn = 2\n\n    def get_max_sum (n):\n    \tres = list()\n    \tres.append(0)\n    \tres.append(1)\n    \ti = 2\n    \twhile i<n - 1:\n    \t\tres.append(max(i, (res[int(i / 2)]\n    \t\t\t\t\t\t+ res[int(i / 3)] +\n    \t\t\t\t\t\t\tres[int(i / 4)]\n    \t\t\t\t\t\t+ res[int(i / 5)])))\n    \t\ti = i + 1\n>   \treturn res[n]\n            ^^^^^^\nE    IndexError: list index out of range\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9dmiztgx\\solution.py:12: IndexError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9dmiztgx\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9dmiztgx\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp9dmiztgx\\test_solution.py::test_case_2\n3 failed in 0.39s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `get_max_sum(60)` is expected to return `106`, but instead raises an `IndexError` because the list `res` doesn't have enough elements to access `res[60]`.\n\n2. **Evidence**:\n   - The test case `get_max_sum(60)` fails with `IndexError: list index out of range`\n   - The function initializes `res` with only 2 elements (`res[0]` and `res[1]`), then tries to build up to `res[n]` using a while loop that stops at `i < n - 1`\n   - This means the maximum index in `res` will be `n-2`, not `n-1` (for `n=60`, it only goes up to index 58)\n\n3. **Failure type**:\n   - **IndexError**: The code attempts to access an index that doesn't exist in the list\n   - **Logical error**: The loop condition doesn't properly build the list up to the required size\n\n4. **Suspected location**:\n   The issue is in the while loop condition and the final return statement",
+      "hypothesis": "Here's the detailed analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `get_max_sum(60)` raises an `IndexError` because it tries to return `res[60]`, but the list `res` only contains indices up to `58` (due to the loop condition `i < n - 1`). This means the list is one element too short to cover the required range.\n\n---\n\n### **2. Evidence**\n- **Test case failure**: `get_max_sum(60)` fails with `IndexError: list index out of range`.\n- **Loop condition**: The loop runs while `i < n - 1`, so for `n = 60`, it only fills `res` up to index `58` (since `i` starts at `2` and increments until `i = 59` is not reached).\n- **Final return**: The function returns `res[n]`, but `res` only has indices `0` to `n-2` (for `n=60`, `res` has indices `0` to `58`).\n\n---\n\n### **3. Root Cause**\nThe loop condition `i < n -",
+      "patched_code": "def get_max_sum(n):\n    res = [0] * (n + 1)\n    res[1] = 1\n    for i in range(2, n + 1):\n        res[i] = max(i, res[int(i / 2)] + res[int(i / 3)] + res[int(i / 4)] + res[int(i / 5)])\n    return res[n]",
+      "decision": "patch_and_retry",
+      "duration_seconds": 13.46
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def get_max_sum(n):\n    res = [0] * (n + 1)\n    res[1] = 1\n    for i in range(2, n + 1):\n        res[i] = max(i, res[int(i / 2)] + res[int(i / 3)] + res[int(i / 4)] + res[int(i / 5)])\n    return res[n]",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.37s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.69
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All statements in `get_max_sum()` were executed during testing.\n- All statements in the test cases were executed.\n\nHowever, **100% coverage does not necessarily mean robust testing**\u2014it only confirms that every line was run at least once. We must analyze whether edge cases, boundary conditions, and invalid inputs were tested.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nBased on the function's logic, the following cases may not have been fully tested:\n\n#### **Potential Gaps:**\n1. **Input `n = 0`**\n   - The function does not explicitly handle `n = 0` (though the loop starts at `2`).\n   - If `n = 0` is passed, the function will return `res[0] = 0` (default initialization), but this may not be the intended behavior.\n   - **Risk:** Silent failure or incorrect result.\n\n2. **Input `n = 1`**\n   - The function sets `res[1] = 1",
+    "generated_tests": [
+      "assert get_max_sum(1) == 1",
+      "assert get_max_sum(15) == 18",
+      "assert get_max_sum(30) == 46"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert get_max_sum(30) == 46\nE       assert 44 == 46\nE        +  where 44 = get_max_sum(30)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqngyqhp7\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqngyqhp7\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.39s\n\n"
+  }
+}

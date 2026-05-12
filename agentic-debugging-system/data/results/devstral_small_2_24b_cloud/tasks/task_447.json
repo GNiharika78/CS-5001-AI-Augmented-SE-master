@@ -1,0 +1,51 @@
+{
+  "task_id": 447,
+  "task_prompt": "Write a function to find cubes of individual elements in a list.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_pow_to_mul",
+  "status": "repaired",
+  "final_code": "def cube_nums(nums):\n    cube_nums = list(map(lambda x: x ** 3, nums))\n    return cube_nums",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 46.87,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def cube_nums(nums):\n cube_nums = list(map(lambda x: x * 3, nums))\n return cube_nums",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert cube_nums([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])==[1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]\nE       assert [3, 6, 9, 12, 15, 18, ...] == [1, 8, 27, 64, 125, 216, ...]\nE         \nE         At index 0 diff: 3 != 1\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpd7vfvcft\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert cube_nums([10,20,30])==([1000, 8000, 27000])\nE       assert [30, 60, 90] == [1000, 8000, 27000]\nE         \nE         At index 0 diff: 30 != 1000\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpd7vfvcft\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert cube_nums([12,15])==([1728, 3375])\nE       assert [36, 45] == [1728, 3375]\nE         \nE         At index 0 diff: 36 != 1728\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpd7vfvcft\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpd7vfvcft\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpd7vfvcft\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpd7vfvcft\\test_solution.py::test_case_2\n3 failed in 0.35s\n\n",
+      "failure": "Here's the failure analysis for the given code:\n\n1. **What failed**:\n   The function `cube_nums()` is supposed to return the cubes of individual elements in a list, but it's incorrectly returning the elements multiplied by 3 instead of cubed.\n\n2. **Evidence**:\n   - Test case 0: Expected `[1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]` but got `[3, 6, 9, 12, 15, 18, 21, 24, 27, 30]`\n   - Test case 1: Expected `[1000, 8000, 27000]` but got `[30, 60, 90]`\n\n3. **Failure type**:\n   This is a **logical error** where the function implements the wrong mathematical operation (multiplication by 3 instead of cubing).\n\n4. **Suspected location**:\n   The error is in the lambda function within the `map()` call:\n   ```python",
+      "hypothesis": "Here's the structured analysis of the failure:\n\n1. **Failing behavior**:\n   The function returns elements multiplied by 3 instead of their cubes.\n\n2. **Evidence**:\n   - For input `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`, expected output is `[1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]` but got `[3, 6, 9, 12, 15, 18, 21, 24, 27, 30]`\n   - For input `[10, 20, 30]`, expected output is `[1000, 8000, 27000]` but got `[30, 60, 90]`\n\n3. **Root cause**:\n   The lambda function incorrectly implements `x * 3` (multiplication by 3) instead of `x ** 3` (cubing).\n\n4. **Why",
+      "patched_code": "def cube_nums(nums):\n    cube_nums = list(map(lambda x: x ** 3, nums))\n    return cube_nums",
+      "decision": "patch_and_retry",
+      "duration_seconds": 16.29
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def cube_nums(nums):\n    cube_nums = list(map(lambda x: x ** 3, nums))\n    return cube_nums",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.63
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (10/10 statements covered)\n  - `solution.py`: 3 statements, 0 missed (100% coverage)\n  - `test_solution.py`: 7 statements, 0 missed (100% coverage)\n- The function `cube_nums` and its test cases are fully covered.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested (or may be weakly tested):\n- **Empty list**: `nums = []` (should return `[]`).\n- **Negative numbers**: `nums = [-1, -2, -3]` (should return `[-1, -8, -27]`).\n- **Floating-point numbers**: `nums = [1.5, 2.5]` (should return `[3.375, 15.625]`).\n- **Mixed types**: `nums = [1, 2.5, -3]` (should return `[1, 15.625, -27]`",
+    "generated_tests": [
+      "assert cube_nums([0, -1, -2]) == [0, -1, -8]",
+      "assert cube_nums([1.5, 2.5]) == [3.375, 15.625]",
+      "assert cube_nums([]) == []"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.33s\n\n"
+  }
+}

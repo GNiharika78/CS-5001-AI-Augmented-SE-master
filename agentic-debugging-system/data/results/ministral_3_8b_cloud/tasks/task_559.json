@@ -1,0 +1,51 @@
+{
+  "task_id": 559,
+  "task_prompt": "Write a function to find the sum of the largest contiguous sublist in the given list.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def max_sub_array_sum(a, size):\n    if size == 0:\n        return 0\n    max_so_far = a[0]\n    max_ending_here = a[0]\n    for i in range(1, size):\n        max_ending_here = max(a[i], max_ending_here + a[i])\n        if max_so_far < max_ending_here:\n            max_so_far = max_ending_here\n    return max_so_far",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 22.52,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_sub_array_sum(a, size):\n  max_so_far = 0\n  max_ending_here = 0\n  for i in range(0, size):\n    max_ending_here = max_ending_here - a[i]\n    if max_ending_here < 0:\n      max_ending_here = 0\n    elif (max_so_far < max_ending_here):\n      max_so_far = max_ending_here\n  return max_so_far",
+      "tests_passed_before_patch": false,
+      "test_output": "FF.                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert max_sub_array_sum([-2, -3, 4, -1, -2, 1, 5, -3], 8) == 7\nE       assert 5 == 7\nE        +  where 5 = max_sub_array_sum([-2, -3, 4, -1, -2, 1, ...], 8)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv_8c__ux\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert max_sub_array_sum([-3, -4, 5, -2, -3, 2, 6, -4], 8) == 8\nE       assert 7 == 8\nE        +  where 7 = max_sub_array_sum([-3, -4, 5, -2, -3, 2, ...], 8)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv_8c__ux\\test_solution.py:7: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv_8c__ux\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv_8c__ux\\test_solution.py::test_case_1\n2 failed, 1 passed in 0.39s\n\n",
+      "failure": "Let me analyze the failure and provide a corrected solution.\n\n1. **What failed**:\nThe function is not correctly calculating the maximum subarray sum (Kadane's algorithm implementation). It's returning incorrect values for the test cases.\n\n2. **Evidence**:\n- For input `[-2, -3, 4, -1, -2, 1, 5, -3]` (size 8), expected output is 7 (from subarray `[4, -1, -2, 1, 5]`), but function returns 5\n- For input `[-3, -4, 5, -2, -3, 2, 6, -4]` (size 8), expected output is 8 (from subarray `[5, -2, -3, 2, 6]`), but function returns 7\n\n3. **Failure type**:\nThe function has a logical error in its implementation of Kadane's algorithm. Specifically:\n- It's subtracting `a[i]` instead of adding it\n- The initial values of `max_so_far` and `max_ending_here` should be negative infinity or the first element\n- The logic for resetting `max_ending_h",
+      "hypothesis": "Here's the detailed analysis and corrected solution:\n\n---\n\n### **1. Failing Behavior**\nThe function fails to compute the maximum subarray sum (Kadane's algorithm) correctly. It returns incorrect results for positive test cases, often underestimating the true maximum sum.\n\n### **2. Evidence**\n- **Test Case 1**: Input `[-2, -3, 4, -1, -2, 1, 5, -3]` (size 8)\n  - Expected output: `7` (from subarray `[4, -1, -2, 1, 5]`).\n  - Function returns: `5` (incorrect).\n- **Test Case 2**: Input `[-3, -4, 5, -2, -3, 2, 6, -4]` (size 8)\n  - Expected output: `8` (from subarray `[5, -2, -3, 2, 6]`).\n  - Function returns: `7` (incorrect).\n\n### **3. Root Cause**\nThe function has **three critical flaws**:\n1. **Incorrect Update Rule**:\n   - The line `max_ending_here = max_ending_here -",
+      "patched_code": "def max_sub_array_sum(a, size):\n    if size == 0:\n        return 0\n    max_so_far = a[0]\n    max_ending_here = a[0]\n    for i in range(1, size):\n        max_ending_here = max(a[i], max_ending_here + a[i])\n        if max_so_far < max_ending_here:\n            max_so_far = max_ending_here\n    return max_so_far",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.34
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_sub_array_sum(a, size):\n    if size == 0:\n        return 0\n    max_so_far = a[0]\n    max_ending_here = a[0]\n    for i in range(1, size):\n        max_ending_here = max(a[i], max_ending_here + a[i])\n        if max_so_far < max_ending_here:\n            max_so_far = max_ending_here\n    return max_so_far",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           10      1    90%   3\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 17      1    94%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe test coverage report shows:\n- **Total statements tested**: 16/17 (94% coverage).\n- **Missing statement**: 1 out of 10 in `solution.py` (line 3, `if size == 0:`).\n- **Test file coverage**: 100% (all statements in `test_solution.py` are executed).\n\n### **2. Missing or Weakly Tested Cases**\nThe only **uncovered statement** is:\n```python\nif size == 0:  # Line 3 in solution.py\n```\nThis means:\n- **No test case** checks the behavior when `size = 0` (empty subarray).\n- The function returns `0` in this case, but the test suite does not verify this edge case.\n\n### **3. Suggested Additional Tests**\nTo achieve **100% coverage**, add test cases that:\n1. **Test `size = 0`** (empty subarray):\n   ```python\n   def test_empty_subarray():\n       assert max_sub_array_sum([], 0) == 0\n   ```\n2. **Test negative numbers** (if not already covered):\n   ```python",
+    "generated_tests": [
+      "assert max_sub_array_sum([1, 2, 3, -2, 5], 5) == 9",
+      "assert max_sub_array_sum([-1, -2, -3, -4], 4) == -1",
+      "assert max_sub_array_sum([5], 1) == 5"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.36s\n\n"
+  }
+}

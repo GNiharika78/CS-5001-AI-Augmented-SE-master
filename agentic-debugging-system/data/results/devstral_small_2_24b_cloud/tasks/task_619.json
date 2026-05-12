@@ -1,0 +1,51 @@
+{
+  "task_id": 619,
+  "task_prompt": "Write a function to move all the numbers to the end of the given string.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def move_num(test_str):\n  res = ''\n  dig = ''\n  for ele in test_str:\n    if ele.isdigit():\n      dig += ele\n    else:\n      res += ele\n  res += dig\n  return (res)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 94.59,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def move_num(test_str):\n  res = ''\n  dig = ''\n  for ele in test_str:\n    if ele.isdigit():\n      dig -= ele\n    else:\n      res += ele\n  res += dig\n  return (res) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert move_num('I1love143you55three3000thousand') == 'Iloveyouthreethousand1143553000'\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp16ba2ou2\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\ntest_str = 'I1love143you55three3000thousand'\n\n    def move_num(test_str):\n      res = ''\n      dig = ''\n      for ele in test_str:\n        if ele.isdigit():\n>         dig -= ele\nE         TypeError: unsupported operand type(s) for -=: 'str' and 'str'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp16ba2ou2\\solution.py:6: TypeError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert move_num('Avengers124Assemble') == 'AvengersAssemble124'\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp16ba2ou2\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\ntest_str = 'Avengers124Assemble'\n\n    def move_num(test_str):\n      res = ''\n      dig = ''\n      for ele in test_str:\n        if ele.isdigit():\n>         dig -= ele\nE         TypeError: unsupported operand type(s) for -=: 'str' and 'str'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp16ba2ou2\\solution.py:6: TypeError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert move_num('Its11our12path13to14see15things16do17things') == 'Itsourpathtoseethingsdothings11121314151617'\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp16ba2ou2\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\ntest_str = 'Its11our12path13to14see15things16do17things'\n\n    def move_num(test_str):\n      res = ''\n      dig = ''\n      for ele in test_str:\n        if ele.isdigit():\n>         dig -= ele\nE         TypeError: unsupported operand type(s) for -=: 'str' and 'str'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp16ba2ou2\\solution.py:6: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp16ba2ou2\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp16ba2ou2\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp16ba2ou2\\test_solution.py::test_case_2\n3 failed in 0.35s\n\n",
+      "failure": "1. **What failed**: The function `move_num` failed to correctly move all numbers to the end of the string. Instead, it raised a `TypeError` due to an incorrect operation (`dig -= ele`).\n\n2. **Evidence**:\n   - The test case `move_num('I1love143you55three3000thousand')` expected the output `'Iloveyouthreethousand1143553000'`, but the function raised a `TypeError`:\n     ```\n     TypeError: unsupported operand type(s) for -=: 'str' and 'str'\n     ```\n   - The error occurs because the code attempts to use the `-=` operator on strings (`dig -= ele`), which is not valid in Python.\n\n3. **Failure type**: **Logical Error** (incorrect operation) leading to a **Runtime Error** (`TypeError`).\n\n4. **Suspected location**:\n   - The error is in the line `dig -= ele` inside the `if ele.isdigit():` block. The `-=` operator is not valid for string concatenation. The correct operation should be `dig += ele`.\n\n### Corrected Code:\n```python\ndef move_num(test_str",
+      "hypothesis": "Here's the structured response based on the analysis:\n\n1. **Failing behavior**:\n   The function `move_num` fails to move numbers to the end of the string and instead raises a `TypeError` when attempting to use the `-=` operator on strings.\n\n2. **Evidence**:\n   - Test case: `move_num('I1love143you55three3000thousand')`\n   - Expected output: `'Iloveyouthreethousand1143553000'`\n   - Actual behavior: Raises `TypeError: unsupported operand type(s) for -=: 'str' and 'str'`\n\n3. **Root cause**:\n   The line `dig -= ele` is invalid because:\n   - The `-=` operator is not defined for string operations in Python.\n   - The intended operation was likely string concatenation (`dig += ele`), but the wrong operator was used.\n\n4. **Why this explains failure**:\n   - The logical error (using `-=` instead of `+=`) directly causes the runtime error.\n   - The function cannot proceed past this line, so it never reaches the final concatenation step (`res += dig`).\n\n5. **Repair plan**:\n   - Replace",
+      "patched_code": "def move_num(test_str):\n  res = ''\n  dig = ''\n  for ele in test_str:\n    if ele.isdigit():\n      dig += ele\n    else:\n      res += ele\n  res += dig\n  return (res)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 48.74
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def move_num(test_str):\n  res = ''\n  dig = ''\n  for ele in test_str:\n    if ele.isdigit():\n      dig += ele\n    else:\n      res += ele\n  res += dig\n  return (res)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.62
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            9      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 16      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (16/16 statements covered)\n  - `solution.py`: 9/9 statements covered (100%)\n  - `test_solution.py`: 7/7 statements covered (100%)\n- The function `move_num` and its test cases are fully covered by the existing tests.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested or could be weakly tested:\n1. **Empty String**: Input is `\"\"`.\n2. **No Numbers**: Input has no digits (e.g., `\"abc\"`).\n3. **All Numbers**: Input is all digits (e.g., `\"123\"`).\n4. **Mixed Characters**: Input with mixed letters, numbers, and symbols (e.g., `\"a1b2c3!@#\"`).\n5. **Unicode or Non-ASCII Characters**: Input with non-ASCII characters (e.g., `\"caf\u00e9123\"`).\n6. **Large Input**: Input with a very long string (performance test).\n7. **",
+    "generated_tests": [
+      "assert move_num('NoNumbersHere') == 'NoNumbersHere'",
+      "assert move_num('12345') == '12345'",
+      "assert move_num('a1b2c3') == 'abc123'"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.37s\n\n"
+  }
+}

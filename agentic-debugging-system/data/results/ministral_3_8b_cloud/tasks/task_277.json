@@ -1,0 +1,51 @@
+{
+  "task_id": 277,
+  "task_prompt": "Write a function that takes in a dictionary and integer n and filters the dictionary to only include entries with values greater than or equal to n.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "boundary_gte_to_gt",
+  "status": "repaired",
+  "final_code": "def dict_filter(d, n):\n    return {key: value for key, value in d.items() if value >= n}",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 22.56,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def dict_filter(dict,n):\n result = {key:value for (key, value) in dict.items() if value >n}\n return result",
+      "tests_passed_before_patch": false,
+      "test_output": ".FF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert dict_filter({'Cierra Vega': 175, 'Alden Cantrell': 180, 'Kierra Gentry': 165, 'Pierre Cox': 190},180)=={ 'Alden Cantrell': 180, 'Pierre Cox': 190}\nE       AssertionError: assert {'Pierre Cox': 190} == {'Alden Cantr...rre Cox': 190}\nE         \nE         Omitting 1 identical items, use -vv to show\nE         Right contains 1 more item:\nE         {'Alden Cantrell': 180}\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpf4xjssvh\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert dict_filter({'Cierra Vega': 175, 'Alden Cantrell': 180, 'Kierra Gentry': 165, 'Pierre Cox': 190},190)=={ 'Pierre Cox': 190}\nE       AssertionError: assert {} == {'Pierre Cox': 190}\nE         \nE         Right contains 1 more item:\nE         {'Pierre Cox': 190}\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpf4xjssvh\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpf4xjssvh\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpf4xjssvh\\test_solution.py::test_case_2\n2 failed, 1 passed in 0.40s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function is not correctly filtering dictionary entries where values are **greater than or equal to** `n` (the current implementation only checks for values **strictly greater than** `n`). The test expects entries with values **equal to** `n` to be included, but the function excludes them.\n\n2. **Evidence**:\n   - In `test_case_1`, the input `n=180` should include both `'Alden Cantrell': 180` and `'Pierre Cox': 190`, but the function only returns `{'Pierre Cox': 190}` (missing `'Alden Cantrell': 180`).\n   - In `test_case_2`, the input `n=190` should include `'Pierre Cox': 190`, but the test output is truncated (likely due to a typo in the expected output in the error message).\n\n3. **Failure type**:\n   - **Logical error**: The condition `value > n` is too strict. It should be `value >= n` to include equal values.\n\n4. **Suspected location**:\n   The issue is in the dictionary",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `dict_filter` incorrectly excludes dictionary entries where the value is **equal to** `n`, only including those where the value is **strictly greater than** `n`. This violates the requirement to include values **greater than or equal to** `n`.\n\n---\n\n### **2. Evidence**\n- **Test Case 1**:\n  Input: `n = 180`, dictionary includes `{'Alden Cantrell': 180, 'Pierre Cox': 190, ...}`\n  Expected Output: `{'Alden Cantrell': 180, 'Pierre Cox': 190, ...}`\n  Actual Output: `{'Pierre Cox': 190, ...}` (missing `'Alden Cantrell': 180`).\n  This confirms the function fails to include entries with `value == n`.\n\n- **Test Case 2**:\n  Input: `n = 190`, dictionary includes `{'Pierre Cox': 190, ...}`\n  Expected Output: `{'Pierre Cox': 190, ...}`\n  Actual Output: Likely",
+      "patched_code": "def dict_filter(d, n):\n    return {key: value for key, value in d.items() if value >= n}",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.91
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def dict_filter(d, n):\n    return {key: value for key, value in d.items() if value >= n}",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.66
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All statements in `dict_filter()` were executed during testing.\n- All statements in the test cases were executed.\n\n### **2. Missing or Weakly Tested Cases**\nWhile the coverage is perfect, we should consider whether the tests thoroughly validate edge cases. Common edge cases for this function include:\n- **Empty dictionary** (`d = {}`) \u2192 Should return `{}`.\n- **Dictionary with no values \u2265 `n`** \u2192 Should return `{}`.\n- **Dictionary with all values \u2265 `n`** \u2192 Should return the original dictionary.\n- **Negative values in `n`** \u2192 Should still filter correctly.\n- **Non-integer values in `d`** (if the function assumes `d` contains only comparable types).\n- **`n` being `None` or invalid** (if the function should handle such cases).\n\nSince the coverage is 100%, the tests likely cover these cases, but we should verify explicitly.\n\n### **3. Suggested Additional Tests**\nTo ensure robustness, consider adding tests for:",
+    "generated_tests": [
+      "assert dict_filter({'a': 10, 'b': 20, 'c': 30, 'd': 5}, 15) == {'a': 10, 'b': 20, 'c': 30}",
+      "assert dict_filter({}, 10) == {}",
+      "assert dict_filter({'x': 5, 'y': 5, 'z': 5}, 6) == {}"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...F..                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert dict_filter({'a': 10, 'b': 20, 'c': 30, 'd': 5}, 15) == {'a': 10, 'b': 20, 'c': 30}\nE       AssertionError: assert {'b': 20, 'c': 30} == {'a': 10, 'b': 20, 'c': 30}\nE         \nE         Omitting 2 identical items, use -vv to show\nE         Right contains 1 more item:\nE         {'a': 10}\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp980db1md\\test_solution.py:13: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp980db1md\\test_solution.py::test_case_3\n1 failed, 5 passed in 0.37s\n\n"
+  }
+}

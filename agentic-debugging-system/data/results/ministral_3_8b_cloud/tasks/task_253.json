@@ -1,0 +1,51 @@
+{
+  "task_id": 253,
+  "task_prompt": "Write a python function that returns the number of integer elements in a given list.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def count_integer(list1):\n    ctr = 0\n    for i in list1:\n        if isinstance(i, int):\n            ctr += 1\n    return ctr",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 21.95,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def count_integer(list1):\n    ctr = 0\n    for i in list1:\n        if isinstance(i, int):\n            ctr = ctr - 1\n    return ctr",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert count_integer([1,2,'abc',1.2]) == 2\nE       AssertionError: assert -2 == 2\nE        +  where -2 = count_integer([1, 2, 'abc', 1.2])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpo8dldqo7\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert count_integer([1,2,3]) == 3\nE       assert -3 == 3\nE        +  where -3 = count_integer([1, 2, 3])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpo8dldqo7\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert count_integer([1,1.2,4,5.1]) == 2\nE       assert -2 == 2\nE        +  where -2 = count_integer([1, 1.2, 4, 5.1])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpo8dldqo7\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpo8dldqo7\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpo8dldqo7\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpo8dldqo7\\test_solution.py::test_case_2\n3 failed in 0.39s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `count_integer()` is not correctly counting the number of integer elements in the list. Instead of incrementing the counter when an integer is found, it's decrementing it (`ctr = ctr - 1`), which results in a negative count.\n\n2. **Evidence**:\n   - For `[1,2,'abc',1.2]`, the function returns `-2` instead of `2`\n   - For `[1,2,3]`, the function returns `-3` instead of `3`\n   - For `[1,1.2,4,5.1]`, the function returns `-2` instead of `2`\n   - The test cases expect positive counts, but the function returns negative values\n\n3. **Failure type**:\n   - **Logical Error**: The core logic of the function is incorrect (using subtraction instead of addition)\n   - **Type Checking Error**: While the type checking (`isinstance(i, int)`) is correct, the counting mechanism is wrong\n\n4. **Suspected location**:\n   The issue is in this line:\n   ```python\n   ctr = ctr - 1\n   ```\n   This",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `count_integer()` returns a **negative count** of integers in the list instead of the expected positive count. For example:\n- Input: `[1, 2, 'abc', 1.2]` \u2192 Output: `-2` (expected: `2`)\n- Input: `[1, 2, 3]` \u2192 Output: `-3` (expected: `3`)\n\n---\n\n### **2. Evidence**\n- The function uses `isinstance(i, int)` correctly to check for integers.\n- However, the counter logic is flawed: `ctr = ctr - 1` **decrements** the counter instead of incrementing it.\n- All test cases show negative results, confirming the logical error.\n\n---\n\n### **3. Root Cause**\nThe **logical error** is in the line:\n```python\nctr = ctr - 1  # Incorrect: Decrements the counter\n```\nThe intention was to **increment** the counter when an integer is found, but the code mistakenly subtracts `1` instead.\n\n---\n\n### **4. Why This Explains the Failure**\n- The",
+      "patched_code": "def count_integer(list1):\n    ctr = 0\n    for i in list1:\n        if isinstance(i, int):\n            ctr += 1\n    return ctr",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.76
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def count_integer(list1):\n    ctr = 0\n    for i in list1:\n        if isinstance(i, int):\n            ctr += 1\n    return ctr",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.67
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the `solution.py` (the function under test) and `test_solution.py` (the test file). This means:\n- All **6 statements** in `count_integer()` were executed during testing.\n- All **7 statements** in the test file were executed.\n\nSince no statements were missed, the tests appear to be thorough in terms of basic functionality.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nWhile the coverage is perfect, we should consider **edge cases** that might not have been explicitly tested but could still be important:\n\n#### **Potential Weaknesses:**\n1. **Empty List**\n   - Does the function correctly return `0` for an empty list?\n   - Example: `count_integer([])` \u2192 Should return `0`.\n\n2. **Non-Integer Types (Beyond `int`)**\n   - Does it correctly ignore `bool` (since `bool` is a subclass of `int` in Python)?\n   - Example: `count_integer([True, False])` \u2192 Should return `0` (if `bool` should not be counted as `int`).\n   -",
+    "generated_tests": [
+      "assert count_integer([True, 1, 2.5, None]) == 1",
+      "assert count_integer([]) == 0",
+      "assert count_integer([-5, 0, 10, \"hello\", 3.14]) == 3"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...F..                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert count_integer([True, 1, 2.5, None]) == 1\nE       assert 2 == 1\nE        +  where 2 = count_integer([True, 1, 2.5, None])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqt5loj54\\test_solution.py:13: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpqt5loj54\\test_solution.py::test_case_3\n1 failed, 5 passed in 0.39s\n\n"
+  }
+}

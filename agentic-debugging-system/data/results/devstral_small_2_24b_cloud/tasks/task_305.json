@@ -1,0 +1,51 @@
+{
+  "task_id": 305,
+  "task_prompt": "Write a function to return two words from a list of words starting with letter 'p'.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "import re\ndef start_withp(words):\n    for w in words:\n        m = re.match(r\"([Pp]\\w+)\\W([Pp]\\w+)\", w)\n        if m:\n            return m.groups()",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 32.73,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef start_withp(words):\n for w in words:\n        m = re.match(\"(P\\w-)\\W(P\\w+)\", w)\n        if m:\n            return m.groups()",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert start_withp([\"Python PHP\", \"Java JavaScript\", \"c c++\"])==('Python', 'PHP')\nE       AssertionError: assert None == ('Python', 'PHP')\nE        +  where None = start_withp(['Python PHP', 'Java JavaScript', 'c c++'])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv06zfp31\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert start_withp([\"Python Programming\",\"Java Programming\"])==('Python','Programming')\nE       AssertionError: assert None == ('Python', 'Programming')\nE        +  where None = start_withp(['Python Programming', 'Java Programming'])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv06zfp31\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert start_withp([\"Pqrst Pqr\",\"qrstuv\"])==('Pqrst','Pqr')\nE       AssertionError: assert None == ('Pqrst', 'Pqr')\nE        +  where None = start_withp(['Pqrst Pqr', 'qrstuv'])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv06zfp31\\test_solution.py:10: AssertionError\n============================== warnings summary ===============================\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv06zfp31\\solution.py:4\n  C:\\Users\\gurra\\AppData\\Local\\Temp\\tmpv06zfp31\\solution.py:4: SyntaxWarning: invalid escape sequence '\\w'\n    m = re.match(\"(P\\w-)\\W(P\\w+)\", w)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv06zfp31\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv06zfp31\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpv06zfp31\\test_solution.py::test_case_2\n3 failed, 1 warning in 0.34s\n\n",
+      "failure": "### Analysis of the Failure\n\n1. **What failed**:\n   The function `start_withp` is supposed to return two words from a list of words that start with the letter 'p' (case-insensitive). However, the function is returning `None` instead of the expected tuples of words.\n\n2. **Evidence**:\n   - In `test_case_0`, the input is `[\"Python PHP\", \"Java JavaScript\", \"c c++\"]`, and the expected output is `('Python', 'PHP')`. The function returns `None`.\n   - In `test_case_1`, the input is `[\"Python Programming\",\"Java Programming\"]`, and the expected output is `('Python', 'Programming')`. The function returns `None`.\n\n3. **Failure type**:\n   - The function is not correctly identifying words that start with 'p' or 'P'.\n   - The regular expression pattern `(P\\w-)\\W(P\\w+)` is incorrect for the task. It seems to be trying to match two words starting with 'P' separated by a non-word character, but it is not working as intended.\n\n4. **Suspected location**:\n   - The issue is in the regular expression pattern and the logic of the function",
+      "hypothesis": "### Analysis of the Failure\n\n1. **Failing behavior**:\n   The function `start_withp` is supposed to return two words from a list of words that start with the letter 'p' (case-insensitive). However, the function is returning `None` instead of the expected tuples of words.\n\n2. **Evidence**:\n   - In `test_case_0`, the input is `[\"Python PHP\", \"Java JavaScript\", \"c c++\"]`, and the expected output is `('Python', 'PHP')`. The function returns `None`.\n   - In `test_case_1`, the input is `[\"Python Programming\",\"Java Programming\"]`, and the expected output is `('Python', 'Programming')`. The function returns `None`.\n\n3. **Root cause**:\n   - The regular expression pattern `(P\\w-)\\W(P\\w+)` is incorrect for the task. It seems to be trying to match two words starting with 'P' separated by a non-word character, but it is not working as intended.\n   - The pattern `(P\\w-)` is not correctly matching words starting with 'P' or 'p'. The `\\w` matches any word character (equivalent to `[a-zA-Z0",
+      "patched_code": "import re\ndef start_withp(words):\n    for w in words:\n        m = re.match(r\"([Pp]\\w+)\\W([Pp]\\w+)\", w)\n        if m:\n            return m.groups()",
+      "decision": "patch_and_retry",
+      "duration_seconds": 21.26
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef start_withp(words):\n    for w in words:\n        m = re.match(r\"([Pp]\\w+)\\W([Pp]\\w+)\", w)\n        if m:\n            return m.groups()",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.57
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (13/13 statements covered)\n- **solution.py**: 100% (6/6 statements covered)\n- **test_solution.py**: 100% (7/7 statements covered)\n\nThe coverage report indicates that all lines of code in both the solution and test files are executed during testing. This is a strong indicator that the test suite is comprehensive for the current implementation.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, there are potential edge cases or scenarios that may not be explicitly tested based on the current implementation and regex pattern. These include:\n- **Empty list**: What happens when `words` is empty? The function will return `None` (implicitly), but this may not be tested.\n- **No matches**: What happens when no words in the list match the pattern? The function will return `None` (implicitly), but this may not be tested.\n- **Case sensitivity**: The regex handles both 'P' and 'p', but this may not be explicitly tested.\n- **Non-alphabetic characters**: The regex `\\w",
+    "generated_tests": [
+      "assert start_withp([\"pizza pasta\", \"apple banana\"]) == ('pizza', 'pasta')",
+      "assert start_withp([\"Pineapple Pear\", \"Mango Orange\"]) == ('Pineapple', 'Pear')",
+      "assert start_withp([\"pencil paper\", \"book pen\"]) == ('pencil', 'paper')"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.30s\n\n"
+  }
+}

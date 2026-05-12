@@ -1,0 +1,39 @@
+{
+  "task_id": 164,
+  "task_prompt": "Write a function to determine if the sum of the divisors of two integers are the same.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import math \ndef div_sum(n): \n  total = 1\n  i = 2\n\n  while i + i <= n:\n    if (n % i == 0):\n      total = (total + i + math.floor(n / i))\n    i += 1\n\n  return total\n\ndef are_equivalent(num1, num2): \n    return div_sum(num1) == div_sum(num2); ",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 39.04,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math \ndef div_sum(n): \n  total = 1\n  i = 2\n\n  while i + i <= n:\n    if (n % i == 0):\n      total = (total + i + math.floor(n / i))\n    i += 1\n\n  return total\n\ndef are_equivalent(num1, num2): \n    return div_sum(num1) == div_sum(num2); ",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.30s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.57
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           11      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 18      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\nThe coverage report indicates that **100% of the statements** in both `solution.py` and `test_solution.py` are covered by the test suite. This means all lines of code were executed during testing, and no statements were missed.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, this does not necessarily mean all edge cases or unusual inputs were tested. Potential weakly tested cases include:\n- **Negative numbers**: The function `div_sum` does not explicitly handle negative inputs, but the behavior is undefined (e.g., `div_sum(-5)` would return `1` due to the loop condition `i + i <= n` failing immediately).\n- **Zero**: `div_sum(0)` would also return `1` (since the loop condition fails), but this may not be the intended behavior.\n- **Large numbers**: The function may not be tested with very large integers, which could reveal performance issues or integer overflow (though Python handles big integers well).\n- **Prime numbers**: The function should correctly return `1 + n` for primes, but this may not be explicitly tested.\n- **Equivalent pairs**: The",
+    "generated_tests": [
+      "assert are_equivalent(1, 1) == True",
+      "assert are_equivalent(6, 28) == True",
+      "assert are_equivalent(10, 15) == False"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....F.                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert are_equivalent(6, 28) == True\nE       assert False == True\nE        +  where False = are_equivalent(6, 28)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjdu8bgob\\test_solution.py:16: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjdu8bgob\\test_solution.py::test_case_4\n1 failed, 5 passed in 0.31s\n\n"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "task_id": 294,
+  "task_prompt": "Write a function to find the maximum value in a given heterogeneous list.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "builtin_max_to_min",
+  "status": "repaired",
+  "final_code": "def max_val(listval):\n     max_val = max(i for i in listval if isinstance(i, int))\n     return(max_val)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 32.8,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_val(listval):\n     max_val = min(i for i in listval if isinstance(i, int)) \n     return(max_val)",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert max_val(['Python', 3, 2, 4, 5, 'version'])==5\nE       AssertionError: assert 2 == 5\nE        +  where 2 = max_val(['Python', 3, 2, 4, 5, 'version'])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpfcq5_p8d\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert max_val(['Python', 15, 20, 25])==25\nE       AssertionError: assert 15 == 25\nE        +  where 15 = max_val(['Python', 15, 20, 25])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpfcq5_p8d\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert max_val(['Python', 30, 20, 40, 50, 'version'])==50\nE       AssertionError: assert 20 == 50\nE        +  where 20 = max_val(['Python', 30, 20, 40, 50, 'version'])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpfcq5_p8d\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpfcq5_p8d\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpfcq5_p8d\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpfcq5_p8d\\test_solution.py::test_case_2\n3 failed in 0.38s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   - The function `max_val` is supposed to find the maximum integer value in a heterogeneous list (containing both integers and non-integer elements), but it incorrectly returns the minimum integer value instead.\n\n2. **Evidence**:\n   - **Test Case 0**: Input `['Python', 3, 2, 4, 5, 'version']` expected output `5`, but the function returned `2`.\n   - **Test Case 1**: Input `['Python', 15, 20, 25]` expected output `25`, but the function returned `15`.\n   - **Test Case 2**: Input `['Python', 30, 20, 40, 50, 'version']` (expected output `50`, but the function would return `20`).\n\n3. **Failure type**:\n   - **Logical Error**: The function uses `min()` instead of `max()` to find the maximum value in the list.\n\n4. **Suspected location**:\n   - The error is in the line:\n     ```python\n     max_val = min(i for i in listval if isinstance(i, int))",
+      "hypothesis": "### Failing Behavior\nThe function `max_val` incorrectly returns the **minimum** integer value in a heterogeneous list instead of the **maximum** integer value.\n\n### Evidence\n- **Test Case 0**: Input `['Python', 3, 2, 4, 5, 'version']` \u2192 Expected `5`, but returned `2`.\n- **Test Case 1**: Input `['Python', 15, 20, 25]` \u2192 Expected `25`, but returned `15`.\n- **Test Case 2**: Input `['Python', 30, 20, 40, 50, 'version']` \u2192 Expected `50`, but returned `20`.\n\n### Root Cause\nThe function uses `min()` instead of `max()` to compute the result:\n```python\nmax_val = min(i for i in listval if isinstance(i, int))\n```\nThis causes it to find the smallest integer rather than the largest.\n\n### Why This Explains the Failure\n- The function filters integers correctly (`isinstance(i, int)`), but the use of `min()` ensures the smallest value is selected, not the largest.\n- This is a **logical error** where",
+      "patched_code": "def max_val(listval):\n     max_val = max(i for i in listval if isinstance(i, int))\n     return(max_val)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 15.65
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_val(listval):\n     max_val = max(i for i in listval if isinstance(i, int))\n     return(max_val)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.59
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (10/10 lines covered)\n  - `solution.py`: 100% (3/3 lines covered)\n  - `test_solution.py`: 100% (7/7 lines covered)\n- The current test suite fully exercises all lines of the code, including the function definition, the generator expression, and the `isinstance` check.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested or could be weakly tested:\n1. **Empty List**: The function will raise a `ValueError` if the list is empty or contains no integers. This behavior should be tested.\n2. **All Non-Integer Values**: If the list contains no integers (e.g., `[1.5, \"hello\", True]`), the function will raise a `ValueError`. This should be tested.\n3. **Mixed Types with Floats**: The function ignores floats (e.g., `[1, 2.5, 3]`). This is correct per the current implementation, but the behavior should be",
+    "generated_tests": [
+      "assert max_val([1, 2, 3, 4, 5]) == 5",
+      "assert max_val([-1, -2, -3, -4, -5]) == -1",
+      "assert max_val(['a', 'b', 'c']) is None"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert max_val(['a', 'b', 'c']) is None\n               ^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpvonvmakj\\test_solution.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nlistval = ['a', 'b', 'c']\n\n    def max_val(listval):\n>        max_val = max(i for i in listval if isinstance(i, int))\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE        ValueError: max() iterable argument is empty\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpvonvmakj\\solution.py:2: ValueError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpvonvmakj\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.33s\n\n"
+  }
+}

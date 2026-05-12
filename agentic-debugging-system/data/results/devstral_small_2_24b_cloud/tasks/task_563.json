@@ -1,0 +1,39 @@
+{
+  "task_id": 563,
+  "task_prompt": "Write a function to extract values between quotation marks from a string.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import re\ndef extract_values(text):\n return (re.findall(r'\"(.+?)\"', text))",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 12.0,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef extract_values(text):\n return (re.findall(r'\"(.+?)\"', text))",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.58
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (10/10 statements covered)\n  - `solution.py`: 3 statements, 0 missed (100% coverage)\n  - `test_solution.py`: 7 statements, 0 missed (100% coverage)\n- The function `extract_values` and its test suite are fully covered by the current tests.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested (or may be weakly tested):\n- **Empty string**: `\"\"` (no quotes at all).\n- **No matches**: String with no quoted substrings (e.g., `\"Hello World\"`).\n- **Nested quotes**: String with nested or escaped quotes (e.g., `\"He said \\\"Hello\\\"\"`).\n- **Multiple quotes**: String with multiple quoted substrings (e.g., `\"foo\" \"bar\"`).\n- **Unclosed quotes**: String with an unclosed quote (e.g., `\"Hello`).\n- **Non-string input**: Passing non-string types (e.g., `None`, `123`, `[]",
+    "generated_tests": [
+      "assert extract_values('\"Hello\" and \"World\"') == ['Hello', 'World']",
+      "assert extract_values('\"Single\"') == ['Single']",
+      "assert extract_values('No quotes here') == []"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.33s\n\n"
+  }
+}

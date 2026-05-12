@@ -1,0 +1,39 @@
+{
+  "task_id": 443,
+  "task_prompt": "Write a python function to find the largest negative number from the given list.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "boundary_lt_to_lte",
+  "status": "repaired",
+  "final_code": "def largest_neg(list1): \n    max = list1[0] \n    for x in list1: \n        if x <= max : \n             max = x  \n    return max",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 13.53,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def largest_neg(list1): \n    max = list1[0] \n    for x in list1: \n        if x <= max : \n             max = x  \n    return max",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.33s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.57
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (13/13 statements covered)\n- **solution.py**: 100% (6/6 statements covered)\n- **test_solution.py**: 100% (7/7 statements covered)\n\nThe coverage report indicates that all lines of code in both the solution and test files have been executed during testing. This is a good sign, but 100% coverage does not necessarily mean the code is thoroughly tested for all edge cases.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be adequately tested or could be weakly tested:\n1. **Empty List**: The function does not handle the case where `list1` is empty. This would raise an `IndexError` when trying to access `list1[0]`.\n2. **All Positive Numbers**: If the list contains only positive numbers, the function will return the smallest positive number (due to the logic `x <= max`), which is incorrect for the intended purpose (finding the largest negative number).\n3. **All Negative Numbers**: The function should work correctly here",
+    "generated_tests": [
+      "assert largest_neg([-1, -2, -3, -4, -5]) == -1",
+      "assert largest_neg([0, -1, -2, -3]) == -1",
+      "assert largest_neg([-10, -20, -30, -40, -50]) == -10"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...FFF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert largest_neg([-1, -2, -3, -4, -5]) == -1\nE       assert -5 == -1\nE        +  where -5 = largest_neg([-1, -2, -3, -4, -5])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpw7avjkbk\\test_solution.py:13: AssertionError\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert largest_neg([0, -1, -2, -3]) == -1\nE       assert -3 == -1\nE        +  where -3 = largest_neg([0, -1, -2, -3])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpw7avjkbk\\test_solution.py:16: AssertionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert largest_neg([-10, -20, -30, -40, -50]) == -10\nE       assert -50 == -10\nE        +  where -50 = largest_neg([-10, -20, -30, -40, -50])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpw7avjkbk\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpw7avjkbk\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpw7avjkbk\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpw7avjkbk\\test_solution.py::test_case_5\n3 failed, 3 passed in 0.35s\n\n"
+  }
+}

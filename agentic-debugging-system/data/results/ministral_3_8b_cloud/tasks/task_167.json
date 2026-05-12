@@ -1,0 +1,51 @@
+{
+  "task_id": 167,
+  "task_prompt": "Write a python function to find the smallest power of 2 greater than or equal to n.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def next_power_of_2(n):\n    if n <= 0:\n        return 1\n    n -= 1\n    n |= n >> 1\n    n |= n >> 2\n    n |= n >> 4\n    n |= n >> 8\n    n |= n >> 16\n    return n + 1",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.97,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def next_power_of_2(n): \n  if n and not n & (n - 1):\n    return n\n\n  count = 0\n  while n != 0: \n    n >>= 1\n    count -= 1\n\n  return 1 << count; ",
+      "tests_passed_before_patch": false,
+      "test_output": ".FF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert next_power_of_2(5) == 8\n               ^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbtx_rm63\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nn = 0\n\n    def next_power_of_2(n):\n      if n and not n & (n - 1):\n        return n\n    \n      count = 0\n      while n != 0:\n        n >>= 1\n        count -= 1\n    \n>     return 1 << count;\n            ^^^^^^^^^^\nE     ValueError: negative shift count\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbtx_rm63\\solution.py:10: ValueError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert next_power_of_2(17) == 32\n               ^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbtx_rm63\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nn = 0\n\n    def next_power_of_2(n):\n      if n and not n & (n - 1):\n        return n\n    \n      count = 0\n      while n != 0:\n        n >>= 1\n        count -= 1\n    \n>     return 1 << count;\n            ^^^^^^^^^^\nE     ValueError: negative shift count\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbtx_rm63\\solution.py:10: ValueError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbtx_rm63\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbtx_rm63\\test_solution.py::test_case_2\n2 failed, 1 passed in 0.41s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `next_power_of_2(n)` fails to correctly compute the smallest power of 2 greater than or equal to `n` for positive integers. It raises a `ValueError` due to a negative shift count when `n` is not a power of 2.\n\n2. **Evidence**:\n   - For `n = 5`, the function returns an incorrect result (or crashes) instead of returning `8`.\n   - For `n = 17`, the function also fails (likely crashes) instead of returning `32`.\n   - The error message `ValueError: negative shift count` occurs because `count` becomes negative during the right-shift loop, which is invalid in Python.\n\n3. **Failure type**:\n   - **Logical error**: The function's logic for counting bits is flawed, leading to incorrect results.\n   - **Runtime error**: The negative shift count causes a `ValueError` when trying to compute `1 << count`.\n\n4. **Suspected location**:\n   The issue is in the loop where `count` is decremented (`count -= 1`) instead of incremented (`count += 1`). This causes `count` to",
+      "hypothesis": "Here's the detailed analysis and repair plan for the `next_power_of_2` function:\n\n---\n\n### **1. Failing Behavior**\nThe function fails to compute the smallest power of 2 \u2265 `n` for non-power-of-2 inputs (e.g., `n = 5` or `n = 17`). Instead, it either:\n- Returns incorrect results (e.g., `5` for `n = 5` due to logical flaws).\n- Crashes with `ValueError: negative shift count` when `n` is not a power of 2 (e.g., `n = 17`).\n\n---\n\n### **2. Evidence**\n- **Input `n = 5`**:\n  - Expected output: `8` (since \\(2^3 = 8\\) is the smallest power of 2 \u2265 5).\n  - Actual behavior: The loop decrements `count` (e.g., `count = -3` for `n = 5`), leading to `1 << -3` (invalid shift) or incorrect logic.\n- **Input `n = 17`**:\n  - Expected output: `32` (since \\(2^5 = 32\\)).\n  - Actual",
+      "patched_code": "def next_power_of_2(n):\n    if n <= 0:\n        return 1\n    n -= 1\n    n |= n >> 1\n    n |= n >> 2\n    n |= n >> 4\n    n |= n >> 8\n    n |= n >> 16\n    return n + 1",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.22
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def next_power_of_2(n):\n    if n <= 0:\n        return 1\n    n -= 1\n    n |= n >> 1\n    n |= n >> 2\n    n |= n >> 4\n    n |= n >> 8\n    n |= n >> 16\n    return n + 1",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.65
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           10      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 17      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All **10 statements** in the function (`next_power_of_2`) were executed during testing.\n- All **7 statements** in the test file were executed.\n\nSince no statements were missed, the tests likely cover the function's logic comprehensively.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nWhile the coverage is perfect, we should analyze whether the tests cover **edge cases** and **logical branches** effectively. The function `next_power_of_2` has the following key cases:\n\n#### **Key Cases to Check:**\n1. **Positive integers** (e.g., `n = 1`, `n = 2`, `n = 3`, `n = 15`, `n = 16`).\n2. **Edge cases**:\n   - `n = 0` (should return `1`).\n   - `n = -1` (should return `1`).\n   - `n = -10` (should return `1`).\n3. **Large numbers**",
+    "generated_tests": [
+      "assert next_power_of_2(1) == 1",
+      "assert next_power_of_2(1023) == 1024",
+      "assert next_power_of_2(-10) == 1"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.36s\n\n"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "task_id": 422,
+  "task_prompt": "Write a python function to find the average of cubes of first n natural numbers.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def find_Average_Of_Cube(n):\n    sum = 0\n    for i in range(1, n + 1):\n        sum += i * i * i\n    return round(sum / n, 6)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 26.18,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def find_Average_Of_Cube(n):  \n    sum = 0\n    for i in range(1, n + 1): \n        sum += i + i * i  \n    return round(sum / n, 6) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert find_Average_Of_Cube(2) == 4.5\nE       assert 4.0 == 4.5\nE        +  where 4.0 = find_Average_Of_Cube(2)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptebrr9r1\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert find_Average_Of_Cube(3) == 12\nE       assert 6.666667 == 12\nE        +  where 6.666667 = find_Average_Of_Cube(3)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptebrr9r1\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert find_Average_Of_Cube(1) == 1\nE       assert 2.0 == 1\nE        +  where 2.0 = find_Average_Of_Cube(1)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptebrr9r1\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptebrr9r1\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptebrr9r1\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptebrr9r1\\test_solution.py::test_case_2\n3 failed in 0.39s\n\n",
+      "failure": "Here's the analysis of the failures:\n\n1. **What failed**:\n   The function `find_Average_Of_Cube(n)` is not correctly calculating the average of cubes of the first `n` natural numbers. Instead, it's incorrectly summing `i + i*i` (which is `i + i\u00b3`) and then dividing by `n`, rather than summing just the cubes (`i\u00b3`).\n\n2. **Evidence**:\n   - For `n=2`, the correct cubes are `1\u00b3 + 2\u00b3 = 1 + 8 = 9`, and the average should be `9/2 = 4.5`. The function returns `4.0` (incorrect).\n   - For `n=3`, the correct cubes are `1\u00b3 + 2\u00b3 + 3\u00b3 = 1 + 8 + 27 = 36`, and the average should be `36/3 = 12`. The function returns `6.666667` (incorrect).\n   - For `n=1`, the correct cube is `1\u00b3 = 1`, and the average should be `1`. The function returns `2.0` (incorrect).\n\n3. **",
+      "hypothesis": "Here\u2019s the structured analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `find_Average_Of_Cube(n)` incorrectly computes the average by summing `i + i\u00b3` (instead of just `i\u00b3`) and then dividing by `n`. This leads to wrong results for all test cases.\n\n---\n\n### **2. Evidence**\n- **Test Case `n=2`**:\n  - Correct: `1\u00b3 + 2\u00b3 = 9` \u2192 Average = `4.5`.\n  - Function returns: `(1 + 1\u00b3) + (2 + 2\u00b3) = 1+1 + 2+8 = 12` \u2192 `12/2 = 6.0` (incorrect).\n  - *Note*: The original code actually returns `4.0` because of a typo in the logic (see **Root Cause** below). The evidence above reflects the **intended but incorrect** logic (`i + i\u00b3`), not the actual output.\n\n- **Test Case `n=3`**:\n  - Correct: `1\u00b3 + 2\u00b3 + 3\u00b3 = 36` \u2192 Average = `12`.\n  - Function returns",
+      "patched_code": "def find_Average_Of_Cube(n):\n    sum = 0\n    for i in range(1, n + 1):\n        sum += i * i * i\n    return round(sum / n, 6)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 15.33
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def find_Average_Of_Cube(n):\n    sum = 0\n    for i in range(1, n + 1):\n        sum += i * i * i\n    return round(sum / n, 6)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.67
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            5      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 12      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All **5 statements** in `find_Average_Of_Cube()` were executed.\n- All **7 statements** in the test file were executed.\n\nSince coverage is perfect, the tests likely verify:\n- Basic functionality (e.g., correct average for small `n`).\n- Edge cases (e.g., `n = 1`, `n = 0` if handled, or negative inputs if blocked).\n- Possible rounding behavior (e.g., `round(sum / n, 6)`).\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nDespite full coverage, the following **potential weaknesses** may exist:\n\n#### **A. Input Validation**\n- The function does **not explicitly handle invalid inputs** (e.g., `n <= 0` or non-integer `n`).\n  - **Risk**: If `n = 0`, division by zero occurs. If `n` is negative, the loop runs infinitely (or until an error).\n  - **Current behavior**: The loop runs for `range(1",
+    "generated_tests": [
+      "assert find_Average_Of_Cube(5) == 101.666667",
+      "assert find_Average_Of_Cube(0) == 0",
+      "assert find_Average_Of_Cube(10) == 302.5"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...FF.                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert find_Average_Of_Cube(5) == 101.666667\nE       assert 45.0 == 101.666667\nE        +  where 45.0 = find_Average_Of_Cube(5)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7mwjo_0h\\test_solution.py:13: AssertionError\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert find_Average_Of_Cube(0) == 0\n               ^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7mwjo_0h\\test_solution.py:16: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nn = 0\n\n    def find_Average_Of_Cube(n):\n        sum = 0\n        for i in range(1, n + 1):\n            sum += i * i * i\n>       return round(sum / n, 6)\n                     ^^^^^^^\nE       ZeroDivisionError: division by zero\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7mwjo_0h\\solution.py:5: ZeroDivisionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7mwjo_0h\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7mwjo_0h\\test_solution.py::test_case_4\n2 failed, 4 passed in 0.38s\n\n"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "task_id": 96,
+  "task_prompt": "Write a python function to find the number of divisors of a given integer.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def divisor(n):\n    return len([i for i in range(1, n+1) if not n % i])",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 57.35,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def divisor(n):\n  for i in range(n):\n    x = len([i for i in range(1,n-1) if not n % i])\n  return x",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert divisor(15) == 4\nE       assert 3 == 4\nE        +  where 3 = divisor(15)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp0rc8rpt2\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert divisor(12) == 6\nE       assert 5 == 6\nE        +  where 5 = divisor(12)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp0rc8rpt2\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert divisor(9) == 3\nE       assert 2 == 3\nE        +  where 2 = divisor(9)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp0rc8rpt2\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp0rc8rpt2\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp0rc8rpt2\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp0rc8rpt2\\test_solution.py::test_case_2\n3 failed in 0.31s\n\n",
+      "failure": "### Analysis of the Failed Function\n\n1. **What Failed**:\n   The function `divisor(n)` is supposed to return the number of divisors of a given integer `n`, but it fails for all test cases. The test cases expect:\n   - `divisor(15)` to return `4` (divisors: 1, 3, 5, 15)\n   - `divisor(12)` to return `6` (divisors: 1, 2, 3, 4, 6, 12)\n   - `divisor(9)` to return `3` (divisors: 1, 3, 9)\n\n   However, the function returns `3`, `5`, and `2` respectively, which are incorrect.\n\n2. **Evidence**:\n   - For `n = 15`, the function returns `3` (expected `4`).\n   - For `n = 12`, the function returns `5` (expected `6`).\n   - For `n = 9`, the function returns `2` (expected `3`).\n\n   The function is consistently missing one divisor in each case. This",
+      "hypothesis": "### Analysis of the Failed Function\n\n1. **Failing Behavior**:\n   The function `divisor(n)` returns an incorrect count of divisors for any given integer `n`. Specifically, it consistently undercounts by 1 divisor for all test cases.\n\n2. **Evidence**:\n   - For `n = 15`, the function returns `3` (expected `4`). The divisors are `1, 3, 5, 15`.\n   - For `n = 12`, the function returns `5` (expected `6`). The divisors are `1, 2, 3, 4, 6, 12`.\n   - For `n = 9`, the function returns `2` (expected `3`). The divisors are `1, 3, 9`.\n\n   The function is missing the divisor `n` itself in all cases.\n\n3. **Root Cause**:\n   The issue lies in the range used in the list comprehension:\n   ```python\n   [i for i in range(1, n-1) if not n % i]\n   ```\n   The range `range(1, n-1)` excludes `n` (since it stops at `",
+      "patched_code": "def divisor(n):\n    return len([i for i in range(1, n+1) if not n % i])",
+      "decision": "patch_and_retry",
+      "duration_seconds": 44.75
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def divisor(n):\n    return len([i for i in range(1, n+1) if not n % i])",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.30s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.6
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (9/9 statements covered)\n  - `solution.py`: 100% (2/2 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n- The code and tests are fully covered by the current test suite.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases or scenarios might not be explicitly tested or could be weakly tested:\n- **Negative numbers**: The function may not handle negative integers correctly (e.g., `divisor(-6)`). The current implementation will return 0 because `range(1, n+1)` for `n = -6` is empty.\n- **Zero**: The function may not handle `n = 0` correctly. The current implementation will return 0 because `range(1, 1)` is empty, but mathematically, 0 has infinitely many divisors (all non-zero integers).\n- **Large numbers**: Performance or correctness for very large `n` (e.g., `n = 10^9`) is not tested",
+    "generated_tests": [
+      "assert divisor(1) == 1",
+      "assert divisor(7) == 2",
+      "assert divisor(24) == 8"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.33s\n\n"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "task_id": 410,
+  "task_prompt": "Write a function to find the minimum value in a given heterogeneous list.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "builtin_min_to_max",
+  "status": "repaired",
+  "final_code": "def min_val(listval):\n    return min(i for i in listval if isinstance(i, int))",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 26.88,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def min_val(listval):\n     min_val = max(i for i in listval if isinstance(i, int))\n     return min_val",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert min_val(['Python', 3, 2, 4, 5, 'version'])==2\nE       AssertionError: assert 5 == 2\nE        +  where 5 = min_val(['Python', 3, 2, 4, 5, 'version'])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxcwgw0yk\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert min_val(['Python', 15, 20, 25])==15\nE       AssertionError: assert 25 == 15\nE        +  where 25 = min_val(['Python', 15, 20, 25])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxcwgw0yk\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert min_val(['Python', 30, 20, 40, 50, 'version'])==20\nE       AssertionError: assert 50 == 20\nE        +  where 50 = min_val(['Python', 30, 20, 40, 50, 'version'])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxcwgw0yk\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxcwgw0yk\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxcwgw0yk\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxcwgw0yk\\test_solution.py::test_case_2\n3 failed in 0.38s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `min_val()` is not correctly finding the minimum integer value in a heterogeneous list. Instead of returning the smallest integer, it's returning the maximum integer value due to using `max()` instead of `min()`.\n\n2. **Evidence**:\n   - Test case 0: Expected `2` but got `5` (the max integer in the list)\n   - Test case 1: Expected `15` but got `25` (the max integer in the list)\n   - Test case 2: The function would return the max integer (50) instead of the min (20)\n\n3. **Failure type**:\n   - **Logical Error**: The function uses `max()` when it should use `min()` to find the minimum value.\n   - **Incorrect Filtering**: While the filtering for integers (`isinstance(i, int)`) is correct, the operation being performed on the filtered values is wrong.\n\n4. **Suspected location**:\n   The error is in this line:\n   ```python\n   min_val = max(i for i in listval if isinstance(i, int))\n   ```\n   The function should use `min()` instead of `",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `min_val()` incorrectly returns the **maximum integer** in the list instead of the **minimum integer**. For example:\n- Input: `[3, \"hello\", 5, 2, 10.5]` \u2192 Returns `5` (max) instead of `2` (min).\n- Input: `[15, \"abc\", 25, 10, 30]` \u2192 Returns `25` (max) instead of `15` (min).\n\n---\n\n### **2. Evidence**\n- **Test Case 0**: Expected `2` (min of `[3, 5, 2]`), got `5` (max).\n- **Test Case 1**: Expected `15` (min of `[15, 25]`), got `25` (max).\n- **Test Case 2**: Expected `20` (min of `[50, 20]`), would return `50` (max).\n\n---\n\n### **3. Root Cause**\nThe function uses `max()` instead of `min()` on the filtered integers:\n```python\nmin",
+      "patched_code": "def min_val(listval):\n    return min(i for i in listval if isinstance(i, int))",
+      "decision": "patch_and_retry",
+      "duration_seconds": 15.34
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def min_val(listval):\n    return min(i for i in listval if isinstance(i, int))",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.40s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 1.06
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All statements in `min_val()` were executed during testing.\n- All statements in the test cases were executed.\n\nHowever, **100% coverage does not necessarily mean robust testing**\u2014it only confirms that all lines were run at least once. We must analyze whether edge cases and invalid inputs were properly tested.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nGiven the function `min_val(listval)`:\n- **Assumption:** The function filters out non-integer values (e.g., `float`, `str`, `None`, etc.) and returns the minimum of the remaining integers.\n- **Potential gaps in testing:**\n  1. **Empty list after filtering** (e.g., `[]`, `[None, \"a\"]`).\n     - The current implementation will raise `ValueError` (since `min()` on an empty iterable fails).\n     - **Is this behavior expected?** If not, the function should handle this case gracefully (e.g., return `None` or raise a custom exception).",
+    "generated_tests": [
+      "assert min_val([None, 0, -5, 10, 'test']) == -5",
+      "assert min_val([1, 2.5, 3, 'a', 0]) == 0",
+      "assert min_val(['a', 'b', 'c']) == AssertionError"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert min_val(['a', 'b', 'c']) == AssertionError\n               ^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8pr05l5j\\test_solution.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nlistval = ['a', 'b', 'c']\n\n    def min_val(listval):\n>       return min(i for i in listval if isinstance(i, int))\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       ValueError: min() iterable argument is empty\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8pr05l5j\\solution.py:2: ValueError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8pr05l5j\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.39s\n\n"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "task_id": 308,
+  "task_prompt": "Write a function to find the specified number of largest products from two given lists, selecting one factor from each list.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def large_product(nums1, nums2, N):\n    result = sorted([x*y for x in nums1 for y in nums2], reverse=True)[:N]\n    return result",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 22.33,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def large_product(nums1, nums2, N):\n    result = sorted([x+y for x in nums1 for y in nums2], reverse=True)[:N]\n    return result",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert large_product([1, 2, 3, 4, 5, 6],[3, 6, 8, 9, 10, 6],3)==[60, 54, 50]\nE       assert [16, 15, 15] == [60, 54, 50]\nE         \nE         At index 0 diff: 16 != 60\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm5ql9qri\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert large_product([1, 2, 3, 4, 5, 6],[3, 6, 8, 9, 10, 6],4)==[60, 54, 50, 48]\nE       assert [16, 15, 15, 14] == [60, 54, 50, 48]\nE         \nE         At index 0 diff: 16 != 60\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm5ql9qri\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert large_product([1, 2, 3, 4, 5, 6],[3, 6, 8, 9, 10, 6],5)==[60, 54, 50, 48, 45]\nE       assert [16, 15, 15, 14, 14] == [60, 54, 50, 48, 45]\nE         \nE         At index 0 diff: 16 != 60\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm5ql9qri\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm5ql9qri\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm5ql9qri\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm5ql9qri\\test_solution.py::test_case_2\n3 failed in 0.40s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `large_product()` is not producing the expected largest products from the two lists. Instead of returning the top N products formed by multiplying one element from each list, it's returning incorrect values (likely due to incorrect pairing or sorting).\n\n2. **Evidence**:\n   - For test case 0, expected output is `[60, 54, 50]` but got `[16, 15, 15]`\n   - For test case 1, expected output is `[60, 54, 50, 48]` but got `[16, 15, 15, 14]`\n   - The current implementation uses `x+y` (sum) instead of `x*y` (product)\n   - The test expects products like 6\u00d710=60, 6\u00d79=54, 5\u00d710=50, etc.\n\n3. **Failure type**:\n   - **Logical error**: The function is performing addition instead of multiplication\n   - **Incorrect pairing**: The current approach doesn't properly find the largest products by considering optimal pairings\n\n4.",
+      "hypothesis": "Here's the detailed analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `large_product()` incorrectly computes the **sum** (`x + y`) of pairs from `nums1` and `nums2` instead of their **product** (`x * y`). This leads to wrong results, as demonstrated in the test cases.\n\n---\n\n### **2. Evidence**\n- **Test Case 0**:\n  - Input: `nums1 = [6, 5, 4]`, `nums2 = [10, 9, 8]`, `N = 3`\n  - Expected Output: `[60, 54, 50]` (products of largest pairs: `6*10=60`, `6*9=54`, `5*10=50`)\n  - Actual Output: `[16, 15, 15]` (sums of pairs: `6+10=16`, `5+9=14` (not in output), `4+8=12` (not in output), etc.)\n  - **Issue**: The function returns sums instead of products.\n\n- **Test Case 1",
+      "patched_code": "def large_product(nums1, nums2, N):\n    result = sorted([x*y for x in nums1 for y in nums2], reverse=True)[:N]\n    return result",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.76
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def large_product(nums1, nums2, N):\n    result = sorted([x*y for x in nums1 for y in nums2], reverse=True)[:N]\n    return result",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All **3 statements** in `large_product()` were executed during testing.\n- All **7 statements** in the test file were executed.\n\nSince coverage is perfect, the tests likely cover:\n- Basic functionality (e.g., returning the top `N` products).\n- Edge cases (e.g., empty lists, `N=0`, `N > total possible products`).\n- Possible input types (e.g., negative numbers, duplicates).\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nWhile coverage is high, **logical coverage** (testing all possible behaviors) may still be incomplete. Potential gaps include:\n\n#### **A. Edge Cases Not Explicitly Tested**\n1. **Empty Input Lists**\n   - `nums1 = []` or `nums2 = []` \u2192 Should return `[]` (no products possible).\n   - Currently, the function returns `[]` (correct), but tests may not explicitly verify this.\n\n2. **`N = 0`**\n   - Should return `[]` (",
+    "generated_tests": [
+      "assert large_product([-1, -2, -3], [4, 5, 6], 2) == [15, 12]",
+      "assert large_product([10, 20, 30], [1, 2, 3], 1) == [60]",
+      "assert large_product([], [1, 2, 3], 0) == []"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...FF.                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert large_product([-1, -2, -3], [4, 5, 6], 2) == [15, 12]\nE       assert [-4, -5] == [15, 12]\nE         \nE         At index 0 diff: -4 != 15\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpu3vvot5z\\test_solution.py:13: AssertionError\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert large_product([10, 20, 30], [1, 2, 3], 1) == [60]\nE       assert [90] == [60]\nE         \nE         At index 0 diff: 90 != 60\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpu3vvot5z\\test_solution.py:16: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpu3vvot5z\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpu3vvot5z\\test_solution.py::test_case_4\n2 failed, 4 passed in 0.39s\n\n"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "task_id": 111,
+  "task_prompt": "Write a function to find the common elements in given nested lists.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def common_in_nested_lists(nestedlist):\n    sets = map(set, nestedlist)\n    common = set.intersection(*sets)\n    return list(common)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.87,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def common_in_nested_lists(nestedlist):\n    result = list(set.intersection(+map(set, nestedlist)))\n    return result",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert set(common_in_nested_lists([[12, 18, 23, 25, 45], [7, 12, 18, 24, 28], [1, 5, 8, 12, 15, 16, 18]]))==set([18, 12])\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxllfru2h\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nnestedlist = [[12, 18, 23, 25, 45], [7, 12, 18, 24, 28], [1, 5, 8, 12, 15, 16, ...]]\n\n    def common_in_nested_lists(nestedlist):\n>       result = list(set.intersection(+map(set, nestedlist)))\n                                       ^^^^^^^^^^^^^^^^^^^^^\nE       TypeError: bad operand type for unary +: 'map'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxllfru2h\\solution.py:2: TypeError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert set(common_in_nested_lists([[12, 5, 23, 25, 45], [7, 11, 5, 23, 28], [1, 5, 8, 18, 23, 16]]))==set([5,23])\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxllfru2h\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nnestedlist = [[12, 5, 23, 25, 45], [7, 11, 5, 23, 28], [1, 5, 8, 18, 23, 16]]\n\n    def common_in_nested_lists(nestedlist):\n>       result = list(set.intersection(+map(set, nestedlist)))\n                                       ^^^^^^^^^^^^^^^^^^^^^\nE       TypeError: bad operand type for unary +: 'map'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxllfru2h\\solution.py:2: TypeError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert set(common_in_nested_lists([[2, 3,4, 1], [4, 5], [6,4, 8],[4, 5], [6, 8,4]]))==set([4])\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxllfru2h\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nnestedlist = [[2, 3, 4, 1], [4, 5], [6, 4, 8], [4, 5], [6, 8, 4]]\n\n    def common_in_nested_lists(nestedlist):\n>       result = list(set.intersection(+map(set, nestedlist)))\n                                       ^^^^^^^^^^^^^^^^^^^^^\nE       TypeError: bad operand type for unary +: 'map'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxllfru2h\\solution.py:2: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxllfru2h\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxllfru2h\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpxllfru2h\\test_solution.py::test_case_2\n3 failed in 0.40s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function failed to find common elements in nested lists because it incorrectly tried to use the unary `+` operator on a `map` object, which is not valid in Python.\n\n2. **Evidence**:\n   - The error message: `TypeError: bad operand type for unary +: 'map'`\n   - The test expects the function to return `[18, 12]` (common elements in all lists)\n   - The current implementation tries to use `set.intersection(+map(set, nestedlist))` which is syntactically incorrect\n\n3. **Failure type**:\n   - Syntax/TypeError: The code attempts to use the unary `+` operator on a map object, which isn't supported\n   - Logical error: The approach to find intersection is incorrect for multiple sets\n\n4. **Suspected location**:\n   The problematic line is: `result = list(set.intersection(+map(set, nestedlist)))`\n\nHere's the corrected function:\n\n```python\ndef common_in_nested_lists(nestedlist):\n    # Convert each sublist to a set\n    sets = [set(sublist) for sublist in nestedlist]",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function fails to return the common elements across all nested lists. Instead, it raises a `TypeError` because it incorrectly attempts to apply the unary `+` operator to a `map` object, which is not valid in Python.\n\n**Expected Output:** `[18, 12]` (common elements in all input lists)\n**Actual Output:** `TypeError: bad operand type for unary +: 'map'`\n\n---\n\n### **2. Evidence**\n- **Error Message:** `TypeError: bad operand type for unary +: 'map'`\n  This indicates the code tried to use `+` on a `map` object, which is invalid.\n- **Test Case:** The function should return `[18, 12]` for input like:\n  ```python\n  [[1, 2, 18], [12, 18, 3], [12, 18, 4]]\n  ```\n  The current implementation fails to compute the intersection correctly.\n\n---\n\n### **3. Root Cause**\nThe line:\n```python\nresult = list(set.intersection(+map(set, nestedlist",
+      "patched_code": "def common_in_nested_lists(nestedlist):\n    sets = map(set, nestedlist)\n    common = set.intersection(*sets)\n    return list(common)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 11.7
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def common_in_nested_lists(nestedlist):\n    sets = map(set, nestedlist)\n    common = set.intersection(*sets)\n    return list(common)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.68
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All **4 statements** in the `common_in_nested_lists` function were executed during testing.\n- All **7 statements** in the test file were executed.\n\nSince coverage is perfect, the tests likely verify:\n- Basic functionality (e.g., finding common elements in simple nested lists).\n- Edge cases (e.g., empty lists, single-element lists, or lists with no common elements).\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nDespite full coverage, some **logical edge cases** may not be explicitly tested. Common scenarios to consider:\n- **Empty nested lists** (e.g., `[[], [], []]` \u2192 should return `[]`).\n- **Non-list inputs** (e.g., passing a non-iterable or a flat list instead of a nested list).\n- **Nested lists with mixed types** (e.g., `[1, [2, 3]], [3, [1, 4]]` \u2192 should handle nested structures correctly).\n- **Large or deeply nested lists** (performance",
+    "generated_tests": [
+      "assert set(common_in_nested_lists([[1, 2, 3], [3, 4, 5], [3, 6, 7]])) == set([3])",
+      "assert set(common_in_nested_lists([[10, 20], [20, 30, 10], [10, 40, 50]])) == set([10, 20])",
+      "assert set(common_in_nested_lists([[1, 2, 3, 4], [], [4, 5, 6]])) == set([4])"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....FF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert set(common_in_nested_lists([[10, 20], [20, 30, 10], [10, 40, 50]])) == set([10, 20])\nE       assert {10} == {10, 20}\nE         \nE         Extra items in the right set:\nE         20\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpe6u6ajq5\\test_solution.py:16: AssertionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert set(common_in_nested_lists([[1, 2, 3, 4], [], [4, 5, 6]])) == set([4])\nE       assert set() == {4}\nE         \nE         Extra items in the right set:\nE         4\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpe6u6ajq5\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpe6u6ajq5\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpe6u6ajq5\\test_solution.py::test_case_5\n2 failed, 4 passed in 0.38s\n\n"
+  }
+}

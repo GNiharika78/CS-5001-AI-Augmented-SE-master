@@ -1,0 +1,39 @@
+{
+  "task_id": 737,
+  "task_prompt": "Write a function to check whether the given string is starting with a vowel or not using regex.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import re \nregex = '^[aeiouAEIOU][A-Za-z0-9_]+'\ndef check_str(string): \n\treturn re.search(regex, string)",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 12.34,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re \nregex = '^[aeiouAEIOU][A-Za-z0-9_]+'\ndef check_str(string): \n\treturn re.search(regex, string)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.29s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.57
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (11/11 statements covered)\n  - `solution.py`: 4/4 statements covered (100%)\n  - `test_solution.py`: 7/7 statements covered (100%)\n\nThe current test suite achieves full statement coverage for both the implementation and test files. This means every line of code is executed at least once during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, this does not necessarily mean all edge cases or logical scenarios are tested. Potential gaps include:\n- **Empty string**: The function's behavior with an empty string is not explicitly tested.\n- **Non-alphabetic starting characters**: The regex allows digits and underscores after the first character, but the first character must be a vowel. However, the function's behavior with strings starting with non-letters (e.g., digits, symbols) is not tested.\n- **Unicode or non-ASCII vowels**: The regex only checks for ASCII vowels (`a, e, i, o, u` and their uppercase counterparts). Non-ASCII vowels (e.g., `",
+    "generated_tests": [
+      "assert check_str(\"apple\")",
+      "assert not check_str(\"123abc\")",
+      "assert check_str(\"Under\")"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.31s\n\n"
+  }
+}

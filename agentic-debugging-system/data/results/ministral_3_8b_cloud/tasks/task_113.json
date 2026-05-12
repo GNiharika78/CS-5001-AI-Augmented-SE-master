@@ -1,0 +1,39 @@
+{
+  "task_id": 113,
+  "task_prompt": "Write a function to check if a string represents an integer or not.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def check_integer(text):\n text = text.strip()\n if len(text) < 1:\n    return None\n else:\n     if all(text[i] in \"0123456789\" for i in range(len(text))):\n          return True\n     elif (text[0] in \"--\") and \\\n         all(text[i] in \"0123456789\" for i in range(1,len(text))):\n         return True\n     else:\n        return False",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 9.15,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def check_integer(text):\n text = text.strip()\n if len(text) < 1:\n    return None\n else:\n     if all(text[i] in \"0123456789\" for i in range(len(text))):\n          return True\n     elif (text[0] in \"--\") and \\\n         all(text[i] in \"0123456789\" for i in range(1,len(text))):\n         return True\n     else:\n        return False",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.38s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.67
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            9      2    78%   4, 10\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 16      2    88%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe test coverage report shows:\n- **Total statements in `solution.py`:** 9\n- **Missed statements:** 2 (lines 4 and 10)\n- **Coverage:** 78% (only 7 out of 9 statements are tested)\n- **Test file (`test_solution.py`):** Fully covered (100%)\n\nThis indicates that **2 out of 9 statements in `check_integer()` are not tested**, meaning the function may not handle certain edge cases correctly.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nThe **missing statements** are:\n- **Line 4:** `if len(text) < 1: return None`\n  - This checks if the input is an empty string after stripping whitespace.\n  - **Not tested:** The function may not return `None` for empty strings (e.g., `\"\"`, `\"   \"`).\n\n- **Line 10:** The `else` block (implicitly covers cases where the string is invalid).\n  - **Not tested:** The function may not correctly reject strings like:\n    - `\"123a\"` (alphanumeric)\n    - `\"12.3\"` (",
+    "generated_tests": [
+      "assert check_integer(\"-123\") == True",
+      "assert check_integer(\"  -123  \") == True",
+      "assert check_integer(\"123.45\") == False"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.36s\n\n"
+  }
+}

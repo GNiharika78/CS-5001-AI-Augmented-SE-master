@@ -1,0 +1,39 @@
+{
+  "task_id": 128,
+  "task_prompt": "Write a function to find words that are longer than n characters from a given list of words.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "boundary_gt_to_gte",
+  "status": "repaired",
+  "final_code": "def long_words(n, str):\n    word_len = []\n    txt = str.split(\" \")\n    for x in txt:\n        if len(x) >= n:\n            word_len.append(x)\n    return word_len\t",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 29.03,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def long_words(n, str):\n    word_len = []\n    txt = str.split(\" \")\n    for x in txt:\n        if len(x) >= n:\n            word_len.append(x)\n    return word_len\t",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.57
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (14/14 statements covered)\n  - `solution.py`: 100% (7/7 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n- The code and tests are fully covered, meaning all lines of code were executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not have been thoroughly tested:\n1. **Empty Input String**: What happens if `str` is an empty string (`\"\"`)?\n2. **No Words Longer Than `n`**: What if no words in the list meet the length requirement?\n3. **Multiple Spaces Between Words**: How does the function handle multiple spaces (e.g., `\"hello   world\"`)?\n4. **Leading/Trailing Spaces**: Does the function handle leading/trailing spaces correctly (e.g., `\"  hello world  \"`)?\n5. **Non-Alphabetic Characters**: How does the function handle punctuation or special characters (e.g., `\"hello, world!\"",
+    "generated_tests": [
+      "assert long_words(4, \"hello world\") == ['hello', 'world']",
+      "assert long_words(1, \"a b c d e\") == ['a', 'b', 'c', 'd', 'e']",
+      "assert long_words(10, \"short medium long longer\") == ['longer']"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert long_words(10, \"short medium long longer\") == ['longer']\nE       AssertionError: assert [] == ['longer']\nE         \nE         Right contains one more item: 'longer'\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4zsphc23\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4zsphc23\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.31s\n\n"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "task_id": 85,
+  "task_prompt": "Write a function to find the surface area of a sphere.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import math\ndef surfacearea_sphere(r):\n    surfacearea = 4 * math.pi * r * r\n    return surfacearea",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 25.6,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef surfacearea_sphere(r):\n  surfacearea=4+math.pi*r*r\n  return surfacearea",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert math.isclose(surfacearea_sphere(10), 1256.6370614359173, rel_tol=0.001)\nE       assert False\nE        +  where False = <built-in function isclose>(318.1592653589793, 1256.6370614359173, rel_tol=0.001)\nE        +    where <built-in function isclose> = math.isclose\nE        +    and   318.1592653589793 = surfacearea_sphere(10)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp_8b65btw\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert math.isclose(surfacearea_sphere(15), 2827.4333882308138, rel_tol=0.001)\nE       assert False\nE        +  where False = <built-in function isclose>(710.8583470577034, 2827.4333882308138, rel_tol=0.001)\nE        +    where <built-in function isclose> = math.isclose\nE        +    and   710.8583470577034 = surfacearea_sphere(15)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp_8b65btw\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert math.isclose(surfacearea_sphere(20), 5026.548245743669, rel_tol=0.001)\nE       assert False\nE        +  where False = <built-in function isclose>(1260.6370614359173, 5026.548245743669, rel_tol=0.001)\nE        +    where <built-in function isclose> = math.isclose\nE        +    and   1260.6370614359173 = surfacearea_sphere(20)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp_8b65btw\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp_8b65btw\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp_8b65btw\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp_8b65btw\\test_solution.py::test_case_2\n3 failed in 0.38s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `surfacearea_sphere()` is returning incorrect surface area calculations for spheres. The test expects the surface area of a sphere with radius 10 to be approximately 1256.637, but the function returns 318.159, which is clearly wrong.\n\n2. **Evidence**:\n   - The test case shows the expected value for radius=10 is 1256.6370614359173\n   - The function returns 318.1592653589793 (which is actually 4\u03c0r\u00b2 for r=10, but the formula is missing the multiplication by \u03c0)\n   - The same pattern appears in test case 1 (returns 710.858 instead of 2827.433)\n\n3. **Failure type**:\n   The function has a **mathematical formula error** - it's missing the multiplication by \u03c0 in the formula. The current implementation is:\n   ```python\n   surfacearea = 4 + math.pi * r * r\n   ```\n   This",
+      "hypothesis": "Here's the structured analysis of the failure:\n\n---\n\n### **1. Failing Behavior**\nThe function `surfacearea_sphere(r)` returns incorrect surface area values for spheres. For example:\n- **Input:** `r = 10`\n  **Expected Output:** `1256.637` (\u2248 4\u03c0r\u00b2)\n  **Actual Output:** `318.159` (\u2248 4 + \u03c0r\u00b2, which is wrong)\n\n---\n\n### **2. Evidence**\n- **Test Case 1:** Expected `2827.433` (for `r=10`), but function returns `710.858`.\n- **Test Case 2:** Expected `1256.637` (for `r=10`), but function returns `318.159`.\n- **Pattern:** The function returns `4 + \u03c0r\u00b2` instead of `4\u03c0r\u00b2`, which is mathematically incorrect for surface area.\n\n---\n\n### **3. Root Cause**\nThe formula for the surface area of a sphere is **4\u03c0r\u00b2**, but the function incorrectly implements it as:\n```python\nsurfacearea = 4 + math",
+      "patched_code": "import math\ndef surfacearea_sphere(r):\n    surfacearea = 4 * math.pi * r * r\n    return surfacearea",
+      "decision": "patch_and_retry",
+      "duration_seconds": 16.42
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef surfacearea_sphere(r):\n    surfacearea = 4 * math.pi * r * r\n    return surfacearea",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All **4 statements** in the `surfacearea_sphere` function were executed during testing.\n- All **7 statements** in the test file were executed.\n\nSince no statements are missing, the tests appear to fully exercise the function under normal conditions.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nWhile the coverage is **100%**, we should consider **edge cases** that might not have been explicitly tested. Common scenarios to verify include:\n\n| **Test Case**               | **Description**                                                                 | **Likely Covered?** | **Risk if Uncovered**                     |\n|-----------------------------|---------------------------------------------------------------------------------|---------------------|-------------------------------------------|\n| **Positive radius (r > 0)** | Normal case (e.g., `r = 5`).                                                     | \u2705 Yes              | Correct calculation.                      |\n| **Zero radius (r = 0)**     | Edge case: A sphere with radius 0 (degenerate case).                             | \u274c? Unclear         | Should return `",
+    "generated_tests": [
+      "assert math.isclose(surfacearea_sphere(0), 0, rel_tol=0.001)",
+      "assert math.isclose(surfacearea_sphere(5.5), 379.9426267902325, rel_tol=0.001)",
+      "assert math.isclose(surfacearea_sphere(0.1), 0.12566370614359172, rel_tol=0.001)"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.37s\n\n"
+  }
+}

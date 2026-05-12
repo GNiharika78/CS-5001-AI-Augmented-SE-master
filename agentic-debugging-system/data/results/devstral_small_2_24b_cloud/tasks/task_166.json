@@ -1,0 +1,51 @@
+{
+  "task_id": 166,
+  "task_prompt": "Write a function that counts the number of pairs of integers in a list that xor to an even number.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def find_even_pair(A):\n    count = 0\n    for i in range(len(A)):\n        for j in range(i + 1, len(A)):\n            if ((A[i] ^ A[j]) % 2 == 0):\n                count += 1\n    return count",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 36.36,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def find_even_pair(A): \n  count = 0\n  for i in range(0, len(A)): \n    for j in range(i-1, len(A)): \n        if ((A[i] ^ A[j]) % 2 == 0): \n          count += 1\n\n  return count",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert find_even_pair([5, 4, 7, 2, 1]) == 4\nE       assert 10 == 4\nE        +  where 10 = find_even_pair([5, 4, 7, 2, 1])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8vri7h2y\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert find_even_pair([7, 2, 8, 1, 0, 5, 11]) == 9\nE       assert 19 == 9\nE        +  where 19 = find_even_pair([7, 2, 8, 1, 0, 5, ...])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8vri7h2y\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert find_even_pair([1, 2, 3]) == 1\nE       assert 5 == 1\nE        +  where 5 = find_even_pair([1, 2, 3])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8vri7h2y\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8vri7h2y\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8vri7h2y\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp8vri7h2y\\test_solution.py::test_case_2\n3 failed in 0.33s\n\n",
+      "failure": "### Analysis of the Failed Function\n\n1. **What failed**:\n   The function `find_even_pair` is supposed to count the number of pairs of integers in a list that XOR to an even number. However, the test cases show that the function is returning incorrect counts (e.g., returning 10 instead of 4 for the first test case).\n\n2. **Evidence**:\n   - Test case 0: Expected 4, got 10.\n   - Test case 1: Expected 9, got 19.\n   - Test case 2: Expected 1, got 5.\n   The function is consistently overcounting the number of valid pairs.\n\n3. **Failure type**:\n   The failure is due to incorrect logic in the nested loops and the condition for counting pairs. Specifically:\n   - The inner loop starts at `i-1`, which can lead to negative indices or incorrect pairings.\n   - The function counts pairs where `i == j` (same element), which is not a valid pair.\n   - The function counts each pair twice (e.g., `(i, j)` and `(j, i)`), leading to double-counting.\n\n4. **Suspected location**:\n   The issues are in",
+      "hypothesis": "### Analysis of the Failed Function\n\n1. **Failing behavior**:\n   The function `find_even_pair` is overcounting the number of pairs of integers in a list that XOR to an even number. For example, it returns 10 instead of 4 for the first test case.\n\n2. **Evidence**:\n   - Test case 0: Expected 4, got 10.\n   - Test case 1: Expected 9, got 19.\n   - Test case 2: Expected 1, got 5.\n   The function consistently returns counts that are higher than expected, indicating overcounting.\n\n3. **Root cause**:\n   - The inner loop starts at `i-1`, which can lead to negative indices or incorrect pairings (e.g., when `i=0`, `j` starts at `-1`).\n   - The function counts pairs where `i == j` (same element), which is not a valid pair (a pair should consist of two distinct elements).\n   - The function counts each pair twice (e.g., `(i, j)` and `(j, i)`), leading to double-counting.\n\n4. **Why this explains failure**:\n   - The incorrect loop bounds and",
+      "patched_code": "def find_even_pair(A):\n    count = 0\n    for i in range(len(A)):\n        for j in range(i + 1, len(A)):\n            if ((A[i] ^ A[j]) % 2 == 0):\n                count += 1\n    return count",
+      "decision": "patch_and_retry",
+      "duration_seconds": 17.7
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def find_even_pair(A):\n    count = 0\n    for i in range(len(A)):\n        for j in range(i + 1, len(A)):\n            if ((A[i] ^ A[j]) % 2 == 0):\n                count += 1\n    return count",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.27s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.54
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\nThe coverage report indicates that the code has **100% statement coverage**, meaning all lines of the `find_even_pair` function and the test cases in `test_solution.py` were executed during testing. No statements were missed.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, this does not necessarily mean all edge cases or logical scenarios were tested. Potential missing or weakly tested cases include:\n- **Empty list**: The function should return `0` for an empty list.\n- **Single-element list**: The function should return `0` since no pairs exist.\n- **All even numbers**: All pairs should XOR to an even number (since even ^ even = even).\n- **All odd numbers**: All pairs should XOR to an even number (since odd ^ odd = even).\n- **Mixed even and odd numbers**: Only pairs of the same parity (both even or both odd) should XOR to an even number.\n- **Large lists**: Performance or correctness for large inputs (though this is more of a stress test).\n- **Duplicate values**: Ensure duplicates are handled correctly (e.g., `[2,",
+    "generated_tests": [
+      "assert find_even_pair([0, 0, 0]) == 3",
+      "assert find_even_pair([1, 3, 5, 7]) == 0",
+      "assert find_even_pair([2, 4, 6, 8, 10]) == 10"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....F.                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert find_even_pair([1, 3, 5, 7]) == 0\nE       assert 6 == 0\nE        +  where 6 = find_even_pair([1, 3, 5, 7])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpex_j4y4f\\test_solution.py:16: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpex_j4y4f\\test_solution.py::test_case_4\n1 failed, 5 passed in 0.31s\n\n"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "task_id": 756,
+  "task_prompt": "Write a function that matches a string that has an 'a' followed by one or more 'b's. https://www.w3resource.com/python-exercises/re/python-re-exercise-3.php",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "import re\ndef text_match_zero_one(text):\n        patterns = 'ab-?'\n        if re.search(patterns,  text):\n                return True\n        else:\n                return False",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 9.98,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef text_match_zero_one(text):\n        patterns = 'ab-?'\n        if re.search(patterns,  text):\n                return True\n        else:\n                return False",
+      "tests_passed_before_patch": true,
+      "test_output": "......                                                                   [100%]\n6 passed in 0.37s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.66
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py      13      0   100%\n------------------------------------------------\nTOTAL                 19      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the `solution.py` (6 statements) and `test_solution.py` (13 statements). This means:\n- All executable lines in the function (`text_match_zero_one`) were tested.\n- All test cases in `test_solution.py` executed successfully.\n\nHowever, **100% coverage does not necessarily mean 100% correctness**\u2014it only confirms that all lines were executed at least once. The function's logic may still be flawed if edge cases are not properly tested.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nThe current implementation (`patterns = 'ab-?'`) is **incorrect** for the intended task:\n- The regex `'ab-?'` matches:\n  - `'ab'` (if `-?` is treated as a literal, which it is not\u2014this is a syntax error).\n  - **Actually, the regex `'ab-?'` is invalid** because `-` is a metacharacter (range operator) and must be escaped or placed at the start/end of a character class. The correct regex for the task should be `'ab+'` (to match",
+    "generated_tests": [
+      "assert text_match_zero_one(\"a\") == False",
+      "assert text_match_zero_one(\"abb\") == True",
+      "assert text_match_zero_one(\"abbbbbbb\") == True"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": ".........                                                                [100%]\n9 passed in 0.37s\n\n"
+  }
+}

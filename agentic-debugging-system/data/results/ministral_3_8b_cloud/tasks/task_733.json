@@ -1,0 +1,51 @@
+{
+  "task_id": 733,
+  "task_prompt": "Write a function to find the index of the first occurrence of a given number in a sorted array.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def find_first_occurrence(A, x):\n    left, right = 0, len(A) - 1\n    result = -1\n    while left <= right:\n        mid = (left + right) // 2\n        if x == A[mid]:\n            result = mid\n            right = mid - 1\n        elif x < A[mid]:\n            right = mid - 1\n        else:\n            left = mid + 1\n    return result",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 22.64,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def find_first_occurrence(A, x):\n    (left, right) = (0, len(A) - 1)\n    result = -1\n    while left <= right:\n        mid = (left - right) // 2\n        if x == A[mid]:\n            result = mid\n            right = mid - 1\n        elif x < A[mid]:\n            right = mid - 1\n        else:\n            left = mid + 1\n    return result",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert find_first_occurrence([2, 5, 5, 5, 6, 6, 8, 9, 9, 9], 5) == 1\nE       assert -1 == 1\nE        +  where -1 = find_first_occurrence([2, 5, 5, 5, 6, 6, ...], 5)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1b1_sgy6\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert find_first_occurrence([2, 3, 5, 5, 6, 6, 8, 9, 9, 9], 5) == 2\nE       assert -1 == 2\nE        +  where -1 = find_first_occurrence([2, 3, 5, 5, 6, 6, ...], 5)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1b1_sgy6\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert find_first_occurrence([2, 4, 1, 5, 6, 6, 8, 9, 9, 9], 6) == 4\nE       assert -5 == 4\nE        +  where -5 = find_first_occurrence([2, 4, 1, 5, 6, 6, ...], 6)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1b1_sgy6\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1b1_sgy6\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1b1_sgy6\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp1b1_sgy6\\test_solution.py::test_case_2\n3 failed in 0.40s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `find_first_occurrence` is not correctly finding the first occurrence of the target number `x` in the sorted array. Instead, it's returning `-1` (the default value) even when the number exists in the array.\n\n2. **Evidence**:\n   - For input `[2, 5, 5, 5, 6, 6, 8, 9, 9, 9]` and `x = 5`, the expected output is `1` (index of first `5`), but the function returns `-1`.\n   - For input `[2, 3, 5, 5, 6, 6, 8, 9, 9, 9]` and `x = 5`, the expected output is `2` (index of first `5`), but the function returns `-1`.\n   - The function's logic is not correctly updating the `result` variable when the target is found.\n\n3. **Failure type**:\n   The function is not correctly implementing binary search to find the first occurrence of `x`. The issue is in the calculation of `mid` and the logic for updating `",
+      "hypothesis": "Here's the detailed analysis and repair plan for the `find_first_occurrence` function:\n\n---\n\n### **1. Failing Behavior**\nThe function fails to return the correct index of the first occurrence of `x` in a sorted array. Instead, it returns `-1` even when `x` exists in the array. This happens because the binary search logic incorrectly updates the `result` and `mid` calculations.\n\n---\n\n### **2. Evidence**\n- **Test Case 1**:\n  Input: `A = [2, 5, 5, 5, 6, 6, 8, 9, 9, 9]`, `x = 5`\n  Expected Output: `1` (first occurrence of `5` at index `1`)\n  Actual Output: `-1` (incorrect)\n\n- **Test Case 2**:\n  Input: `A = [2, 3, 5, 5, 6, 6, 8, 9, 9, 9]`, `x = 5`\n  Expected Output: `2` (first occurrence of `5` at index `2`)\n  Actual Output: `-1` (incorrect)\n\n- **Test Case",
+      "patched_code": "def find_first_occurrence(A, x):\n    left, right = 0, len(A) - 1\n    result = -1\n    while left <= right:\n        mid = (left + right) // 2\n        if x == A[mid]:\n            result = mid\n            right = mid - 1\n        elif x < A[mid]:\n            right = mid - 1\n        else:\n            left = mid + 1\n    return result",
+      "decision": "patch_and_retry",
+      "duration_seconds": 13.0
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def find_first_occurrence(A, x):\n    left, right = 0, len(A) - 1\n    result = -1\n    while left <= right:\n        mid = (left + right) // 2\n        if x == A[mid]:\n            result = mid\n            right = mid - 1\n        elif x < A[mid]:\n            right = mid - 1\n        else:\n            left = mid + 1\n    return result",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.37s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.65
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           12      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 19      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All executable lines in `find_first_occurrence()` were executed during testing.\n- All test cases in `test_solution.py` were executed successfully.\n\n### **2. Missing or Weakly Tested Cases**\nWhile the coverage is **100%**, we should analyze whether the tests thoroughly validate edge cases and correctness. Common edge cases for binary search on a sorted array include:\n- **Empty array** (`A = []`).\n- **Single-element array** (`A = [x]` or `A = [y]` where `y \u2260 x`).\n- **All elements equal** (`A = [x, x, x]`).\n- **Element not present** (`x` is smaller/larger than all elements).\n- **Duplicate elements** (e.g., `A = [x, x, x, y]`).\n- **Negative numbers** (if applicable).\n- **Large arrays** (to test performance, though not directly related to correctness).\n\nSince the coverage report does not list **missing statements**, we assume the",
+    "generated_tests": [
+      "assert find_first_occurrence([], 5) == -1",
+      "assert find_first_occurrence([1, 2, 3, 4, 5], 5) == 4",
+      "assert find_first_occurrence([1, 1, 1, 1, 1], 1) == 0"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.39s\n\n"
+  }
+}

@@ -15,8 +15,9 @@ from app.agents.coverage_analysis_agent import CoverageAnalysisAgent
 
 
 class DebuggingOrchestrator:
-    def __init__(self, max_attempts=3):
+    def __init__(self, max_attempts=3, model="ministral-3:8b-cloud"):
         self.max_attempts = max_attempts
+        self.model = model
 
         self.failure_agent = FailureAnalysisAgent()
         self.hypothesis_agent = HypothesisAgent()
@@ -36,6 +37,7 @@ class DebuggingOrchestrator:
         print("\n==============================")
         print(f"Task ID: {task['task_id']}")
         print(f"Bug Type: {bug_type}")
+        print(f"Model: {self.model}")
         print("==============================")
 
         for attempt in range(1, self.max_attempts + 1):
@@ -87,6 +89,7 @@ class DebuggingOrchestrator:
                 task["prompt"],
                 code,
                 result["output"],
+                self.model,
             )
 
             print("Failure Analysis Agent finished.")
@@ -114,6 +117,7 @@ class DebuggingOrchestrator:
                 task["prompt"],
                 code,
                 failure,
+                self.model,
             )
 
             print("Hypothesis Agent finished.")
@@ -144,6 +148,7 @@ class DebuggingOrchestrator:
                 tests,
                 failure,
                 hypothesis,
+                self.model,
             )
 
             print("Patch Generation Agent finished.")
@@ -231,6 +236,7 @@ class DebuggingOrchestrator:
             task["prompt"],
             code,
             coverage["coverage_output"],
+            self.model,
         )
 
         if coverage_analysis == "LLM_FAILED":
@@ -242,6 +248,7 @@ class DebuggingOrchestrator:
             task["prompt"],
             code,
             tests,
+            self.model,
         )
 
         generated_test_result = None
@@ -276,6 +283,7 @@ class DebuggingOrchestrator:
         return {
             "task_id": task["task_id"],
             "task_prompt": task["prompt"],
+            "model": self.model,
             "bug_type": bug_type,
             "status": status,
             "final_code": code,

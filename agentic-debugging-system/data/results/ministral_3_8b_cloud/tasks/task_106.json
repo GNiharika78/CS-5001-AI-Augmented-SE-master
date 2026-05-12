@@ -1,0 +1,51 @@
+{
+  "task_id": 106,
+  "task_prompt": "Write a function to append the given list to the given tuples.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def add_lists(test_list, test_tup):\n    return test_tup + tuple(test_list)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 20.9,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def add_lists(test_list, test_tup):\n  res = tuple(list(test_tup) - test_list)\n  return (res) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert add_lists([5, 6, 7], (9, 10)) == (9, 10, 5, 6, 7)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp2fbwaxe2\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\ntest_list = [5, 6, 7], test_tup = (9, 10)\n\n    def add_lists(test_list, test_tup):\n>     res = tuple(list(test_tup) - test_list)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^\nE     TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp2fbwaxe2\\solution.py:2: TypeError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert add_lists([6, 7, 8], (10, 11)) == (10, 11, 6, 7, 8)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp2fbwaxe2\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\ntest_list = [6, 7, 8], test_tup = (10, 11)\n\n    def add_lists(test_list, test_tup):\n>     res = tuple(list(test_tup) - test_list)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^\nE     TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp2fbwaxe2\\solution.py:2: TypeError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert add_lists([7, 8, 9], (11, 12)) == (11, 12, 7, 8, 9)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp2fbwaxe2\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\ntest_list = [7, 8, 9], test_tup = (11, 12)\n\n    def add_lists(test_list, test_tup):\n>     res = tuple(list(test_tup) - test_list)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^\nE     TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp2fbwaxe2\\solution.py:2: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp2fbwaxe2\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp2fbwaxe2\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp2fbwaxe2\\test_solution.py::test_case_2\n3 failed in 0.40s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function was supposed to append the given list to the given tuple (concatenate them), but instead it tried to perform a set difference operation (`-`) between a list and another list, which is not supported in Python.\n\n2. **Evidence**:\n   - The test expects `(9, 10, 5, 6, 7)` when given `[5, 6, 7]` and `(9, 10)`\n   - The current implementation tries to do `list(test_tup) - test_list` which is invalid syntax\n   - The error message shows `TypeError: unsupported operand type(s) for -: 'list' and 'list'`\n\n3. **Failure type**:\n   - Syntax/Type Error: The operation being performed is not valid for the given types\n   - Logical Error: The function is trying to do set operations when concatenation is needed\n\n4. **Suspected location**:\n   The problematic line is:\n   ```python\n   res = tuple(list(test_tup) - test_list)\n   ```\n   This should be replaced with concatenation logic.\n\nThe correct implementation should simply concatenate the tuple and list, converting",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n1. **Failing behavior**:\n   The function attempts to perform a set difference operation (`-`) between a list and another list, which raises a `TypeError` because this operation is not supported between lists. Instead of concatenating the input list to the tuple, it tries to subtract elements.\n\n2. **Evidence**:\n   - Input: `test_list = [5, 6, 7]`, `test_tup = (9, 10)`\n   - Expected output: `(9, 10, 5, 6, 7)`\n   - Actual behavior: Raises `TypeError: unsupported operand type(s) for -: 'list' and 'list'`\n\n3. **Root cause**:\n   The function incorrectly uses the `-` operator (set difference) instead of concatenation. The `-` operator is not valid for lists or tuples in this context, and the logic doesn't match the intended behavior of appending/concatenating the list to the tuple.\n\n4. **Why this explains failure**:\n   The error message clearly indicates the operation is invalid for the given types, and the expected output shows the function should concatenate rather than perform set",
+      "patched_code": "def add_lists(test_list, test_tup):\n    return test_tup + tuple(test_list)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.02
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def add_lists(test_list, test_tup):\n    return test_tup + tuple(test_list)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.66
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All statements in `add_lists()` were executed during testing.\n- All statements in the test cases were executed.\n\n### **2. Missing or Weakly Tested Cases**\nSince the coverage is **100%**, there are **no missing or weakly tested statements** in the code. However, we should consider edge cases that might not have been explicitly tested but are still important for robustness:\n\n#### **Potential Edge Cases Not Explicitly Tested:**\n1. **Empty List (`test_list = []`)**\n   - Does the function correctly handle an empty list?\n   - Expected behavior: `test_tup + tuple([])` should return `test_tup` unchanged.\n\n2. **Empty Tuple (`test_tup = ()`)**\n   - Does the function correctly handle an empty tuple?\n   - Expected behavior: `() + tuple(test_list)` should return `tuple(test_list)`.\n\n3. **Mixed Data Types (e.g., integers, strings, nested structures)**\n   - Does the function work correctly when `test_list`",
+    "generated_tests": [
+      "assert add_lists([], (1, 2)) == (1, 2)",
+      "assert add_lists([1], ()) == (1,)",
+      "assert add_lists([-1, 0, 1], ('a', 'b')) == ('a', 'b', -1, 0, 1)"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.37s\n\n"
+  }
+}

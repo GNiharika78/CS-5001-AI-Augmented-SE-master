@@ -1,0 +1,39 @@
+{
+  "task_id": 620,
+  "task_prompt": "Write a function to find the size of the largest subset of a list of numbers so that every pair is divisible.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def largest_subset(a):\n\tn = len(a)\n\tdp = [0 for i in range(n)]\n\tdp[n - 1] = 1; \n\tfor i in range(n - 2, -1, -1):\n\t\tmxm = 0;\n\t\tfor j in range(i - 1, n):\n\t\t\tif a[j] % a[i] == 0 or a[i] % a[j] == 0:\n\t\t\t\tmxm = max(mxm, dp[j])\n\t\tdp[i] = 1 + mxm\n\treturn max(dp)",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 42.39,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def largest_subset(a):\n\tn = len(a)\n\tdp = [0 for i in range(n)]\n\tdp[n - 1] = 1; \n\tfor i in range(n - 2, -1, -1):\n\t\tmxm = 0;\n\t\tfor j in range(i - 1, n):\n\t\t\tif a[j] % a[i] == 0 or a[i] % a[j] == 0:\n\t\t\t\tmxm = max(mxm, dp[j])\n\t\tdp[i] = 1 + mxm\n\treturn max(dp)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.62
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           11      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 18      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (18/18 lines covered)\n  - `solution.py`: 11/11 lines covered (100%)\n  - `test_solution.py`: 7/7 lines covered (100%)\n- The code and tests are fully covered, meaning all statements were executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, this does not guarantee that all edge cases or logical scenarios are thoroughly tested. Potential gaps include:\n- **Empty list**: The function may not handle an empty list gracefully (though the current implementation would return `0` due to `max(dp)` on an empty list).\n- **Single-element list**: Trivial case where the largest subset is the list itself.\n- **All identical elements**: E.g., `[2, 2, 2]` (every pair is divisible).\n- **No divisible pairs**: E.g., `[2, 3, 5]` (largest subset is 1).\n- **Large numbers**: Performance or correctness with very large numbers (e.g., `1e9`).\n-",
+    "generated_tests": [
+      "assert largest_subset([2, 4, 8, 16]) == 4",
+      "assert largest_subset([5, 10, 15, 20, 25]) == 5",
+      "assert largest_subset([7, 14, 21, 28, 35, 42]) == 6"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....FF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert largest_subset([5, 10, 15, 20, 25]) == 5\nE       assert 3 == 5\nE        +  where 3 = largest_subset([5, 10, 15, 20, 25])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpldmi5sh3\\test_solution.py:16: AssertionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert largest_subset([7, 14, 21, 28, 35, 42]) == 6\nE       assert 3 == 6\nE        +  where 3 = largest_subset([7, 14, 21, 28, 35, 42])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpldmi5sh3\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpldmi5sh3\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpldmi5sh3\\test_solution.py::test_case_5\n2 failed, 4 passed in 0.36s\n\n"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "task_id": 311,
+  "task_prompt": "Write a python function to set the left most unset bit.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def set_left_most_unset_bit(n): \n    if not (n & (n - 1)): \n        return n \n    pos, temp, count = 0, n, 0 \n    while temp: \n        if not (temp & 1): \n            pos = count      \n        count += 1; temp>>=1\n    return (n | (1 << (pos))) ",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 9.45,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def set_left_most_unset_bit(n): \n    if not (n & (n - 1)): \n        return n \n    pos, temp, count = 0, n, 0 \n    while temp: \n        if not (temp & 1): \n            pos = count      \n        count += 1; temp>>=1\n    return (n | (1 << (pos))) ",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.37s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.63
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            9      1    89%   3\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 16      1    94%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe test coverage report shows:\n- **Total statements**: 9 in `solution.py` (1 missing, 8 covered \u2192 **89%**).\n- **Test file (`test_solution.py`)**: 7 statements fully covered (100%).\n- **Overall coverage**: 15/16 statements covered (**94%**).\n\nThe **missing statement** is likely the **first `if` condition** (`if not (n & (n - 1)):`), which checks if `n` is already a power of two (i.e., has no unset bits). This suggests that the test cases did **not** include a scenario where `n` is already a power of two (e.g., `n = 1`, `n = 2`, `n = 4`, etc.).\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nThe function `set_left_most_unset_bit(n)` is expected to:\n- Return `n` if it is already a power of two (no unset bits).\n- Otherwise, set the leftmost unset bit and return the result.\n\n**Missing test cases:**\n1. **`n` is already a power of two** (",
+    "generated_tests": [
+      "assert set_left_most_unset_bit(0) == 1",
+      "assert set_left_most_unset_bit(7) == 15",
+      "assert set_left_most_unset_bit(24) == 30"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...FFF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert set_left_most_unset_bit(0) == 1\nE       assert 0 == 1\nE        +  where 0 = set_left_most_unset_bit(0)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3f9o5r6t\\test_solution.py:13: AssertionError\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert set_left_most_unset_bit(7) == 15\nE       assert 7 == 15\nE        +  where 7 = set_left_most_unset_bit(7)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3f9o5r6t\\test_solution.py:16: AssertionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert set_left_most_unset_bit(24) == 30\nE       assert 28 == 30\nE        +  where 28 = set_left_most_unset_bit(24)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3f9o5r6t\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3f9o5r6t\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3f9o5r6t\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp3f9o5r6t\\test_solution.py::test_case_5\n3 failed, 3 passed in 0.38s\n\n"
+  }
+}

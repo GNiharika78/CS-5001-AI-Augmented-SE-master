@@ -1,0 +1,39 @@
+{
+  "task_id": 620,
+  "task_prompt": "Write a function to find the size of the largest subset of a list of numbers so that every pair is divisible.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def largest_subset(a):\n\tn = len(a)\n\tdp = [0 for i in range(n)]\n\tdp[n - 1] = 1; \n\tfor i in range(n - 2, -1, -1):\n\t\tmxm = 0;\n\t\tfor j in range(i - 1, n):\n\t\t\tif a[j] % a[i] == 0 or a[i] % a[j] == 0:\n\t\t\t\tmxm = max(mxm, dp[j])\n\t\tdp[i] = 1 + mxm\n\treturn max(dp)",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 10.6,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def largest_subset(a):\n\tn = len(a)\n\tdp = [0 for i in range(n)]\n\tdp[n - 1] = 1; \n\tfor i in range(n - 2, -1, -1):\n\t\tmxm = 0;\n\t\tfor j in range(i - 1, n):\n\t\t\tif a[j] % a[i] == 0 or a[i] % a[j] == 0:\n\t\t\t\tmxm = max(mxm, dp[j])\n\t\tdp[i] = 1 + mxm\n\treturn max(dp)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.63
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           11      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 18      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All **11 statements** in the function `largest_subset()` were executed during testing.\n- All **7 statements** in the test file were executed.\n\nSince coverage is 100%, the tests likely exercised all branches and paths in the function. However, **coverage \u2260 correctness**\u2014we must still analyze edge cases and potential weaknesses.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nWhile the tests cover all statements, we should check for:\n#### **A. Edge Cases Not Explicitly Tested**\n1. **Empty List (`[]`)**\n   - Does the function handle `n = 0` correctly? (Currently, `dp` is initialized with `n` elements, but `max(dp)` on an empty list would raise an error.)\n   - **Risk:** If `a = []`, `dp = []`, and `max(dp)` fails.\n\n2. **Single-Element List (`[x]`)**\n   - Should return `1` (since a single element trivially satisfies",
+    "generated_tests": [
+      "assert largest_subset([2, 4, 8, 16, 32]) == 5",
+      "assert largest_subset([5, 10, 20, 25, 50]) == 3",
+      "assert largest_subset([7, 14, 21, 28, 35, 105]) == 4"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert largest_subset([7, 14, 21, 28, 35, 105]) == 4\nE       assert 3 == 4\nE        +  where 3 = largest_subset([7, 14, 21, 28, 35, 105])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7egrv004\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7egrv004\\test_solution.py::test_case_5\n1 failed, 5 passed in 0.39s\n\n"
+  }
+}

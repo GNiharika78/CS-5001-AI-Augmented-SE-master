@@ -1,0 +1,39 @@
+{
+  "task_id": 436,
+  "task_prompt": "Write a python function to return the negative numbers in a list.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "boundary_lt_to_lte",
+  "status": "repaired",
+  "final_code": "def neg_nos(list1):\n  out = []\n  for num in list1: \n    if num <= 0: \n      out.append(num)\n  return out ",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 24.72,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def neg_nos(list1):\n  out = []\n  for num in list1: \n    if num <= 0: \n      out.append(num)\n  return out ",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.59
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 13      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (13/13 statements covered)\n  - `solution.py`: 6/6 statements covered (100%)\n  - `test_solution.py`: 7/7 statements covered (100%)\n- The function `neg_nos` and its test cases are fully covered by the existing tests.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested (or may be weakly tested):\n- **Empty list**: `[]` (should return `[]`).\n- **List with no negative numbers**: `[1, 2, 3]` (should return `[]`).\n- **List with all negative numbers**: `[-1, -2, -3]` (should return `[-1, -2, -3]`).\n- **List with mixed positive, negative, and zero**: `[1, -2, 0, 3, -4]` (should return `[-2, 0, -4]`).\n- **List with non-integer values**: `[1.5, -2.",
+    "generated_tests": [
+      "assert neg_nos([0, 1, 2, 3]) == [0]",
+      "assert neg_nos([-10, -20, -30]) == [-10, -20, -30]",
+      "assert neg_nos([]) == []"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.31s\n\n"
+  }
+}

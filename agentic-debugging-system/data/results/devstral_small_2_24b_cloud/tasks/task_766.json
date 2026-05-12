@@ -1,0 +1,51 @@
+{
+  "task_id": 766,
+  "task_prompt": "Write a function to return a list of all pairs of consecutive items in a given list.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def pair_wise(l1):\n    temp = []\n    for i in range(len(l1) - 1):\n        current_element, next_element = l1[i], l1[i + 1]\n        x = (current_element, next_element)\n        temp.append(x)\n    return temp",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 28.55,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def pair_wise(l1):\n    temp = []\n    for i in range(len(l1) - 1):\n        current_element, next_element = l1[i], l1[i - 1]\n        x = (current_element, next_element)\n        temp.append(x)\n    return temp",
+      "tests_passed_before_patch": false,
+      "test_output": "FFFF                                                                     [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert pair_wise([1,1,2,3,3,4,4,5])==[(1, 1), (1, 2), (2, 3), (3, 3), (3, 4), (4, 4), (4, 5)]\nE       assert [(1, 5), (1, ..., (4, 3), ...] == [(1, 1), (1, ..., (4, 4), ...]\nE         \nE         At index 0 diff: (1, 5) != (1, 1)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn6b1z1p4\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert pair_wise([1,5,7,9,10])==[(1, 5), (5, 7), (7, 9), (9, 10)]\nE       assert [(1, 10), (5,...7, 5), (9, 7)] == [(1, 5), (5, ..., 9), (9, 10)]\nE         \nE         At index 0 diff: (1, 10) != (1, 5)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn6b1z1p4\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert pair_wise([5,1,9,7,10])==[(5, 1), (1, 9), (9, 7), (7, 10)]\nE       assert [(5, 10), (1,...9, 1), (7, 9)] == [(5, 1), (1, ..., 7), (7, 10)]\nE         \nE         At index 0 diff: (5, 10) != (5, 1)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn6b1z1p4\\test_solution.py:10: AssertionError\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert pair_wise([1,2,3,4,5,6,7,8,9,10])==[(1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 7), (7, 8), (8, 9), (9, 10)]\nE       assert [(1, 10), (2,..., (6, 5), ...] == [(1, 2), (2, ..., (6, 7), ...]\nE         \nE         At index 0 diff: (1, 10) != (1, 2)\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn6b1z1p4\\test_solution.py:13: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn6b1z1p4\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn6b1z1p4\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn6b1z1p4\\test_solution.py::test_case_2\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn6b1z1p4\\test_solution.py::test_case_3\n4 failed in 0.35s\n\n",
+      "failure": "### Analysis of the Failed Function\n\n1. **What failed**:\n   The function `pair_wise` is supposed to return a list of all pairs of consecutive items in a given list. However, the current implementation is not correctly pairing consecutive elements. Instead, it is pairing each element with the element before it (due to the incorrect index `i - 1`), which leads to incorrect pairs and even out-of-bounds errors in some cases.\n\n2. **Evidence**:\n   - In `test_case_0`, the expected output is `[(1, 1), (1, 2), (2, 3), (3, 3), (3, 4), (4, 4), (4, 5)]`, but the actual output starts with `(1, 5)` (incorrect) instead of `(1, 1)`.\n   - In `test_case_1`, the expected output is `[(1, 5), (5, 7), (7, 9), (9, 10)]`, but the actual output starts with `(1, 10)` (incorrect) instead of `(1, 5)`.\n\n3. **Failure type**:\n   - **Logical Error",
+      "hypothesis": "### Analysis of the Failed Function\n\n1. **Failing behavior**:\n   The function `pair_wise` is not correctly pairing consecutive elements in the list. Instead, it is pairing each element with the element before it (due to the incorrect index `i - 1`), which leads to incorrect pairs and even out-of-bounds errors in some cases.\n\n2. **Evidence**:\n   - In `test_case_0`, the expected output is `[(1, 1), (1, 2), (2, 3), (3, 3), (3, 4), (4, 4), (4, 5)]`, but the actual output starts with `(1, 5)` (incorrect) instead of `(1, 1)`.\n   - In `test_case_1`, the expected output is `[(1, 5), (5, 7), (7, 9), (9, 10)]`, but the actual output starts with `(1, 10)` (incorrect) instead of `(1, 5)`.\n\n3. **Root cause**:\n   The issue lies in the line `current_element, next_element = l1[i], l1[i - 1",
+      "patched_code": "def pair_wise(l1):\n    temp = []\n    for i in range(len(l1) - 1):\n        current_element, next_element = l1[i], l1[i + 1]\n        x = (current_element, next_element)\n        temp.append(x)\n    return temp",
+      "decision": "patch_and_retry",
+      "duration_seconds": 14.78
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def pair_wise(l1):\n    temp = []\n    for i in range(len(l1) - 1):\n        current_element, next_element = l1[i], l1[i + 1]\n        x = (current_element, next_element)\n        temp.append(x)\n    return temp",
+      "tests_passed_before_patch": true,
+      "test_output": "....                                                                     [100%]\n4 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.61
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      0   100%\ntest_solution.py       9      0   100%\n------------------------------------------------\nTOTAL                 16      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (16/16 statements covered)\n  - `solution.py`: 7/7 statements covered (100%)\n  - `test_solution.py`: 9/9 statements covered (100%)\n- The code and tests are fully covered with no missing statements.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested (or may be weakly tested):\n- **Empty list**: `pair_wise([])` should return `[]`.\n- **Single-element list**: `pair_wise([1])` should return `[]` (no consecutive pairs).\n- **Large lists**: Performance or correctness for very large lists (e.g., 10,000+ elements).\n- **Non-homogeneous lists**: Lists with mixed types (e.g., `[1, \"a\", 3.14]`).\n- **Duplicate elements**: Lists with repeated consecutive elements (e.g., `[1, 1, 2, 2]`).\n- **Non-list inputs**: Behavior when passing non-list inputs (e",
+    "generated_tests": [
+      "assert pair_wise([]) == []",
+      "assert pair_wise([1]) == []",
+      "assert pair_wise(['a', 'b', 'c']) == [('a', 'b'), ('b', 'c')]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": ".......                                                                  [100%]\n7 passed in 0.33s\n\n"
+  }
+}

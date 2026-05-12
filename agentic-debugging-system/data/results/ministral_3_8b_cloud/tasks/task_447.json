@@ -1,0 +1,51 @@
+{
+  "task_id": 447,
+  "task_prompt": "Write a function to find cubes of individual elements in a list.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_pow_to_mul",
+  "status": "repaired",
+  "final_code": "def cube_nums(nums):\n    cube_nums = list(map(lambda x: x ** 3, nums))\n    return cube_nums",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 29.55,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def cube_nums(nums):\n cube_nums = list(map(lambda x: x * 3, nums))\n return cube_nums",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert cube_nums([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])==[1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]\nE       assert [3, 6, 9, 12, 15, 18, ...] == [1, 8, 27, 64, 125, 216, ...]\nE         \nE         At index 0 diff: 3 != 1\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpyk_xw00m\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert cube_nums([10,20,30])==([1000, 8000, 27000])\nE       assert [30, 60, 90] == [1000, 8000, 27000]\nE         \nE         At index 0 diff: 30 != 1000\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpyk_xw00m\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert cube_nums([12,15])==([1728, 3375])\nE       assert [36, 45] == [1728, 3375]\nE         \nE         At index 0 diff: 36 != 1728\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpyk_xw00m\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpyk_xw00m\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpyk_xw00m\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpyk_xw00m\\test_solution.py::test_case_2\n3 failed in 0.41s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `cube_nums()` is supposed to return the cubes of each element in the input list, but instead it's multiplying each element by 3 (cubing is raising to the power of 3, not multiplying by 3).\n\n2. **Evidence**:\n   - For input `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`, the function returns `[3, 6, 9, 12, 15, 18, 21, 24, 27, 30]` (each element multiplied by 3)\n   - Expected output is `[1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]` (each element cubed)\n   - Same pattern appears in the second test case\n\n3. **Failure type**:\n   - Logical error: The function performs multiplication instead of cubing\n   - This is a semantic error where the code doesn't",
+      "hypothesis": "Here's the structured analysis of the failure:\n\n---\n\n### **1. Failing Behavior**\nThe function `cube_nums()` incorrectly computes the **triple** (multiply by 3) of each element in the input list instead of computing the **cube** (raise to the power of 3).\n\n---\n\n### **2. Evidence**\n- **Input:** `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`\n  - **Actual Output:** `[3, 6, 9, 12, 15, 18, 21, 24, 27, 30]` (each element multiplied by 3)\n  - **Expected Output:** `[1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]` (each element cubed)\n\n- **Same pattern observed in all test cases.**\n\n---\n\n### **3. Root Cause**\nThe function uses `lambda x: x * 3`, which performs **multiplication by 3** instead of",
+      "patched_code": "def cube_nums(nums):\n    cube_nums = list(map(lambda x: x ** 3, nums))\n    return cube_nums",
+      "decision": "patch_and_retry",
+      "duration_seconds": 19.11
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def cube_nums(nums):\n    cube_nums = list(map(lambda x: x ** 3, nums))\n    return cube_nums",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.69
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All **3 statements** in `cube_nums()` were executed during testing.\n- All **7 statements** in the test file were executed.\n\nSince coverage is perfect, the tests likely cover:\n- Normal cases (positive integers, negative integers, zero).\n- Edge cases (empty list, single-element list).\n- Potential type-related cases (though the function assumes `nums` is iterable with numeric elements).\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nWhile the coverage is high, we should consider whether the tests fully validate **correctness** (not just execution). Potential gaps include:\n\n#### **A. Input Validation**\n- The function does **not** explicitly handle non-numeric inputs (e.g., strings, `None`, mixed types).\n  - Example: `cube_nums([\"a\", 2])` \u2192 May raise `TypeError` or produce unexpected results.\n  - **Risk**: Silent failures or crashes if inputs are invalid.\n\n#### **B. Edge Cases**\n- **Empty list**: `cube",
+    "generated_tests": [
+      "assert cube_nums([-2, -1, 0, 1, 2]) == [-8, -1, 0, 1, 8]",
+      "assert cube_nums([0.5, 1.5, 2.5]) == [0.125, 3.375, 15.625]",
+      "assert cube_nums([]) == []"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.37s\n\n"
+  }
+}

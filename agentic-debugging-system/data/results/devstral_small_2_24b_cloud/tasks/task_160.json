@@ -1,0 +1,39 @@
+{
+  "task_id": 160,
+  "task_prompt": "Write a function that returns integers x and y that satisfy ax + by = n as a tuple, or return None if no solution exists.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def find_solution(a, b, n):\n\ti = 0\n\twhile i + a <= n:\n\t\tif (n - (i * a)) % b == 0: \n\t\t\treturn (i, (n - (i * a)) // b)\n\t\ti = i + 1\n\treturn None",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 12.48,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def find_solution(a, b, n):\n\ti = 0\n\twhile i + a <= n:\n\t\tif (n - (i * a)) % b == 0: \n\t\t\treturn (i, (n - (i * a)) // b)\n\t\ti = i + 1\n\treturn None",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.30s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.58
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (14/14 statements covered)\n  - `solution.py`: 100% (7/7 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n- The code and tests are fully covered, meaning all lines of code were executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage report shows 100% line coverage, this does not necessarily mean all edge cases or boundary conditions are thoroughly tested. Potential weakly tested cases include:\n- **Edge Cases**:\n  - `a = 0` or `b = 0` (division by zero or trivial cases).\n  - `n = 0` (trivial solution `(0, 0)` if `a` and `b` are non-zero).\n  - Large values of `a`, `b`, or `n` (performance or overflow issues).\n  - Negative values of `a`, `b`, or `n` (if the problem allows them).\n- **Boundary Conditions**:\n  - `a` or `b` is 1 (",
+    "generated_tests": [
+      "assert find_solution(3, 5, 19) == (2, 1)",
+      "assert find_solution(0, 1, 5) == None",
+      "assert find_solution(7, 0, 21) == (3, 0)"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...FFF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert find_solution(3, 5, 19) == (2, 1)\nE       assert (3, 2) == (2, 1)\nE         \nE         At index 0 diff: 3 != 2\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjy9er1qe\\test_solution.py:13: AssertionError\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert find_solution(0, 1, 5) == None\nE       assert (0, 5) == None\nE        +  where (0, 5) = find_solution(0, 1, 5)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjy9er1qe\\test_solution.py:16: AssertionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert find_solution(7, 0, 21) == (3, 0)\n               ^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjy9er1qe\\test_solution.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\na = 7, b = 0, n = 21\n\n    def find_solution(a, b, n):\n    \ti = 0\n    \twhile i + a <= n:\n>   \t\tif (n - (i * a)) % b == 0:\n        ^^^^^^^^^^^^^^^^^\nE     ZeroDivisionError: integer modulo by zero\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjy9er1qe\\solution.py:4: ZeroDivisionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjy9er1qe\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjy9er1qe\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpjy9er1qe\\test_solution.py::test_case_5\n3 failed, 3 passed in 0.32s\n\n"
+  }
+}

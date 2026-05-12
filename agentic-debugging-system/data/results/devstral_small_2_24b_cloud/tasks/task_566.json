@@ -1,0 +1,51 @@
+{
+  "task_id": 566,
+  "task_prompt": "Write a function to get the sum of the digits of a non-negative integer.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def sum_digits(n):\n  if n == 0:\n    return 0\n  else:\n    return n % 10 + sum_digits(int(n / 10))",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 32.49,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def sum_digits(n):\n  if n == 0:\n    return 0\n  else:\n    return n % 10 - sum_digits(int(n / 10))",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert sum_digits(345)==12\nE       assert 4 == 12\nE        +  where 4 = sum_digits(345)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpg8rz91l2\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert sum_digits(12)==3\nE       assert 1 == 3\nE        +  where 1 = sum_digits(12)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpg8rz91l2\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert sum_digits(97)==16\nE       assert -2 == 16\nE        +  where -2 = sum_digits(97)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpg8rz91l2\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpg8rz91l2\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpg8rz91l2\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpg8rz91l2\\test_solution.py::test_case_2\n3 failed in 0.35s\n\n",
+      "failure": "Let's analyze the failure:\n\n1. **What failed**:\n   - The function `sum_digits(n)` is not correctly calculating the sum of digits of a non-negative integer.\n   - For input 345, it returns 4 instead of 12\n   - For input 12, it returns 1 instead of 3\n   - For input 97, it returns -2 instead of 16\n\n2. **Evidence**:\n   - The test cases show the function is returning incorrect values:\n     - sum_digits(345) \u2192 4 (should be 12)\n     - sum_digits(12) \u2192 1 (should be 3)\n     - sum_digits(97) \u2192 -2 (should be 16)\n\n3. **Failure type**:\n   - This is a logic error in the recursive implementation.\n   - The function is subtracting instead of adding the digits.\n\n4. **Suspected location**:\n   - The error is in the recursive case: `return n % 10 - sum_digits(int(n / 10))`\n   - The minus sign (`-`) should be a plus sign (`+`) to accumulate the sum of digits.\n\nThe",
+      "hypothesis": "Here's the structured analysis of the failure:\n\n1. **Failing behavior**:\n   - The function incorrectly calculates the sum of digits by subtracting instead of adding the digits in the recursive step.\n   - This leads to negative results for numbers where the last digit is smaller than the sum of the remaining digits (e.g., 97 \u2192 -2).\n\n2. **Evidence**:\n   - `sum_digits(345)` returns 4 (345 % 10 = 5, then 5 - sum_digits(34) = 5 - (4 - sum_digits(3)) = 5 - (4 - 3) = 5 - 1 = 4)\n   - `sum_digits(12)` returns 1 (12 % 10 = 2, then 2 - sum_digits(1) = 2 - 1 = 1)\n   - `sum_digits(97)` returns -2 (97 % 10 = 7, then 7 - sum_digits(9) = 7 - 9 = -2)\n\n3. **Root cause**:\n   - The recursive case uses subtraction (`-`) instead of addition (`+",
+      "patched_code": "def sum_digits(n):\n  if n == 0:\n    return 0\n  else:\n    return n % 10 + sum_digits(int(n / 10))",
+      "decision": "patch_and_retry",
+      "duration_seconds": 20.7
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def sum_digits(n):\n  if n == 0:\n    return 0\n  else:\n    return n % 10 + sum_digits(int(n / 10))",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.63
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (11/11 statements covered)\n  - `solution.py`: 4/4 statements covered (100%)\n  - `test_solution.py`: 7/7 statements covered (100%)\n- The code and tests are fully covered with no missing statements.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases or scenarios might not be explicitly tested (or could be weakly tested):\n- **Single-digit numbers** (e.g., `0`, `5`, `9`):\n  - `0` is explicitly handled in the base case, but other single-digit numbers might not be tested.\n- **Large numbers** (e.g., `123456789`, `999999999`):\n  - The function is recursive, so very large numbers could test stack depth (though Python's recursion limit is high, it's still worth checking).\n- **Numbers with repeated digits** (e.g., `111`, `2222`):\n  - Ensures the function",
+    "generated_tests": [
+      "assert sum_digits(0) == 0",
+      "assert sum_digits(100) == 1",
+      "assert sum_digits(9999) == 36"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.32s\n\n"
+  }
+}

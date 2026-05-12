@@ -1,0 +1,51 @@
+{
+  "task_id": 470,
+  "task_prompt": "Write a function to find the pairwise addition of the neighboring elements of the given tuple.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def add_pairwise(test_tup):\n  res = tuple(i + j for i, j in zip(test_tup, test_tup[1:]))\n  return (res)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 27.2,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def add_pairwise(test_tup):\n  res = tuple(i - j for i, j in zip(test_tup, test_tup[1:]))\n  return (res) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert add_pairwise((1, 5, 7, 8, 10)) == (6, 12, 15, 18)\nE       assert (-4, -2, -1, -2) == (6, 12, 15, 18)\nE         \nE         At index 0 diff: -4 != 6\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn_0g0nj1\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert add_pairwise((2, 6, 8, 9, 11)) == (8, 14, 17, 20)\nE       assert (-4, -2, -1, -2) == (8, 14, 17, 20)\nE         \nE         At index 0 diff: -4 != 8\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn_0g0nj1\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert add_pairwise((3, 7, 9, 10, 12)) == (10, 16, 19, 22)\nE       assert (-4, -2, -1, -2) == (10, 16, 19, 22)\nE         \nE         At index 0 diff: -4 != 10\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn_0g0nj1\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn_0g0nj1\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn_0g0nj1\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn_0g0nj1\\test_solution.py::test_case_2\n3 failed in 0.35s\n\n",
+      "failure": "### Analysis of the Failure\n\n1. **What failed**:\n   The function `add_pairwise` is supposed to compute the pairwise addition of neighboring elements in a tuple, but it is currently performing subtraction instead of addition. This causes the function to return incorrect results.\n\n2. **Evidence**:\n   - For the input `(1, 5, 7, 8, 10)`, the expected output is `(6, 12, 15, 18)` (which are the sums of neighboring pairs: `1+5=6`, `5+7=12`, `7+8=15`, `8+10=18`).\n   - The actual output is `(-4, -2, -1, -2)` (which are the differences: `1-5=-4`, `5-7=-2`, `7-8=-1`, `8-10=-2`).\n   - Similar failures occur for other test cases, confirming the function is subtracting instead of adding.\n\n3. **Failure type**:\n   This is a **logical error** in the function implementation. The function uses subtraction (`i - j`) where it should use addition (`i + j`).\n\n4.",
+      "hypothesis": "Here's the structured analysis of the failure and the repair plan:\n\n### 1. Failing Behavior\nThe function `add_pairwise` incorrectly computes the pairwise **difference** of neighboring elements instead of their **sum**, leading to wrong results.\n\n### 2. Evidence\n- **Input**: `(1, 5, 7, 8, 10)`\n  - **Expected Output**: `(6, 12, 15, 18)` (sums of neighboring pairs)\n  - **Actual Output**: `(-4, -2, -1, -2)` (differences of neighboring pairs)\n- The function consistently returns differences instead of sums for all test cases.\n\n### 3. Root Cause\nThe function uses subtraction (`i - j`) in the generator expression instead of addition (`i + j`). This is a logical error in the implementation.\n\n### 4. Why This Explains the Failure\nThe function's purpose is to add neighboring elements, but the subtraction operation directly contradicts this requirement. The incorrect operation (`-`) is the sole reason for the failure.\n\n### 5. Repair Plan\nReplace the subtraction operation (`i - j`) with addition (`i + j`) in the generator expression. The",
+      "patched_code": "def add_pairwise(test_tup):\n  res = tuple(i + j for i, j in zip(test_tup, test_tup[1:]))\n  return (res)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 15.54
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def add_pairwise(test_tup):\n  res = tuple(i + j for i, j in zip(test_tup, test_tup[1:]))\n  return (res)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.63
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (10/10 statements covered)\n  - `solution.py`: 3 statements, 0 missed (100% coverage)\n  - `test_solution.py`: 7 statements, 0 missed (100% coverage)\n- The function `add_pairwise` and its test cases are fully covered by the existing tests.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested (or may be weakly tested):\n1. **Empty tuple**: `add_pairwise(())` should return an empty tuple.\n2. **Single-element tuple**: `add_pairwise((5,))` should return an empty tuple (no neighbors to pair).\n3. **Large tuple**: Performance or correctness for very large tuples (e.g., 10,000+ elements).\n4. **Mixed data types**: Tuples with mixed numeric types (e.g., `(1, 2.5, 3)`).\n5. **Non-numeric data**: Tuples with non-numeric elements (e.g., `",
+    "generated_tests": [
+      "assert add_pairwise((0, 0, 0, 0)) == (0, 0, 0)",
+      "assert add_pairwise((-1, -2, -3, -4)) == (-3, -5, -7)",
+      "assert add_pairwise((10,)) == ()"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.34s\n\n"
+  }
+}

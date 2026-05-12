@@ -1,0 +1,39 @@
+{
+  "task_id": 128,
+  "task_prompt": "Write a function to find words that are longer than n characters from a given list of words.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "boundary_gt_to_gte",
+  "status": "repaired",
+  "final_code": "def long_words(n, str):\n    word_len = []\n    txt = str.split(\" \")\n    for x in txt:\n        if len(x) >= n:\n            word_len.append(x)\n    return word_len\t",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 13.98,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def long_words(n, str):\n    word_len = []\n    txt = str.split(\" \")\n    for x in txt:\n        if len(x) >= n:\n            word_len.append(x)\n    return word_len\t",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.65
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All executable statements in the function (`long_words`) were executed during testing.\n- No statements were left untested.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nWhile the coverage is **100%**, we should analyze whether the tests adequately verify **edge cases** and **correctness** of the function. Potential weaknesses include:\n\n#### **Possible Untested Scenarios:**\n1. **Empty Input String (`str = \"\"`)**\n   - Does the function handle an empty string correctly? (Expected: Returns `[]`.)\n2. **String with No Words Longer Than `n`**\n   - Does it return an empty list if no words meet the condition?\n3. **String with Only One Word**\n   - Does it correctly filter based on `n`?\n4. **String with Leading/Trailing Whitespace**\n   - Does `split(\" \")` handle extra spaces correctly? (Expected: `split(\" \")` splits on any whitespace, but `split()` without args splits on any whitespace and ignores",
+    "generated_tests": [
+      "assert long_words(4, \"hello world this is a test\") == ['hello', 'world', 'this', 'test']",
+      "assert long_words(1, \"a b c d e\") == ['a', 'b', 'c', 'd', 'e']",
+      "assert long_words(0, \"single\") == ['single']"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.36s\n\n"
+  }
+}

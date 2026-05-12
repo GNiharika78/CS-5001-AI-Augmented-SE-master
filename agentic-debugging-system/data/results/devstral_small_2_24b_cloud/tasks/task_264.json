@@ -1,0 +1,39 @@
+{
+  "task_id": 264,
+  "task_prompt": "Write a function to calculate a dog's age in dog's years.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def dog_age(h_age):\n if h_age < 0:\n \texit()\n elif h_age <= 2:\n\t d_age = h_age + 10.5\n else:\n\t d_age = 21 + (h_age - 2)*4\n return d_age",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 12.6,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def dog_age(h_age):\n if h_age < 0:\n \texit()\n elif h_age <= 2:\n\t d_age = h_age + 10.5\n else:\n\t d_age = 21 + (h_age - 2)*4\n return d_age",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.29s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.59
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      2    71%   3, 5\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      2    86%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 86% (14 statements total, 2 missed)\n- **Solution.py Coverage**: 71% (7 statements, 2 missed)\n- **Test_solution.py Coverage**: 100% (7 statements, 0 missed)\n\n#### 2. Missing or Weakly Tested Cases\nThe coverage report indicates that lines 3 and 5 in `solution.py` are not covered. These correspond to:\n- **Line 3**: The `exit()` call when `h_age < 0` (negative human age).\n- **Line 5**: The `d_age = h_age + 10.5` calculation for `h_age <= 2`.\n\nThis suggests the following cases are missing or weakly tested:\n1. **Negative human age**: The function's behavior for invalid input (`h_age < 0`) is not tested.\n2. **Human age \u2264 2**: The calculation for young dogs (e.g., `h_age = 0`, `1`, or `2`) is not fully tested.\n\n#### 3. Suggested Additional Tests\nTo achieve 100% coverage,",
+    "generated_tests": [
+      "assert dog_age(0) == 10.5",
+      "assert dog_age(1) == 11.5",
+      "assert dog_age(3) == 25"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.32s\n\n"
+  }
+}

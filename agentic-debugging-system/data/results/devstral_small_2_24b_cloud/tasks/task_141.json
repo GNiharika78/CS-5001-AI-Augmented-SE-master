@@ -1,0 +1,51 @@
+{
+  "task_id": 141,
+  "task_prompt": "Write a function to sort a list of elements.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def pancake_sort(nums):\n    arr_len = len(nums)\n    while arr_len > 1:\n        mi = nums.index(max(nums[0:arr_len]))\n        nums = nums[mi::-1] + nums[mi+1:len(nums)]\n        nums = nums[arr_len-1::-1] + nums[arr_len:len(nums)]\n        arr_len -= 1\n    return nums",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 47.56,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def pancake_sort(nums):\n    arr_len = len(nums)\n    while arr_len > 1:\n        mi = nums.index(max(nums[0:arr_len]))\n        nums = nums[mi::-1] - nums[mi+1:len(nums)]\n        nums = nums[arr_len-1::-1] + nums[arr_len:len(nums)]\n        arr_len -= 1\n    return nums",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert pancake_sort([15, 79, 25, 38, 69]) == [15, 25, 38, 69, 79]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptn2c071e\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nnums = [15, 79, 25, 38, 69]\n\n    def pancake_sort(nums):\n        arr_len = len(nums)\n        while arr_len > 1:\n            mi = nums.index(max(nums[0:arr_len]))\n>           nums = nums[mi::-1] - nums[mi+1:len(nums)]\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptn2c071e\\solution.py:5: TypeError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert pancake_sort([98, 12, 54, 36, 85]) == [12, 36, 54, 85, 98]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptn2c071e\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nnums = [98, 12, 54, 36, 85]\n\n    def pancake_sort(nums):\n        arr_len = len(nums)\n        while arr_len > 1:\n            mi = nums.index(max(nums[0:arr_len]))\n>           nums = nums[mi::-1] - nums[mi+1:len(nums)]\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptn2c071e\\solution.py:5: TypeError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert pancake_sort([41, 42, 32, 12, 23]) == [12, 23, 32, 41, 42]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptn2c071e\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nnums = [41, 42, 32, 12, 23]\n\n    def pancake_sort(nums):\n        arr_len = len(nums)\n        while arr_len > 1:\n            mi = nums.index(max(nums[0:arr_len]))\n>           nums = nums[mi::-1] - nums[mi+1:len(nums)]\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           TypeError: unsupported operand type(s) for -: 'list' and 'list'\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptn2c071e\\solution.py:5: TypeError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptn2c071e\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptn2c071e\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptn2c071e\\test_solution.py::test_case_2\n3 failed in 0.34s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   The `pancake_sort` function failed to execute due to a `TypeError` when attempting to subtract two lists (`nums[mi::-1] - nums[mi+1:len(nums)]`). List subtraction is not a valid operation in Python.\n\n2. **Evidence**:\n   - The error occurs at the line `nums = nums[mi::-1] - nums[mi+1:len(nums)]`.\n   - The test case `[15, 79, 25, 38, 69]` triggers the error.\n   - The error message clearly states: `TypeError: unsupported operand type(s) for -: 'list' and 'list'`.\n\n3. **Failure type**:\n   - **Syntax/Type Error**: The code attempts an invalid operation (list subtraction) that is not supported in Python.\n\n4. **Suspected location**:\n   - The error is in the line where the pancake flip operation is performed:\n     ```python\n     nums = nums[mi::-1] - nums[mi+1:len(nums)]\n     ```\n   - The intended operation was likely to concatenate the flipped portion with the remaining part",
+      "hypothesis": "### Failure Analysis Report\n\n1. **Failing Behavior**:\n   The `pancake_sort` function fails with a `TypeError` when attempting to subtract two lists (`nums[mi::-1] - nums[mi+1:len(nums)]`). This operation is invalid in Python, as list subtraction is not supported.\n\n2. **Evidence**:\n   - The error occurs at the line `nums = nums[mi::-1] - nums[mi+1:len(nums)]`.\n   - Test case: `[15, 79, 25, 38, 69]` triggers the error.\n   - Error message: `TypeError: unsupported operand type(s) for -: 'list' and 'list'`.\n\n3. **Root Cause**:\n   The code incorrectly uses the `-` operator to concatenate or manipulate lists. In Python, lists cannot be subtracted. The intended operation was likely to concatenate the flipped portion (`nums[mi::-1]`) with the remaining part of the list (`nums[mi+1:len(nums)]`), but the `-` operator was mistakenly used instead of `+`.\n\n4. **Why This Explains the Failure**:\n   The `-` operator is not",
+      "patched_code": "def pancake_sort(nums):\n    arr_len = len(nums)\n    while arr_len > 1:\n        mi = nums.index(max(nums[0:arr_len]))\n        nums = nums[mi::-1] + nums[mi+1:len(nums)]\n        nums = nums[arr_len-1::-1] + nums[arr_len:len(nums)]\n        arr_len -= 1\n    return nums",
+      "decision": "patch_and_retry",
+      "duration_seconds": 30.79
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def pancake_sort(nums):\n    arr_len = len(nums)\n    while arr_len > 1:\n        mi = nums.index(max(nums[0:arr_len]))\n        nums = nums[mi::-1] + nums[mi+1:len(nums)]\n        nums = nums[arr_len-1::-1] + nums[arr_len:len(nums)]\n        arr_len -= 1\n    return nums",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.27s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.55
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            8      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 15      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (15/15 statements covered)\n  - `solution.py`: 8/8 statements covered (100%)\n  - `test_solution.py`: 7/7 statements covered (100%)\n\nThe coverage report indicates that all lines of code in both the implementation (`solution.py`) and the test file (`test_solution.py`) have been executed during testing. This is a strong initial signal that the test suite is comprehensive.\n\n#### 2. Missing or Weakly Tested Cases\nDespite 100% line coverage, there are potential edge cases or scenarios that may not be thoroughly tested:\n- **Empty list**: The function may not be tested with an empty list (`nums = []`).\n- **Single-element list**: The function may not be tested with a list containing only one element (`nums = [5]`).\n- **Already sorted list**: The function may not be tested with a list that is already sorted (e.g., `nums = [1, 2, 3]`).\n- **Reverse-sorted list**: The function may not be tested with a list sorted in reverse order (",
+    "generated_tests": [
+      "assert pancake_sort([5, 3, 8, 1, 2]) == [1, 2, 3, 5, 8]",
+      "assert pancake_sort([10, 1, 9, 2, 8, 3, 7, 4, 6, 5]) == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]",
+      "assert pancake_sort([-3, -1, -4, -2]) == [-4, -3, -2, -1]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.29s\n\n"
+  }
+}

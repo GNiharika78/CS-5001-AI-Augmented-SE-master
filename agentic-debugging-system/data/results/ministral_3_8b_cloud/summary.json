@@ -1,0 +1,110 @@
+{
+  "model": "ministral-3:8b-cloud",
+  "target_evaluated_tasks": 300,
+  "total_evaluated_tasks": 300,
+  "repaired": 265,
+  "failed": 35,
+  "failed_llm": 0,
+  "success_rate": 0.8833333333333333,
+  "average_attempts": 2.0433333333333334,
+  "average_duration_seconds": 23.4399,
+  "average_llm_calls": 4.903333333333333,
+  "bug_type_summary": {
+    "operator_plus_to_minus": {
+      "total": 123,
+      "repaired": 108,
+      "failed": 15,
+      "failed_llm": 0
+    },
+    "boolean_and_to_or": {
+      "total": 2,
+      "repaired": 2,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "operator_pow_to_mul": {
+      "total": 7,
+      "repaired": 6,
+      "failed": 1,
+      "failed_llm": 0
+    },
+    "operator_mul_to_plus": {
+      "total": 81,
+      "repaired": 70,
+      "failed": 11,
+      "failed_llm": 0
+    },
+    "operator_neq_to_eq": {
+      "total": 8,
+      "repaired": 6,
+      "failed": 2,
+      "failed_llm": 0
+    },
+    "boundary_lt_to_lte": {
+      "total": 6,
+      "repaired": 6,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "builtin_min_to_max": {
+      "total": 7,
+      "repaired": 7,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "builtin_max_to_min": {
+      "total": 8,
+      "repaired": 8,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "operator_eq_to_neq": {
+      "total": 27,
+      "repaired": 24,
+      "failed": 3,
+      "failed_llm": 0
+    },
+    "boundary_gt_to_gte": {
+      "total": 5,
+      "repaired": 5,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "boolean_true_to_false": {
+      "total": 7,
+      "repaired": 7,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "boolean_or_to_and": {
+      "total": 2,
+      "repaired": 1,
+      "failed": 1,
+      "failed_llm": 0
+    },
+    "loop_range_n_to_n_minus_1": {
+      "total": 4,
+      "repaired": 4,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "len_to_len_minus_1": {
+      "total": 6,
+      "repaired": 4,
+      "failed": 2,
+      "failed_llm": 0
+    },
+    "boundary_lte_to_lt": {
+      "total": 2,
+      "repaired": 2,
+      "failed": 0,
+      "failed_llm": 0
+    },
+    "boundary_gte_to_gt": {
+      "total": 5,
+      "repaired": 5,
+      "failed": 0,
+      "failed_llm": 0
+    }
+  }
+}

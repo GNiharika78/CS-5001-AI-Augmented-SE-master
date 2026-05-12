@@ -2,20 +2,26 @@ from app.llm_client import call_llm
 
 
 class TestGenerationAgent:
-    def run(self, task_prompt: str, code: str, existing_tests: list[str]) -> list[str]:
+    def run(
+        self,
+        task_prompt: str,
+        code: str,
+        existing_tests: list[str],
+        model: str,
+    ) -> list[str]:
+
         prompt = f"""
 You are a Test Generation Agent.
 
-Generate 3 additional Python assert statements to test edge cases.
+Generate 3 additional Python assert statements.
 
 Rules:
-- Return only assert statements.
-- No markdown.
-- No explanation.
-- No imports.
-- Do not define functions.
-- Use the same function name from the code.
-- Avoid duplicating existing tests.
+- Return only assert statements
+- No markdown
+- No explanation
+- No imports
+- Do not define functions
+- Avoid duplicate tests
 
 Task:
 {task_prompt}
@@ -25,14 +31,11 @@ Code:
 
 Existing Tests:
 {existing_tests[:3]}
-
-Generate tests for:
-1. Normal case
-2. Edge case
-3. Boundary or unusual input
 """
+
         response = call_llm(
             prompt,
+            model=model,
             max_tokens=256,
         )
 

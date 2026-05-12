@@ -1,0 +1,51 @@
+{
+  "task_id": 759,
+  "task_prompt": "Write a function to check whether a given string is a decimal number with a precision of 2.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def is_decimal(num):\n    import re\n    dnumre = re.compile(r\"\"\"^[0-9]+(\\.[0-9]{1,2})?$\"\"\")\n    result = dnumre.search(num)\n    return bool(result)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 53.77,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def is_decimal(num):\n    import re\n    dnumre = re.compile(r\"\"\"^[0-9]-(\\.[0-9]{1,2})?$\"\"\")\n    result = dnumre.search(num)\n    return bool(result)",
+      "tests_passed_before_patch": false,
+      "test_output": "F..F.                                                                    [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert is_decimal('123.11')==True\nE       AssertionError: assert False == True\nE        +  where False = is_decimal('123.11')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmps_ln5hcq\\test_solution.py:4: AssertionError\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert is_decimal('1.11')==True\nE       AssertionError: assert False == True\nE        +  where False = is_decimal('1.11')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmps_ln5hcq\\test_solution.py:13: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmps_ln5hcq\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmps_ln5hcq\\test_solution.py::test_case_3\n2 failed, 3 passed in 0.34s\n\n",
+      "failure": "### Analysis of the Failure\n\n1. **What failed**:\n   The function `is_decimal` is supposed to check if a given string is a decimal number with a precision of 2 (i.e., up to 2 decimal places). However, the test cases show that it fails to correctly identify valid decimal numbers like `'123.11'` and `'1.11'`.\n\n2. **Evidence**:\n   - The test case `test_case_0` expects `is_decimal('123.11')` to return `True`, but it returns `False`.\n   - The test case `test_case_3` expects `is_decimal('1.11')` to return `True`, but it returns `False`.\n\n3. **Failure type**:\n   The failure is due to an incorrect regular expression pattern in the function. The current regex `r\"\"\"^[0-9]-(\\.[0-9]{1,2})?$\"\"\"` is malformed and does not match the intended pattern for decimal numbers.\n\n4. **Suspected location**:\n   The issue lies in the regular expression pattern in the `is_decimal` function. Specifically:\n   - The `-` in the pattern is likely a typo",
+      "hypothesis": "### Analysis of the Failure\n\n1. **Failing behavior**:\n   The function `is_decimal` incorrectly returns `False` for valid decimal numbers with up to 2 decimal places (e.g., `'123.11'`, `'1.11'`).\n\n2. **Evidence**:\n   - `is_decimal('123.11')` returns `False` (expected: `True`).\n   - `is_decimal('1.11')` returns `False` (expected: `True`).\n   - The regex pattern `r\"\"\"^[0-9]-(\\.[0-9]{1,2})?$\"\"\"` is clearly incorrect because it includes a literal `-` in the middle of the pattern, which would require the input to contain a hyphen (e.g., `'1-2.3'`).\n\n3. **Root cause**:\n   The regular expression is malformed. The `-` in the pattern is likely a typo (perhaps intended to be a `+` for \"one or more digits\"). The correct pattern should match:\n   - Optional leading digits (`[0-9]+`).\n   - Optional decimal part (`.` followed by 1 or 2 digits).\n\n4.",
+      "patched_code": "def is_decimal(num):\n    import re\n    dnumre = re.compile(r\"\"\"^[0-9]+(\\.[0-9]{1,2})?$\"\"\")\n    result = dnumre.search(num)\n    return bool(result)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 22.25
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def is_decimal(num):\n    import re\n    dnumre = re.compile(r\"\"\"^[0-9]+(\\.[0-9]{1,2})?$\"\"\")\n    result = dnumre.search(num)\n    return bool(result)",
+      "tests_passed_before_patch": true,
+      "test_output": ".....                                                                    [100%]\n5 passed in 0.29s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.59
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            5      0   100%\ntest_solution.py      11      0   100%\n------------------------------------------------\nTOTAL                 16      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (16/16 statements covered)\n- **Solution Code Coverage**: 100% (5/5 statements covered)\n- **Test Code Coverage**: 100% (11/11 statements covered)\n\nThe coverage report indicates that all lines of code in both the solution and test files are executed during testing. This is a strong indicator that the test suite is comprehensive.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, there are potential edge cases that may not be explicitly tested or could be weakly tested. These include:\n- **Empty String**: `\"\"` (should return `False`)\n- **String with Only a Decimal Point**: `\".\"` (should return `False`)\n- **String with Leading/Trailing Whitespace**: `\" 123.45 \"` (should return `False` unless stripped, but the current implementation does not strip)\n- **String with Multiple Decimal Points**: `\"123.45.67\"` (should return `False`)\n- **String with Non-Digit Characters**: `\"123.",
+    "generated_tests": [
+      "assert is_decimal('0.00') == True",
+      "assert is_decimal('123') == True",
+      "assert is_decimal('123.') == False"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "........                                                                 [100%]\n8 passed in 0.32s\n\n"
+  }
+}

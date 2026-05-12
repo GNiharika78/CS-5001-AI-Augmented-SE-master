@@ -1,0 +1,39 @@
+{
+  "task_id": 763,
+  "task_prompt": "Write a python function to find the minimum difference between any two elements in a given array. https://www.geeksforgeeks.org/find-minimum-difference-pair/",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_pow_to_mul",
+  "status": "repaired",
+  "final_code": "def find_min_diff(arr,n): \n    arr = sorted(arr) \n    diff = 10*20 \n    for i in range(n-1): \n        if arr[i+1] - arr[i] < diff: \n            diff = arr[i+1] - arr[i]  \n    return diff ",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 14.08,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def find_min_diff(arr,n): \n    arr = sorted(arr) \n    diff = 10*20 \n    for i in range(n-1): \n        if arr[i+1] - arr[i] < diff: \n            diff = arr[i+1] - arr[i]  \n    return diff ",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.58
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      0   100%\n\n",
+    "coverage_analysis": "### 1. Coverage Summary\nThe coverage report shows that both the main code (`solution.py`) and the test file (`test_solution.py`) have **100% statement coverage**. This means all lines of code in both files were executed during testing.\n\n### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, this does not necessarily mean all edge cases or unusual inputs are tested. Potential missing or weakly tested cases include:\n- **Empty array**: The function may not handle `n = 0` or `arr = []` gracefully.\n- **Single-element array**: The function may not handle `n = 1` correctly (the loop `for i in range(n-1)` would not run, and `diff` would remain `200`).\n- **Large arrays**: Performance may not be tested for very large arrays (though the algorithm is O(n log n) due to sorting, which is efficient).\n- **Duplicate elements**: The function may not be tested with arrays containing duplicate values (e.g., `[1, 1, 1]`).\n- **Negative numbers**: The function may not be tested with negative numbers or mixed positive/negative values.\n- **Floating-point",
+    "generated_tests": [
+      "assert find_min_diff((10, 22, 5, 7, 8, 33), 6) == 1",
+      "assert find_min_diff((1, 1, 1, 1), 4) == 0",
+      "assert find_min_diff((-10, -5, -2, 0, 5), 5) == 2"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.31s\n\n"
+  }
+}

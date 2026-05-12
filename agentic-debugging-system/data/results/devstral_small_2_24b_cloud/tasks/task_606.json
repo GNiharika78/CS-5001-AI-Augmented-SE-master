@@ -1,0 +1,51 @@
+{
+  "task_id": 606,
+  "task_prompt": "Write a function to convert degrees to radians.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import math\ndef radian_degree(degree):\n    radian = degree * (math.pi / 180)\n    return radian",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 56.91,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef radian_degree(degree):\n radian = degree+(math.pi/180)\n return radian",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert radian_degree(90)==1.5707963267948966\nE       assert 90.01745329251995 == 1.5707963267948966\nE        +  where 90.01745329251995 = radian_degree(90)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmputdv5uz9\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert radian_degree(60)==1.0471975511965976\nE       assert 60.017453292519946 == 1.0471975511965976\nE        +  where 60.017453292519946 = radian_degree(60)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmputdv5uz9\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert radian_degree(120)==2.0943951023931953\nE       assert 120.01745329251995 == 2.0943951023931953\nE        +  where 120.01745329251995 = radian_degree(120)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmputdv5uz9\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmputdv5uz9\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmputdv5uz9\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmputdv5uz9\\test_solution.py::test_case_2\n3 failed in 0.37s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   The function `radian_degree` is incorrectly converting degrees to radians. The test cases show that the function returns values that are approximately 1 radian (\u03c0/180 \u2248 0.0174533) higher than the expected values.\n\n2. **Evidence**:\n   - For input `90`, the function returns `90.01745329251995` instead of the expected `1.5707963267948966` (\u03c0/2).\n   - For input `60`, the function returns `60.017453292519946` instead of the expected `1.0471975511965976` (\u03c0/3).\n   - For input `120`, the function returns `120.01745329251995` instead of the expected `2.094` (2\u03c0/3).\n\n3. **Failure type**:\n   - **Logical Error**: The",
+      "hypothesis": "Here's the structured analysis of the failing function:\n\n1. **Failing behavior**:\n   The function `radian_degree` incorrectly adds \u03c0/180 to the input degree value instead of multiplying the degree value by \u03c0/180. This results in outputs that are approximately 1 radian (\u03c0/180) higher than the correct conversion.\n\n2. **Evidence**:\n   - Input `90` \u2192 Output `90.01745329251995` (Expected: `1.5707963267948966`)\n   - Input `60` \u2192 Output `60.017453292519946` (Expected: `1.0471975511965976`)\n   - Input `120` \u2192 Output `120.01745329251995` (Expected: `2.0943951023931953`)\n\n3. **Root cause**:\n   The formula used in the function is `radian =",
+      "patched_code": "import math\ndef radian_degree(degree):\n    radian = degree * (math.pi / 180)\n    return radian",
+      "decision": "patch_and_retry",
+      "duration_seconds": 20.41
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef radian_degree(degree):\n    radian = degree * (math.pi / 180)\n    return radian",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.63
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (11/11 statements covered)\n  - `solution.py`: 100% (4/4 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n- The code and tests are fully covered, meaning all executable lines were executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases or scenarios may not have been explicitly tested (or may not be obvious from the coverage report alone):\n- **Negative degree values**: The function should handle negative degrees (e.g., `-90` should return `-\u03c0/2`).\n- **Zero degree**: The function should return `0` for `0` degrees.\n- **Large degree values**: Very large degrees (e.g., `360`, `720`, or `1000000`) should be tested to ensure no overflow or precision issues.\n- **Non-integer degrees**: Floating-point degrees (e.g., `45.5`) should be tested.\n- **Boundary values**: Degrees",
+    "generated_tests": [
+      "assert radian_degree(0) == 0.0",
+      "assert radian_degree(180) == 3.141592653589793",
+      "assert radian_degree(360) == 6.283185307179586"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.33s\n\n"
+  }
+}

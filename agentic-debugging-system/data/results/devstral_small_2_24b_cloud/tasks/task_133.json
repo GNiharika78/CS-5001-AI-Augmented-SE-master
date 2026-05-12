@@ -1,0 +1,39 @@
+{
+  "task_id": 133,
+  "task_prompt": "Write a function to calculate the sum of the negative numbers of a given list of numbers.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "boundary_lt_to_lte",
+  "status": "repaired",
+  "final_code": "def sum_negativenum(nums):\n  sum_negativenum = list(filter(lambda nums:nums<=0,nums))\n  return sum(sum_negativenum)",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 14.15,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def sum_negativenum(nums):\n  sum_negativenum = list(filter(lambda nums:nums<=0,nums))\n  return sum(sum_negativenum)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.59
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (10/10 statements covered)\n  - `solution.py`: 3 statements, 0 missed (100% coverage)\n  - `test_solution.py`: 7 statements, 0 missed (100% coverage)\n- The code and tests are fully covered by the existing test suite.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested or could be weakly tested:\n1. **Empty List**: The function's behavior with an empty list (`[]`) is not explicitly mentioned in the coverage report.\n2. **All Positive Numbers**: A list with no negative numbers (e.g., `[1, 2, 3]`).\n3. **All Negative Numbers**: A list with only negative numbers (e.g., `[-1, -2, -3]`).\n4. **Mixed Numbers**: A list with both positive and negative numbers (e.g., `[-1, 2, -3, 4]`).\n5. **Zero Handling**: The function includes `nums <= 0`, so",
+    "generated_tests": [
+      "assert sum_negativenum([-1, -2, -3, -4, -5]) == -15",
+      "assert sum_negativenum([0, 0, 0, 0]) == 0",
+      "assert sum_negativenum([1, 2, 3, 4, 5]) == 0"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.29s\n\n"
+  }
+}

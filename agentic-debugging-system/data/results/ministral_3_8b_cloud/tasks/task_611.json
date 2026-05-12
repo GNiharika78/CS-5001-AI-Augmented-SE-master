@@ -1,0 +1,51 @@
+{
+  "task_id": 611,
+  "task_prompt": "Write a function which given a matrix represented as a list of lists returns the max of the n'th column.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "builtin_max_to_min",
+  "status": "repaired",
+  "final_code": "def max_of_nth(test_list, N):\n  res = max([sub[N] for sub in test_list])\n  return res",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 27.58,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_of_nth(test_list, N):\n  res = min([sub[N] for sub in test_list])\n  return (res) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert max_of_nth([[5, 6, 7], [1, 3, 5], [8, 9, 19]], 2) == 19\nE       assert 5 == 19\nE        +  where 5 = max_of_nth([[5, 6, 7], [1, 3, 5], [8, 9, 19]], 2)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmputnzbrh8\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert max_of_nth([[6, 7, 8], [2, 4, 6], [9, 10, 20]], 1) == 10\nE       assert 4 == 10\nE        +  where 4 = max_of_nth([[6, 7, 8], [2, 4, 6], [9, 10, 20]], 1)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmputnzbrh8\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert max_of_nth([[7, 8, 9], [3, 5, 7], [10, 11, 21]], 1) == 11\nE       assert 5 == 11\nE        +  where 5 = max_of_nth([[7, 8, 9], [3, 5, 7], [10, 11, 21]], 1)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmputnzbrh8\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmputnzbrh8\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmputnzbrh8\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmputnzbrh8\\test_solution.py::test_case_2\n3 failed in 0.39s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `max_of_nth` is supposed to return the maximum value of the n'th column in a matrix, but instead it's returning the minimum value of that column (due to using `min()` instead of `max()`).\n\n2. **Evidence**:\n   - Test case 0 expects 19 (max of column 2) but gets 5 (min of column 2)\n   - Test case 1 expects 10 (max of column 1) but gets 4 (min of column 1)\n   - The function uses `min([sub[N] for sub in test_list])` when it should use `max()`\n\n3. **Failure type**:\n   - Logical error: The function is performing the wrong operation (min instead of max)\n   - This is a simple implementation mistake rather than a syntax or runtime error\n\n4. **Suspected location**:\n   The error is in this line of the function:\n   ```python\n   res = min([sub[N] for sub in test_list])\n   ```\n   It should be:\n   ```python\n   res = max([sub[N] for sub in test_list])\n   ```\n\nThe",
+      "hypothesis": "Here's the structured analysis of the failure:\n\n1. **Failing behavior**:\n   The function returns the minimum value of the n'th column instead of the maximum value, causing incorrect results for all test cases.\n\n2. **Evidence**:\n   - Test case 0: Expected 19 (max of column 2), got 5 (min of column 2)\n   - Test case 1: Expected 10 (max of column 1), got 4 (min of column 1)\n   - The function's logic is clearly using `min()` when it should use `max()`\n\n3. **Root cause**:\n   The function contains a logical error where `min()` is incorrectly used instead of `max()` in the list comprehension line. This is a simple implementation mistake where the wrong built-in function was selected.\n\n4. **Why this explains failure**:\n   The evidence shows consistent incorrect results (minimum values instead of maximum) across all test cases, which directly correlates with using `min()` instead of `max()`. This is the only logical discrepancy in the code.\n\n5. **Repair plan**:\n   Change the line:\n   ```python\n   res = min([sub[N] for sub in test_list])\n   ```\n   to:",
+      "patched_code": "def max_of_nth(test_list, N):\n  res = max([sub[N] for sub in test_list])\n  return res",
+      "decision": "patch_and_retry",
+      "duration_seconds": 17.34
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_of_nth(test_list, N):\n  res = max([sub[N] for sub in test_list])\n  return res",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.67
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            3      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 10      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All **3 statements** in `max_of_nth()` were executed during testing.\n- All **7 statements** in the test file were executed.\n\nSince coverage is perfect, the tests likely verify:\n- Basic functionality (correct max calculation for a valid column).\n- Edge cases (empty list, invalid `N`, etc.).\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nDespite full coverage, some **potential edge cases** may not be explicitly tested. Common issues for this function include:\n\n| **Case**                     | **Description**                                                                 | **Likely Tested?** |\n|------------------------------|---------------------------------------------------------------------------------|--------------------|\n| **Empty input list**         | `test_list = []` \u2192 Should raise `ValueError` or return `None`?                 | ? (Not obvious)    |\n| **Invalid column index `N`** | `N < 0` or `N >= len(sub)` for any sublist \u2192 Should raise `IndexError`?       | ?                  |\n| **Non-integer `",
+    "generated_tests": [
+      "assert max_of_nth([[1, 2, 3], [4, 5, 6], [7, 8, 9]], 0) == 7",
+      "assert max_of_nth([[-1, -2, -3], [-4, -5, -6], [-7, -8, -9]], 1) == -2",
+      "assert max_of_nth([[10], [20], [30]], 0) == 30"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.35s\n\n"
+  }
+}

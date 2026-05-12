@@ -1,0 +1,51 @@
+{
+  "task_id": 285,
+  "task_prompt": "Write a function that checks whether a string contains the 'a' character followed by two or three 'b' characters.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "boolean_true_to_false",
+  "status": "repaired",
+  "final_code": "import re\ndef text_match_two_three(text):\n    patterns = 'ab{2,3}'\n    return bool(re.search(patterns, text))",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 22.97,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef text_match_two_three(text):\n        patterns = 'ab{2,3}'\n        if re.search(patterns,  text):\n                return False\n        else:\n                return False",
+      "tests_passed_before_patch": false,
+      "test_output": "..F                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert text_match_two_three(\"abbbba\")==(True)\nE       AssertionError: assert False == True\nE        +  where False = text_match_two_three('abbbba')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmptvm1plo4\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmptvm1plo4\\test_solution.py::test_case_2\n1 failed, 2 passed in 0.38s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `text_match_two_three()` is supposed to return `True` when the string contains 'a' followed by **exactly** 2 or 3 'b's, but it's currently returning `False` for all cases (including the correct one in test_case_2).\n\n2. **Evidence**:\n   - The test case `\"abbbba\"` should return `True` because it contains `\"abbb\"` (which matches the pattern 'a' followed by 3 'b's).\n   - The current implementation always returns `False` regardless of input, as both branches return `False`.\n   - The regex pattern `'ab{2,3}'` is correct (matches 'a' followed by 2-3 'b's), but the logic is inverted.\n\n3. **Failure type**:\n   - **Logical Error**: The function's return logic is backwards. It returns `False` when it should return `True` for matches, and vice versa.\n\n4. **Suspected location**:\n   The issue is in the function's return statements:\n   ```python\n   if re.search(patterns, text):\n       return False  # Should be True for",
+      "hypothesis": "Here's the structured analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `text_match_two_three()` **always returns `False`**, even when the input string contains `'a'` followed by **exactly 2 or 3 `'b'`s** (e.g., `\"abbb\"` or `\"abbbb\"`). This contradicts the intended behavior, which should return `True` for valid matches.\n\n---\n\n### **2. Evidence**\n- **Test Case 1**: `\"abbbba\"` contains `\"abbb\"` (valid match), but the function returns `False` (incorrect).\n- **Test Case 2**: `\"abc\"` does **not** contain the pattern, and the function should return `False` (correctly returns `False`).\n- **Test Case 3**: `\"abbbbb\"` contains `\"abbbb\"` (4 `'b'`s, invalid), and the function should return `False` (correctly returns `False`).\n- **Root Issue**: The regex `'ab{2,3}'` is correct, but the logic is inverted:\n  ```python\n  if re.search(patterns, text):  # Matches when it should return True",
+      "patched_code": "import re\ndef text_match_two_three(text):\n    patterns = 'ab{2,3}'\n    return bool(re.search(patterns, text))",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.3
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef text_match_two_three(text):\n    patterns = 'ab{2,3}'\n    return bool(re.search(patterns, text))",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            4      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 11      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the solution (`solution.py`) and the test file (`test_solution.py`). This means:\n- All executable statements in the function (`text_match_two_three`) were executed during testing.\n- No statements were left untested.\n\n### **2. Missing or Weakly Tested Cases**\nWhile the coverage is **100%**, we should analyze whether the tests adequately verify all possible edge cases and intended behavior of the regex pattern `ab{2,3}`.\n\n#### **Potential Weaknesses:**\n- **No test for empty string (`\"\"`)** \u2013 Does the function handle empty input correctly?\n- **No test for strings with no match** \u2013 Does it return `False` for cases like `\"abc\"`, `\"aab\"`, or `\"bbb\"`?\n- **No test for multiple matches** \u2013 Does it correctly identify cases like `\"abbbab\"` (two valid matches)?\n- **No test for overlapping matches** \u2013 Does it handle cases like `\"abbbab\"` (where `\"abbb\"` and `\"bbab\"` overlap)?\n- **No test for Unicode or non-ASCII characters** \u2013",
+    "generated_tests": [
+      "assert text_match_two_three(\"abbb\")==(True)",
+      "assert text_match_two_three(\"abbbc\")==(False)",
+      "assert text_match_two_three(\"aabbb\")==(False)"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "....FF                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert text_match_two_three(\"abbbc\")==(False)\nE       AssertionError: assert True == False\nE        +  where True = text_match_two_three('abbbc')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbf0zghvl\\test_solution.py:16: AssertionError\n_________________________________ test_case_5 _________________________________\n\n    def test_case_5():\n>       assert text_match_two_three(\"aabbb\")==(False)\nE       AssertionError: assert True == False\nE        +  where True = text_match_two_three('aabbb')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbf0zghvl\\test_solution.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbf0zghvl\\test_solution.py::test_case_4\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpbf0zghvl\\test_solution.py::test_case_5\n2 failed, 4 passed in 0.38s\n\n"
+  }
+}

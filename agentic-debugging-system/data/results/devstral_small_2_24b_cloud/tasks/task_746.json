@@ -1,0 +1,51 @@
+{
+  "task_id": 746,
+  "task_prompt": "Write a function to find area of a sector. The function takes the radius and angle as inputs. Function should return None if the angle is larger than 360 degrees.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_pow_to_mul",
+  "status": "repaired",
+  "final_code": "import math\ndef sector_area(r,a):\n    if a > 360:\n        return None\n    return (math.pi*r*r) * (a/360)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 45.21,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef sector_area(r,a):\n    if a > 360:\n        return None\n    return (math.pi*r*2) * (a/360)",
+      "tests_passed_before_patch": false,
+      "test_output": "FF.                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert sector_area(4,45)==6.283185307179586\nE       assert 3.141592653589793 == 6.283185307179586\nE        +  where 3.141592653589793 = sector_area(4, 45)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp0f4octws\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert sector_area(9,45)==31.808625617596654\nE       assert 7.0685834705770345 == 31.808625617596654\nE        +  where 7.0685834705770345 = sector_area(9, 45)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp0f4octws\\test_solution.py:7: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp0f4octws\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp0f4octws\\test_solution.py::test_case_1\n2 failed, 1 passed in 0.35s\n\n",
+      "failure": "Let's analyze the failure:\n\n1. **What failed**:\n   The function `sector_area()` is returning incorrect values for the area of a sector. The test cases show that the calculated area is exactly half of what it should be.\n\n2. **Evidence**:\n   - For radius=4, angle=45\u00b0, expected area is 6.283185307179586 but got 3.141592653589793 (which is exactly half)\n   - For radius=9, angle=45\u00b0, expected area is 31.808625617596654 but got 7.0685834705770345 (again exactly half)\n\n3. **Failure type**:\n   This is a calculation error in the formula implementation.\n\n4. **Suspected location**:\n   The error is in the formula `(math.pi*r*2) * (a/360)`. The correct formula for sector area should be `(math.pi*r*r) * (a/360)` (\u03c0r\u00b2 \u00d7 (\u03b8/360)),",
+      "hypothesis": "### 1. Failing Behavior\nThe function `sector_area(r, a)` is returning values that are exactly half of the expected area for a given sector. This indicates a systematic error in the calculation formula.\n\n### 2. Evidence\n- For `radius=4`, `angle=45\u00b0`:\n  - Expected area: `6.283185307179586`\n  - Actual output: `3.141592653589793` (exactly half)\n- For `radius=9`, `angle=45\u00b0`:\n  - Expected area: `31.808625617596654`\n  - Actual output: `7.0685834705770345` (again exactly half)\n\n### 3. Root Cause\nThe formula used in the function is `(math.pi * r * 2) * (a / 360)`, which simplifies to `2 * math.pi * r * (a / 360)`. This is incorrect because:\n- The correct formula for the area of a sector is",
+      "patched_code": "import math\ndef sector_area(r,a):\n    if a > 360:\n        return None\n    return (math.pi*r*r) * (a/360)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 33.39
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef sector_area(r,a):\n    if a > 360:\n        return None\n    return (math.pi*r*r) * (a/360)",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.69
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            5      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 12      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (12/12 statements covered)\n  - `solution.py`: 100% (5/5 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n- The code and tests are fully covered, meaning all lines of code were executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage report shows 100% line coverage, there are potential edge cases or scenarios that may not be explicitly tested:\n- **Negative radius**: The function does not explicitly handle negative radius values. While mathematically invalid, it might be worth testing how the function behaves (e.g., returns a negative area or raises an error).\n- **Zero radius**: The function may return `0` for `r = 0`, but this edge case might not be tested.\n- **Zero angle**: The function may return `0` for `a = 0`, but this edge case might not be tested.\n- **Non-integer angles**: The function accepts any numeric type for `a`, but floating-point angles (e.g., `a =",
+    "generated_tests": [
+      "assert sector_area(0, 90) == 0",
+      "assert sector_area(5, 180) == 39.269908169872414",
+      "assert sector_area(10, 360) == 314.1592653589793"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.32s\n\n"
+  }
+}

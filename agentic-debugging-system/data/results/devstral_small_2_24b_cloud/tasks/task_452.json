@@ -1,0 +1,39 @@
+{
+  "task_id": 452,
+  "task_prompt": "Write a function that gives loss amount on a sale if the given amount has loss else return 0.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "boundary_gt_to_gte",
+  "status": "repaired",
+  "final_code": "def loss_amount(actual_cost,sale_amount): \n  if(sale_amount >= actual_cost):\n    amount = sale_amount - actual_cost\n    return amount\n  else:\n    return 0",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 13.72,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def loss_amount(actual_cost,sale_amount): \n  if(sale_amount >= actual_cost):\n    amount = sale_amount - actual_cost\n    return amount\n  else:\n    return 0",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.34s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.62
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            5      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 12      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (12/12 statements covered)\n  - `solution.py`: 100% (5/5 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n- The code and tests are fully covered, meaning all lines of code were executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases may not be explicitly tested or could be weakly tested:\n- **Equal sale and actual cost**: `sale_amount == actual_cost` (boundary case where loss is 0).\n- **Negative values**: `actual_cost` or `sale_amount` being negative (invalid input, but the function may not handle it).\n- **Zero values**: `actual_cost = 0` or `sale_amount = 0` (edge case for zero cost or zero sale).\n- **Large numbers**: Very large values for `actual_cost` or `sale_amount` (potential overflow or precision issues, though Python handles big integers well).\n- **Floating-point precision**: If `actual_cost` or",
+    "generated_tests": [
+      "assert loss_amount(0, 0) == 0",
+      "assert loss_amount(1000, 1000) == 0",
+      "assert loss_amount(500, 300) == 0"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.33s\n\n"
+  }
+}

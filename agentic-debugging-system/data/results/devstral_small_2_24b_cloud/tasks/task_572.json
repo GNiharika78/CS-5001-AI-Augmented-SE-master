@@ -1,0 +1,51 @@
+{
+  "task_id": 572,
+  "task_prompt": "Write a python function to remove duplicate numbers from a given number of lists.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_eq_to_neq",
+  "status": "repaired",
+  "final_code": "def two_unique_nums(nums):\n  return [i for i in nums if nums.count(i) == 1]",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 29.58,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def two_unique_nums(nums):\n  return [i for i in nums if nums.count(i)!=1]",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert two_unique_nums([1,2,3,2,3,4,5]) == [1, 4, 5]\nE       assert [2, 3, 2, 3] == [1, 4, 5]\nE         \nE         At index 0 diff: 2 != 1\nE         Left contains one more item: 3\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp20h0g7tv\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert two_unique_nums([1,2,3,2,4,5]) == [1, 3, 4, 5]\nE       assert [2, 2] == [1, 3, 4, 5]\nE         \nE         At index 0 diff: 2 != 1\nE         Right contains 2 more items, first extra item: 4\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp20h0g7tv\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert two_unique_nums([1,2,3,4,5]) == [1, 2, 3, 4, 5]\nE       assert [] == [1, 2, 3, 4, 5]\nE         \nE         Right contains 5 more items, first extra item: 1\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp20h0g7tv\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp20h0g7tv\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp20h0g7tv\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp20h0g7tv\\test_solution.py::test_case_2\n3 failed in 0.35s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   The function `two_unique_nums` is supposed to return numbers that appear exactly once in the input list, but it's incorrectly returning numbers that appear more than once (i.e., duplicates).\n\n2. **Evidence**:\n   - Test Case 0:\n     - Input: `[1, 2, 3, 2, 3, 4, 5]`\n     - Expected Output: `[1, 4, 5]` (numbers appearing once)\n     - Actual Output: `[2, 3, 2, 3]` (numbers appearing more than once)\n   - Test Case 1:\n     - Input: `[1, 2, 3, 2, 4, 5]`\n     - Expected Output: `[1, 3, 4, 5]` (numbers appearing once)\n     - Actual Output: `[2, 2]` (numbers appearing more than once)\n\n3. **Failure type**:\n   - **Logical Error**: The function's logic is inverted. It returns numbers where `nums.count(i) != 1` (i.e., duplicates), but it should return numbers where `nums.count(i) == 1",
+      "hypothesis": "### Failure Analysis Report\n\n1. **Failing Behavior**:\n   The function `two_unique_nums` incorrectly returns numbers that appear more than once (duplicates) instead of numbers that appear exactly once (unique numbers).\n\n2. **Evidence**:\n   - Test Case 0:\n     - Input: `[1, 2, 3, 2, 3, 4, 5]`\n     - Expected Output: `[1, 4, 5]` (numbers appearing once)\n     - Actual Output: `[2, 3, 2, 3]` (numbers appearing more than once)\n   - Test Case 1:\n     - Input: `[1, 2, 3, 2, 4, 5]`\n     - Expected Output: `[1, 3, 4, 5]` (numbers appearing once)\n     - Actual Output: `[2, 2]` (numbers appearing more than once)\n\n3. **Root Cause**:\n   The condition in the list comprehension is inverted. The function checks `nums.count(i) != 1`, which filters out numbers that appear exactly once and keeps duplicates. The correct condition should be `nums.count(i) == 1`.\n\n4. **Why This Expl",
+      "patched_code": "def two_unique_nums(nums):\n  return [i for i in nums if nums.count(i) == 1]",
+      "decision": "patch_and_retry",
+      "duration_seconds": 14.36
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def two_unique_nums(nums):\n  return [i for i in nums if nums.count(i) == 1]",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.65
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (9/9 statements covered)\n  - `solution.py`: 100% (2/2 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n- The current test suite fully covers all lines of the code, including the function `two_unique_nums` and its test cases.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases or scenarios may not be explicitly tested or could be weakly tested:\n1. **Empty List**: The function's behavior with an empty list (`nums = []`).\n2. **All Duplicates**: A list where all elements are duplicates (e.g., `[1, 1, 2, 2]`).\n3. **Single Element**: A list with only one element (e.g., `[1]`).\n4. **Large Inputs**: Performance with very large lists (though this is more of a performance test than a coverage issue).\n5. **Mixed Data Types**: Lists with mixed data types (e.g., `[1, '1',",
+    "generated_tests": [
+      "assert two_unique_nums([1,1,2,2,3,3]) == []",
+      "assert two_unique_nums([10,20,30,20,10]) == [30]",
+      "assert two_unique_nums([1,1,1,2,2,3]) == [3]"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.32s\n\n"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "task_id": 756,
+  "task_prompt": "Write a function that matches a string that has an 'a' followed by one or more 'b's. https://www.w3resource.com/python-exercises/re/python-re-exercise-3.php",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "import re\ndef text_match_zero_one(text):\n        patterns = 'ab-?'\n        if re.search(patterns,  text):\n                return True\n        else:\n                return False",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 11.56,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import re\ndef text_match_zero_one(text):\n        patterns = 'ab-?'\n        if re.search(patterns,  text):\n                return True\n        else:\n                return False",
+      "tests_passed_before_patch": true,
+      "test_output": "......                                                                   [100%]\n6 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.59
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            6      0   100%\ntest_solution.py      13      0   100%\n------------------------------------------------\nTOTAL                 19      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (19/19 statements covered)\n  - `solution.py`: 6/6 statements covered (100%)\n  - `test_solution.py`: 13/13 statements covered (100%)\n\nThe current test suite achieves full statement coverage for both the implementation (`solution.py`) and the test file (`test_solution.py`). However, this does not necessarily mean the function is thoroughly tested for all edge cases or correctness.\n\n---\n\n#### 2. Missing or Weakly Tested Cases\nThe current implementation (`text_match_zero_one`) has a **logical flaw** in its regex pattern (`'ab-?'`), which does not correctly match the requirement (\"a string that has an 'a' followed by one or more 'b's\"). The pattern `'ab-?'` matches:\n- `'ab'` (correct, but only one 'b')\n- `'a'` (incorrect, no 'b's)\n- `'ab-'` (incorrect, includes a hyphen)\n- `'a-'` (incorrect, no 'b's)\n\n**Weakly tested or missing cases**:\n1.",
+    "generated_tests": [
+      "assert text_match_zero_one(\"ab\") == True",
+      "assert text_match_zero_one(\"a\") == False",
+      "assert text_match_zero_one(\"abb\") == True"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": ".........                                                                [100%]\n9 passed in 0.32s\n\n"
+  }
+}

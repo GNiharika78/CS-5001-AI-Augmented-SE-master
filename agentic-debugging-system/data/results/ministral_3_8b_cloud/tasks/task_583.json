@@ -1,0 +1,51 @@
+{
+  "task_id": 583,
+  "task_prompt": "Write a function which returns nth catalan number.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def catalan_number(num):\n    if num <= 1:\n        return 1\n    res_num = 0\n    for i in range(num):\n        res_num += catalan_number(i) * catalan_number(num-i-1)\n    return res_num",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 22.99,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def catalan_number(num):\n    if num <=1:\n         return 1   \n    res_num = 0\n    for i in range(num):\n        res_num += catalan_number(i) + catalan_number(num-i-1)\n    return res_num",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert catalan_number(10)==16796\nE       assert 26244 == 16796\nE        +  where 26244 = catalan_number(10)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq7u63utc\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert catalan_number(9)==4862\nE       assert 8748 == 4862\nE        +  where 8748 = catalan_number(9)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq7u63utc\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert catalan_number(7)==429\nE       assert 972 == 429\nE        +  where 972 = catalan_number(7)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq7u63utc\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq7u63utc\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq7u63utc\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpq7u63utc\\test_solution.py::test_case_2\n3 failed in 0.41s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function `catalan_number()` is returning incorrect values for Catalan numbers. The expected values for n=7,9,10 are 429, 4862, and 16796 respectively, but the function returns 972, 8748, and 26244.\n\n2. **Evidence**:\n   - For n=7: Expected 429, got 972\n   - For n=9: Expected 4862, got 8748\n   - For n=10: Expected 16796, got 26244\n   - The function's recursive formula is incorrect in its implementation\n\n3. **Failure type**:\n   The function is implementing the Catalan number recurrence relation incorrectly. The standard recurrence is:\n   C(n) = \u03a3 (from i=0 to n-1) [C(i) * C(n-i-1)]\n   But the current implementation is adding C(i) + C(n-i-1) instead of multiplying them.\n\n4. **Suspected location**:\n   The problematic line is:",
+      "hypothesis": "Here's the detailed analysis and repair plan for the failing Catalan number function:\n\n---\n\n### **1. Failing Behavior**\nThe function `catalan_number(num)` returns incorrect values for `n > 1`. For example:\n- `n=7`: Expected **429**, got **972**\n- `n=9`: Expected **4862**, got **8748**\n- `n=10`: Expected **16796**, got **26244**\n\n---\n\n### **2. Evidence**\n- The function uses a recursive formula but incorrectly implements it as:\n  ```python\n  res_num += catalan_number(i) + catalan_number(num-i-1)  # \u274c Addition instead of multiplication\n  ```\n- The correct recurrence for Catalan numbers is:\n  \\[\n  C(n) = \\sum_{i=0}^{n-1} C(i) \\times C(n-i-1)\n  \\]\n  (where \\( C(0) = C(1) = 1 \\)).\n\n---\n\n### **3. Root Cause**\nThe function **adds** the results of `catalan_number(i)` and `catalan_number(num-i-1)` instead",
+      "patched_code": "def catalan_number(num):\n    if num <= 1:\n        return 1\n    res_num = 0\n    for i in range(num):\n        res_num += catalan_number(i) * catalan_number(num-i-1)\n    return res_num",
+      "decision": "patch_and_retry",
+      "duration_seconds": 13.67
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def catalan_number(num):\n    if num <= 1:\n        return 1\n    res_num = 0\n    for i in range(num):\n        res_num += catalan_number(i) * catalan_number(num-i-1)\n    return res_num",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.67
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            7      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 14      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All **7 statements** in `catalan_number()` were executed during testing.\n- All **7 statements** in the test file were executed.\n\nHowever, **100% coverage does not necessarily mean robust testing**\u2014it only confirms that all lines were run at least once. We must check if edge cases, invalid inputs, or boundary conditions were tested.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nFrom the code and typical Catalan number expectations, the following cases **may not have been explicitly tested**:\n1. **Negative Input (`num < 0`)**\n   - The function does not handle negative numbers (should it return `0`, raise an error, or behave differently?).\n   - **Current behavior**: Recursion will eventually hit `num <= 1` but may cause infinite recursion or incorrect results.\n\n2. **Non-integer Input (`num` is float/string)**\n   - The function assumes `num` is an integer. Passing a float (e.g., `2.5`) or string (",
+    "generated_tests": [
+      "assert catalan_number(0) == 1",
+      "assert catalan_number(5) == 42",
+      "assert catalan_number(15) == 9694845"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.76s\n\n"
+  }
+}

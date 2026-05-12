@@ -1,0 +1,39 @@
+{
+  "task_id": 407,
+  "task_prompt": "Write a function to create the next bigger number by rearranging the digits of a given number.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def rearrange_bigger(n):\n    nums = list(str(n))\n    for i in range(len(nums)-2,-1,-1):\n        if nums[i] < nums[i-1]:\n            z = nums[i:]\n            y = min(filter(lambda x: x > z[0], z))\n            z.remove(y)\n            z.sort()\n            nums[i:] = [y] + z\n            return int(\"\".join(nums))\n    return False",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 15.18,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def rearrange_bigger(n):\n    nums = list(str(n))\n    for i in range(len(nums)-2,-1,-1):\n        if nums[i] < nums[i-1]:\n            z = nums[i:]\n            y = min(filter(lambda x: x > z[0], z))\n            z.remove(y)\n            z.sort()\n            nums[i:] = [y] + z\n            return int(\"\".join(nums))\n    return False",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.32s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.59
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           11      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 18      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (18/18 statements covered)\n- **Solution Code Coverage**: 100% (11/11 statements covered)\n- **Test Code Coverage**: 100% (7/7 statements covered)\n\nThe coverage report indicates that all lines of code in both the solution and test files are executed during testing. This is a strong indicator that the test suite is comprehensive.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, this does not necessarily mean all edge cases or logical paths are thoroughly tested. Potential weakly tested cases might include:\n- **Single-digit numbers**: The function should return `False` since no rearrangement can produce a larger number.\n- **Numbers with all digits in descending order**: The function should return `False` (e.g., `321`).\n- **Numbers with duplicate digits**: The function should still work correctly (e.g., `121` \u2192 `211`).\n- **Numbers with leading zeros after rearrangement**: The function should handle this gracefully (though the current implementation may not produce such cases).\n-",
+    "generated_tests": [
+      "assert rearrange_bigger(1234) == 1243",
+      "assert rearrange_bigger(4321) == False",
+      "assert rearrange_bigger(513) == 531"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...FF.                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert rearrange_bigger(1234) == 1243\nE       assert 2134 == 1243\nE        +  where 2134 = rearrange_bigger(1234)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdws2crcg\\test_solution.py:13: AssertionError\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert rearrange_bigger(4321) == False\n               ^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdws2crcg\\test_solution.py:16: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nn = 4321\n\n    def rearrange_bigger(n):\n        nums = list(str(n))\n        for i in range(len(nums)-2,-1,-1):\n            if nums[i] < nums[i-1]:\n                z = nums[i:]\n>               y = min(filter(lambda x: x > z[0], z))\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE               ValueError: min() iterable argument is empty\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdws2crcg\\solution.py:6: ValueError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdws2crcg\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpdws2crcg\\test_solution.py::test_case_4\n2 failed, 4 passed in 0.35s\n\n"
+  }
+}

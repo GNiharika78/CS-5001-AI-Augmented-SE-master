@@ -1,0 +1,51 @@
+{
+  "task_id": 740,
+  "task_prompt": "Write a function to convert the given tuple to a key-value dictionary using adjacent elements. https://www.geeksforgeeks.org/python-convert-tuple-to-adjacent-pair-dictionary/",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def tuple_to_dict(test_tup):\n    return dict(zip(test_tup[::2], test_tup[1::2]))",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 22.11,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def tuple_to_dict(test_tup):\n  res = dict(test_tup[idx : idx - 2] for idx in range(0, len(test_tup), 2))\n  return (res) ",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert tuple_to_dict((1, 5, 7, 10, 13, 5)) == {1: 5, 7: 10, 13: 5}\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm0xej5m9\\test_solution.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\ntest_tup = (1, 5, 7, 10, 13, 5)\n\n    def tuple_to_dict(test_tup):\n>     res = dict(test_tup[idx : idx - 2] for idx in range(0, len(test_tup), 2))\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE     ValueError: dictionary update sequence element #0 has length 4; 2 is required\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm0xej5m9\\solution.py:2: ValueError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert tuple_to_dict((1, 2, 3, 4, 5, 6)) == {1: 2, 3: 4, 5: 6}\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm0xej5m9\\test_solution.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\ntest_tup = (1, 2, 3, 4, 5, 6)\n\n    def tuple_to_dict(test_tup):\n>     res = dict(test_tup[idx : idx - 2] for idx in range(0, len(test_tup), 2))\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE     ValueError: dictionary update sequence element #0 has length 4; 2 is required\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm0xej5m9\\solution.py:2: ValueError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert tuple_to_dict((7, 8, 9, 10, 11, 12)) == {7: 8, 9: 10, 11: 12}\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm0xej5m9\\test_solution.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\ntest_tup = (7, 8, 9, 10, 11, 12)\n\n    def tuple_to_dict(test_tup):\n>     res = dict(test_tup[idx : idx - 2] for idx in range(0, len(test_tup), 2))\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE     ValueError: dictionary update sequence element #0 has length 4; 2 is required\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm0xej5m9\\solution.py:2: ValueError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm0xej5m9\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm0xej5m9\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpm0xej5m9\\test_solution.py::test_case_2\n3 failed in 0.39s\n\n",
+      "failure": "Here's the analysis of the failure:\n\n1. **What failed**:\n   The function failed to correctly convert the tuple into a dictionary of adjacent key-value pairs. Instead of producing `{1: 5, 7: 10, 13: 5}`, it raised a `ValueError` because the slicing logic was incorrect.\n\n2. **Evidence**:\n   - Input tuple: `(1, 5, 7, 10, 13, 5)`\n   - Expected output: `{1: 5, 7: 10, 13: 5}`\n   - Actual error: `ValueError: dictionary update sequence element #0 has length 4; 2 is required`\n   - The error occurred because `test_tup[idx : idx - 2]` was trying to create a slice with a negative step, which is invalid.\n\n3. **Failure type**:\n   - **Logical error**: The slicing logic was incorrect, causing Python to try to create invalid slices.\n   - **Syntax error**: The slice operation `idx : idx - 2` is invalid because the step cannot be negative in this context.\n\n4. **Suspected location**:\n   The problematic line is:\n   ```",
+      "hypothesis": "Here's the detailed analysis and repair plan for the failing function:\n\n---\n\n### **1. Failing Behavior**\nThe function `tuple_to_dict` was supposed to convert a tuple of adjacent key-value pairs into a dictionary (e.g., `(1, 5, 7, 10, 13, 5)` \u2192 `{1: 5, 7: 10, 13: 5}`). Instead, it raised a `ValueError` because the slicing logic was incorrect.\n\n---\n\n### **2. Evidence**\n- **Input**: `(1, 5, 7, 10, 13, 5)`\n- **Expected Output**: `{1: 5, 7: 10, 13: 5}`\n- **Actual Error**:\n  ```\n  ValueError: dictionary update sequence element #0 has length 4; 2 is required\n  ```\n- **Root Cause of Error**:\n  The line `test_tup[idx : idx - 2]` was trying to create a slice where the step is negative (`idx - 2`), which is invalid in Python slicing. Additionally, the slice `idx : idx - 2` is nonsensical because it would",
+      "patched_code": "def tuple_to_dict(test_tup):\n    return dict(zip(test_tup[::2], test_tup[1::2]))",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.27
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def tuple_to_dict(test_tup):\n    return dict(zip(test_tup[::2], test_tup[1::2]))",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.67
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            2      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                  9      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and test file (`test_solution.py`). This means:\n- All statements in `tuple_to_dict()` were executed during testing.\n- All test cases in `test_solution.py` passed without missing any branches or edge cases.\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nWhile the coverage is perfect, we should consider whether the tests cover **all possible edge cases** for robustness. The function `tuple_to_dict()` assumes:\n- The input tuple has an **even number of elements** (since it pairs adjacent elements).\n- The input is a **non-empty tuple** (otherwise, `test_tup[::2]` and `test_tup[1::2]` would both be empty, leading to an empty dict, which may or may not be intended).\n\n#### **Potential Weaknesses:**\n1. **Odd-length tuples** \u2192 The function will raise an `IndexError` (e.g., `(1, 2, 3)` \u2192 `zip((1, 3), (2,))` \u2192 `ValueError` when converting to dict).\n2. **Empty tuple**",
+    "generated_tests": [
+      "assert tuple_to_dict((10, 20, 30, 40, 50)) == {10: 20, 30: 40, 50: None}",
+      "assert tuple_to_dict(()) == {}",
+      "assert tuple_to_dict(('a', 'b', 'c', 'd', 'e', 'f', 'g')) == {'a': 'b', 'c': 'd', 'e': 'f'}"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...F..                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert tuple_to_dict((10, 20, 30, 40, 50)) == {10: 20, 30: 40, 50: None}\nE       assert {10: 20, 30: 40} == {10: 20, 30: 40, 50: None}\nE         \nE         Omitting 2 identical items, use -vv to show\nE         Right contains 1 more item:\nE         {50: None}\nE         Use -v to get more diff\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4wteehqq\\test_solution.py:13: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp4wteehqq\\test_solution.py::test_case_3\n1 failed, 5 passed in 0.39s\n\n"
+  }
+}

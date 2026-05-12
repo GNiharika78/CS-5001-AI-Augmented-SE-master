@@ -1,0 +1,51 @@
+{
+  "task_id": 759,
+  "task_prompt": "Write a function to check whether a given string is a decimal number with a precision of 2.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def is_decimal(num):\n    import re\n    dnumre = re.compile(r\"\"\"^[0-9]+(\\.[0-9]{1,2})?$\"\"\")\n    result = dnumre.search(num)\n    return bool(result)",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 22.77,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def is_decimal(num):\n    import re\n    dnumre = re.compile(r\"\"\"^[0-9]-(\\.[0-9]{1,2})?$\"\"\")\n    result = dnumre.search(num)\n    return bool(result)",
+      "tests_passed_before_patch": false,
+      "test_output": "F..F.                                                                    [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert is_decimal('123.11')==True\nE       AssertionError: assert False == True\nE        +  where False = is_decimal('123.11')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpilw2nv9v\\test_solution.py:4: AssertionError\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert is_decimal('1.11')==True\nE       AssertionError: assert False == True\nE        +  where False = is_decimal('1.11')\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpilw2nv9v\\test_solution.py:13: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpilw2nv9v\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpilw2nv9v\\test_solution.py::test_case_3\n2 failed, 3 passed in 0.39s\n\n",
+      "failure": "Here's the analysis of the failures:\n\n1. **What failed**:\n   The function `is_decimal()` is not correctly identifying valid decimal numbers with precision of 2. It's failing to match numbers like \"123.11\" and \"1.11\" that should be considered valid.\n\n2. **Evidence**:\n   - Test case 0: `'123.11'` returns `False` when it should return `True`\n   - Test case 3: `'1.11'` returns `False` when it should return `True`\n   - The regex pattern `^[0-9]-(\\.[0-9]{1,2})?$` has several issues:\n     * It requires a hyphen (`-`) after the digits (which isn't in the test cases)\n     * The decimal part is optional but the pattern is incorrectly structured\n     * The pattern doesn't properly handle numbers with decimal points\n\n3. **Failure type**:\n   The regex pattern is too restrictive and doesn't match the expected format of decimal numbers with precision of 2.\n\n4. **Suspected location**:\n   The regex pattern in the function needs to be corrected. The current pattern `^[0-9]-(\\.[0",
+      "hypothesis": "Here's the detailed analysis and repair plan for the `is_decimal()` function:\n\n---\n\n### **1. Failing Behavior**\nThe function incorrectly returns `False` for valid decimal numbers with **exactly 2 decimal places** (e.g., `\"123.11\"`, `\"1.11\"`), while also incorrectly rejecting valid integers (e.g., `\"123\"` should be allowed if the requirement is to check for numbers with **up to 2 decimal places**).\n\n---\n\n### **2. Evidence**\n- **Test Case 0:** `'123.11'` \u2192 Returns `False` (should be `True`).\n- **Test Case 3:** `'1.11'` \u2192 Returns `False` (should be `True`).\n- **Test Case (hypothetical):** `'123'` \u2192 Should return `True` (if the requirement is to allow integers as well).\n- **Current Regex:** `^[0-9]-(\\.[0-9]{1,2})?$` has:\n  - A **mandatory hyphen (`-`)** after digits (incorrect).\n  - The decimal part is **incorrectly structured** (e.g., `(\\.[",
+      "patched_code": "def is_decimal(num):\n    import re\n    dnumre = re.compile(r\"\"\"^[0-9]+(\\.[0-9]{1,2})?$\"\"\")\n    result = dnumre.search(num)\n    return bool(result)",
+      "decision": "patch_and_retry",
+      "duration_seconds": 13.19
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def is_decimal(num):\n    import re\n    dnumre = re.compile(r\"\"\"^[0-9]+(\\.[0-9]{1,2})?$\"\"\")\n    result = dnumre.search(num)\n    return bool(result)",
+      "tests_passed_before_patch": true,
+      "test_output": ".....                                                                    [100%]\n5 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.67
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            5      0   100%\ntest_solution.py      11      0   100%\n------------------------------------------------\nTOTAL                 16      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the `solution.py` (5 statements) and `test_solution.py` (11 statements). This means:\n- All executable lines in `is_decimal()` were tested.\n- All test cases in `test_solution.py` executed successfully.\n\n### **2. Missing or Weakly Tested Cases**\nDespite full coverage, we should consider edge cases that might not have been explicitly tested but are still important for robustness:\n\n#### **Potential Weaknesses in Current Implementation:**\n- **Empty string (`\"\"`)** \u2192 Should return `False` (handled by regex `^` anchor).\n- **Leading/trailing whitespace (`\" 123.45 \"`)** \u2192 Should return `False` (regex does not account for whitespace).\n- **Negative numbers (`\"-123.45\"`)** \u2192 Should return `False` (regex only allows `+` digits).\n- **Scientific notation (`\"1.23e-4\"`)** \u2192 Should return `False` (regex does not match scientific notation).\n- **More than 2 decimal places (`\"123.456\"`)** \u2192",
+    "generated_tests": [
+      "assert is_decimal('0.00') == True",
+      "assert is_decimal('123.') == False",
+      "assert is_decimal('1.2') == True"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "........                                                                 [100%]\n8 passed in 0.36s\n\n"
+  }
+}

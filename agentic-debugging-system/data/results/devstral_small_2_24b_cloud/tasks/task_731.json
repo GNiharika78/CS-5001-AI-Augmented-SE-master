@@ -1,0 +1,51 @@
+{
+  "task_id": 731,
+  "task_prompt": "Write a function to find the lateral surface area of a cone given radius r and the height h.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "import math\ndef lateralsurface_cone(r,h):\n  l = math.sqrt(r**2 + h**2)\n  LSA = math.pi * r  * l\n  return LSA",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 29.5,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef lateralsurface_cone(r,h):\n  l = math.sqrt(r + r + h * h)\n  LSA = math.pi * r  * l\n  return LSA",
+      "tests_passed_before_patch": false,
+      "test_output": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert lateralsurface_cone(5,12)==204.20352248333654\nE       assert 194.9306977984587 == 204.20352248333654\nE        +  where 194.9306977984587 = lateralsurface_cone(5, 12)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7b2shve1\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert lateralsurface_cone(10,15)==566.3586699569488\nE       assert 491.73703117285083 == 566.3586699569488\nE        +  where 491.73703117285083 = lateralsurface_cone(10, 15)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7b2shve1\\test_solution.py:7: AssertionError\n_________________________________ test_case_2 _________________________________\n\n    def test_case_2():\n>       assert lateralsurface_cone(19,17)==1521.8090132193388\nE       assert 1079.3874145715222 == 1521.8090132193388\nE        +  where 1079.3874145715222 = lateralsurface_cone(19, 17)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7b2shve1\\test_solution.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7b2shve1\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7b2shve1\\test_solution.py::test_case_1\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp7b2shve1\\test_solution.py::test_case_2\n3 failed in 0.34s\n\n",
+      "failure": "### Failure Analysis Report\n\n1. **What failed**:\n   The function `lateralsurface_cone(r, h)` is not correctly calculating the lateral surface area (LSA) of a cone. The test cases show that the function's output does not match the expected values.\n\n2. **Evidence**:\n   - For `r = 5`, `h = 12`, the function returns `194.9306977984587` but the expected value is `204.20352248333654`.\n   - For `r = 10`, `h = 15`, the function returns `491.73703117285083` but the expected value is `566.3586699569488`.\n\n3. **Failure type**:\n   - **Logical Error**: The formula for calculating the slant height `l` is incorrect. The current implementation uses `math.sqrt(r + r + h * h)`, which is wrong. The correct formula for the slant height `l` of a cone is `math.sqrt(r**2",
+      "hypothesis": "### Failure Analysis Report\n\n1. **Failing behavior**:\n   The function `lateralsurface_cone(r, h)` incorrectly calculates the lateral surface area (LSA) of a cone. The computed values do not match the expected results for given test cases.\n\n2. **Evidence**:\n   - For `r = 5`, `h = 12`:\n     - Function output: `194.9306977984587`\n     - Expected output: `204.20352248333654`\n   - For `r = 10`, `h = 15`:\n     - Function output: `491.73703117285083`\n     - Expected output: `566.3586699569488`\n\n3. **Root cause**:\n   The formula for the slant height `l` is incorrect. The current implementation uses `math.sqrt(r + r + h * h)`, which is equivalent to `math.sqrt(2r + h\u00b2)`. The correct formula for the slant height `l` of a cone is",
+      "patched_code": "import math\ndef lateralsurface_cone(r,h):\n  l = math.sqrt(r**2 + h**2)\n  LSA = math.pi * r  * l\n  return LSA",
+      "decision": "patch_and_retry",
+      "duration_seconds": 14.85
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "import math\ndef lateralsurface_cone(r,h):\n  l = math.sqrt(r**2 + h**2)\n  LSA = math.pi * r  * l\n  return LSA",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.30s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.59
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            5      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 12      0   100%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 100% (12/12 statements covered)\n  - `solution.py`: 100% (5/5 statements covered)\n  - `test_solution.py`: 100% (7/7 statements covered)\n- The code and tests are fully covered, meaning all lines of code were executed during testing.\n\n#### 2. Missing or Weakly Tested Cases\nWhile the coverage is 100%, the following edge cases or scenarios may not have been thoroughly tested:\n- **Zero or negative values for `r` or `h`**: The function may not handle these gracefully (e.g., `r = 0`, `h = 0`, or negative values).\n- **Floating-point precision**: Large values of `r` or `h` might lead to precision issues in the calculation of `l` or `LSA`.\n- **Non-numeric inputs**: The function may fail if `r` or `h` are not numbers (e.g., strings, `None`).\n- **Extreme values**: Very large or very small values of `r` or `h` (e",
+    "generated_tests": [
+      "assert lateralsurface_cone(3, 4) == 75.39822368615503",
+      "assert lateralsurface_cone(7, 24) == 580.6443924218321",
+      "assert lateralsurface_cone(1, 1) == 4.442882938158366"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...FF.                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert lateralsurface_cone(3, 4) == 75.39822368615503\nE       assert 47.12388980384689 == 75.39822368615503\nE        +  where 47.12388980384689 = lateralsurface_cone(3, 4)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn9rvvsyy\\test_solution.py:13: AssertionError\n_________________________________ test_case_4 _________________________________\n\n    def test_case_4():\n>       assert lateralsurface_cone(7, 24) == 580.6443924218321\nE       assert 549.7787143782137 == 580.6443924218321\nE        +  where 549.7787143782137 = lateralsurface_cone(7, 24)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn9rvvsyy\\test_solution.py:16: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn9rvvsyy\\test_solution.py::test_case_3\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpn9rvvsyy\\test_solution.py::test_case_4\n2 failed, 4 passed in 0.34s\n\n"
+  }
+}

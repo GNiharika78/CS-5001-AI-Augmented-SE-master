@@ -1,0 +1,39 @@
+{
+  "task_id": 311,
+  "task_prompt": "Write a python function to set the left most unset bit.",
+  "model": "devstral-small-2:24b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def set_left_most_unset_bit(n): \n    if not (n & (n - 1)): \n        return n \n    pos, temp, count = 0, n, 0 \n    while temp: \n        if not (temp & 1): \n            pos = count      \n        count += 1; temp>>=1\n    return (n | (1 << (pos))) ",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 25.13,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def set_left_most_unset_bit(n): \n    if not (n & (n - 1)): \n        return n \n    pos, temp, count = 0, n, 0 \n    while temp: \n        if not (temp & 1): \n            pos = count      \n        count += 1; temp>>=1\n    return (n | (1 << (pos))) ",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.31s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.56
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py            9      1    89%   3\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 16      1    94%\n\n",
+    "coverage_analysis": "### Coverage Analysis Report\n\n#### 1. Coverage Summary\n- **Total Coverage**: 94% (16 statements total, 1 missed)\n- **Solution.py Coverage**: 89% (9 statements, 1 missed)\n- **Test Coverage**: 100% (7 statements, 0 missed)\n\nThe coverage report indicates that the `solution.py` file has 89% coverage, with one statement (line 3) not covered by the existing tests. The test file (`test_solution.py`) has full coverage.\n\n#### 2. Missing or Weakly Tested Cases\nThe missing coverage is on line 3 of `solution.py`, which corresponds to the early return condition:\n```python\nif not (n & (n - 1)):\n    return n\n```\nThis condition checks if `n` is a power of 2 (i.e., has exactly one bit set). The existing tests do not cover the case where `n` is a power of 2, so this branch is never executed.\n\n#### 3. Suggested Additional Tests\nTo achieve 100% coverage, add a test case where `n` is a power of 2. For example:",
+    "generated_tests": [
+      "assert set_left_most_unset_bit(0) == 1",
+      "assert set_left_most_unset_bit(1) == 1",
+      "assert set_left_most_unset_bit(5) == 7"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": false,
+    "generated_test_output": "...F..                                                                   [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_3 _________________________________\n\n    def test_case_3():\n>       assert set_left_most_unset_bit(0) == 1\nE       assert 0 == 1\nE        +  where 0 = set_left_most_unset_bit(0)\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmp27n3z_3e\\test_solution.py:13: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmp27n3z_3e\\test_solution.py::test_case_3\n1 failed, 5 passed in 0.34s\n\n"
+  }
+}

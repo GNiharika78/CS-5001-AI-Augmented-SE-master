@@ -1,0 +1,51 @@
+{
+  "task_id": 463,
+  "task_prompt": "Write a function to find the maximum product subarray of the given array.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_mul_to_plus",
+  "status": "repaired",
+  "final_code": "def max_subarray_product(arr):\n    if not arr:\n        return 0\n\n    max_so_far = float('-inf')\n    max_ending_here = 1\n    min_ending_here = 1\n\n    for num in arr:\n        if num < 0:\n            max_ending_here, min_ending_here = min_ending_here, max_ending_here\n        max_ending_here = max(num, max_ending_here * num)\n        min_ending_here = min(num, min_ending_here * num)\n        max_so_far = max(max_so_far, max_ending_here)\n\n    return max_so_far",
+  "attempts": 2,
+  "llm_calls": 5,
+  "duration": 21.51,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_subarray_product(arr):\n\tn = len(arr)\n\tmax_ending_here = 1\n\tmin_ending_here = 1\n\tmax_so_far = 0\n\tflag = 0\n\tfor i in range(0, n):\n\t\tif arr[i] > 0:\n\t\t\tmax_ending_here = max_ending_here + arr[i]\n\t\t\tmin_ending_here = min (min_ending_here * arr[i], 1)\n\t\t\tflag = 1\n\t\telif arr[i] == 0:\n\t\t\tmax_ending_here = 1\n\t\t\tmin_ending_here = 1\n\t\telse:\n\t\t\ttemp = max_ending_here\n\t\t\tmax_ending_here = max (min_ending_here * arr[i], 1)\n\t\t\tmin_ending_here = temp * arr[i]\n\t\tif (max_so_far < max_ending_here):\n\t\t\tmax_so_far = max_ending_here\n\tif flag == 0 and max_so_far == 0:\n\t\treturn 0\n\treturn max_so_far",
+      "tests_passed_before_patch": false,
+      "test_output": "FF.                                                                      [100%]\n================================== FAILURES ===================================\n_________________________________ test_case_0 _________________________________\n\n    def test_case_0():\n>       assert max_subarray_product([1, -2, -3, 0, 7, -8, -2]) == 112\nE       assert 128 == 112\nE        +  where 128 = max_subarray_product([1, -2, -3, 0, 7, -8, ...])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpu4firgdw\\test_solution.py:4: AssertionError\n_________________________________ test_case_1 _________________________________\n\n    def test_case_1():\n>       assert max_subarray_product([6, -3, -10, 0, 2]) == 180\nE       assert 210 == 180\nE        +  where 210 = max_subarray_product([6, -3, -10, 0, 2])\n\n..\\..\\..\\..\\AppData\\Local\\Temp\\tmpu4firgdw\\test_solution.py:7: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpu4firgdw\\test_solution.py::test_case_0\nFAILED ..\\..\\..\\..\\AppData\\Local\\Temp\\tmpu4firgdw\\test_solution.py::test_case_1\n2 failed, 1 passed in 0.40s\n\n",
+      "failure": "Let me analyze the failures and provide a corrected solution for finding the maximum product subarray.\n\n### 1. What Failed:\nThe function is not correctly calculating the maximum product subarray. The test cases show:\n- For `[1, -2, -3, 0, 7, -8, -2]`, expected 112 but got 128\n- For `[6, -3, -10, 0, 2]`, expected 180 but got 210\n\n### 2. Evidence:\nThe current implementation has several issues:\n- Doesn't properly handle negative numbers and their products\n- The `max_so_far` initialization to 0 causes problems with all-negative arrays\n- The logic for resetting `max_ending_here` and `min_ending_here` when encountering 0 is incorrect\n- The flag mechanism doesn't properly handle all-negative cases\n\n### 3. Failure Type:\nLogical errors in the product calculation and state management during iteration.\n\n### 4. Suspected Location:\nThe main issues are in:\n- How `max_ending_here` and `min_ending_here` are updated\n- The handling of zeros in the array",
+      "hypothesis": "Here's a corrected solution for finding the maximum product subarray, along with an explanation of the failures and fixes:\n\n### Root Cause Analysis:\n1. **Initialization Issue**: `max_so_far` starts at 0, which fails for all-negative arrays (should start at negative infinity)\n2. **Zero Handling**: The current zero reset logic (`max_ending_here = 1`) is incorrect - it should be 0 since product with zero is zero\n3. **Negative Product Logic**: The current approach doesn't properly track when multiplying by negative numbers could yield a new maximum\n4. **State Management**: The `flag` mechanism is unnecessary and doesn't properly handle edge cases\n\n### Corrected Solution:\n```python\ndef max_subarray_product(arr):\n    if not arr:\n        return 0\n\n    max_so_far = float('-inf')\n    max_ending_here = 1\n    min_ending_here = 1\n\n    for num in arr:\n        if num == 0:\n            max_ending_here = 1\n            min_ending_here = 1\n            max_so_far = max(max_so_far, 0)\n            continue\n\n        # Store previous max",
+      "patched_code": "def max_subarray_product(arr):\n    if not arr:\n        return 0\n\n    max_so_far = float('-inf')\n    max_ending_here = 1\n    min_ending_here = 1\n\n    for num in arr:\n        if num < 0:\n            max_ending_here, min_ending_here = min_ending_here, max_ending_here\n        max_ending_here = max(num, max_ending_here * num)\n        min_ending_here = min(num, min_ending_here * num)\n        max_so_far = max(max_so_far, max_ending_here)\n\n    return max_so_far",
+      "decision": "patch_and_retry",
+      "duration_seconds": 12.0
+    },
+    {
+      "attempt": 2,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def max_subarray_product(arr):\n    if not arr:\n        return 0\n\n    max_so_far = float('-inf')\n    max_ending_here = 1\n    min_ending_here = 1\n\n    for num in arr:\n        if num < 0:\n            max_ending_here, min_ending_here = min_ending_here, max_ending_here\n        max_ending_here = max(num, max_ending_here * num)\n        min_ending_here = min(num, min_ending_here * num)\n        max_so_far = max(max_so_far, max_ending_here)\n\n    return max_so_far",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.35s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.65
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           13      1    92%   3\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 20      1    95%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe test coverage report shows:\n- **Total statements**: 13 in `solution.py` (92% coverage, 1 missing).\n- **Test file coverage**: 100% (all 7 statements in `test_solution.py` are tested).\n- **Overall coverage**: 95% (1 missing statement in `solution.py`).\n\nThe missing statement likely corresponds to the **empty array case** (`if not arr: return 0`), but the test may not be checking edge cases like:\n- Arrays with **all negative numbers**.\n- Arrays with **zeroes** (especially multiple zeroes).\n- Arrays with **single-element subarrays** (e.g., `[5]`).\n- Arrays with **floating-point numbers** (if applicable).\n- Arrays with **extreme values** (e.g., very large/small numbers).\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nThe **1 missing statement** in `solution.py` suggests that the test suite may not fully exercise the **empty array case** or other edge cases. Possible gaps:\n- **Empty array (`[]`)** \u2192 Currently returns `0`, but is this the expected behavior? (The function could also return",
+    "generated_tests": [
+      "assert max_subarray_product([-1, -1, -1, -1]) == 1",
+      "assert max_subarray_product([2, 3, -2, 4]) == 6",
+      "assert max_subarray_product([-10, -10, 1, 3, -6]) == 300"
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.36s\n\n"
+  }
+}

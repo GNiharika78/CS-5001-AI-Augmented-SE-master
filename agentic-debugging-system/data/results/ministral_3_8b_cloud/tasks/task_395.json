@@ -1,0 +1,39 @@
+{
+  "task_id": 395,
+  "task_prompt": "Write a python function to find the first non-repeated character in a given string.",
+  "model": "ministral-3:8b-cloud",
+  "bug_type": "operator_plus_to_minus",
+  "status": "repaired",
+  "final_code": "def first_non_repeating_character(str1):\n  char_order = []\n  ctr = {}\n  for c in str1:\n    if c in ctr:\n      ctr[c] -= 1\n    else:\n      ctr[c] = 1 \n      char_order.append(c)\n  for c in char_order:\n    if ctr[c] == 1:\n      return c\n  return None",
+  "attempts": 1,
+  "llm_calls": 2,
+  "duration": 9.29,
+  "memory_type": "episodic_attempt_history",
+  "history": [
+    {
+      "attempt": 1,
+      "planning": "Planning is performed by Failure Analysis and Hypothesis Agents using runtime evidence.",
+      "code_before_patch": "def first_non_repeating_character(str1):\n  char_order = []\n  ctr = {}\n  for c in str1:\n    if c in ctr:\n      ctr[c] -= 1\n    else:\n      ctr[c] = 1 \n      char_order.append(c)\n  for c in char_order:\n    if ctr[c] == 1:\n      return c\n  return None",
+      "tests_passed_before_patch": true,
+      "test_output": "...                                                                      [100%]\n3 passed in 0.36s\n\n",
+      "failure": null,
+      "hypothesis": null,
+      "patched_code": null,
+      "decision": "stop_success",
+      "duration_seconds": 0.64
+    }
+  ],
+  "post": {
+    "coverage_tests_passed": true,
+    "coverage_output": "Name               Stmts   Miss  Cover   Missing\n------------------------------------------------\nsolution.py           12      0   100%\ntest_solution.py       7      0   100%\n------------------------------------------------\nTOTAL                 19      0   100%\n\n",
+    "coverage_analysis": "### **1. Coverage Summary**\nThe provided test coverage report shows **100% statement coverage** for both the implementation (`solution.py`) and the test file (`test_solution.py`). This means:\n- All **12 statements** in the function were executed during testing.\n- All **7 statements** in the test file were executed.\n\nSince coverage is perfect, the tests likely cover:\n- Basic functionality (finding the first non-repeating character).\n- Edge cases (empty string, all repeating characters, single-character string).\n- Possible return values (`None` when no non-repeating character exists).\n\n---\n\n### **2. Missing or Weakly Tested Cases**\nWhile coverage is high, we should consider whether the tests thoroughly validate **all possible behaviors** of the function. Potential gaps include:\n\n#### **A. Edge Cases Not Explicitly Tested**\n1. **Empty String (`\"\"`)**\n   - The function should return `None` (already likely tested).\n2. **All Repeating Characters (e.g., `\"aabbcc\"`)**\n   - Should return `None` (likely tested).\n3. **Single Character (e.g., `\"a\"`)**\n   - Should return `\"a\"` (likely tested).\n4. **",
+    "generated_tests": [
+      "assert first_non_repeating_character(\"\") == None",
+      "assert first_non_repeating_character(\"aabbcc\") == None",
+      "assert first_non_repeating_character(\"aabbc\") == \"c\""
+    ],
+    "generated_tests_count": 3,
+    "generated_tests_passed": true,
+    "generated_test_output": "......                                                                   [100%]\n6 passed in 0.35s\n\n"
+  }
+}
